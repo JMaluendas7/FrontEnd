@@ -1,7 +1,7 @@
-import React from 'react';
-import Banner from './banner';
-import Menu from './menu';
-import Content from './contenido';
+import React from "react";
+import Banner from "./banner";
+import Menu from "./menu";
+import Content from "./contenidodos";
 
 const App = () => {
   return (
@@ -15,8 +15,8 @@ const App = () => {
 
 const styles = {
   container: {
-    display: 'flex',
-    flexDirection: 'row',
+    display: "flex",
+    flexDirection: "row",
   },
 };
 

@@ -1,12 +1,23 @@
 .container {
-    overflow-y: auto;
-    position: absolute;
-    width: 79%;
-    height: 89%;
-    right: 0px;
-    bottom: 0px;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background: #fff;
-    border-top-left-radius: 1rem;
-  }
+  overflow-y: auto;
+  position: absolute;
+  width: 79.8%;
+  height: 90%;
+  right: 0px;
+  bottom: 0px;
+  border: none;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  background: #fff;
+  border-top-left-radius: 3rem;
+  border-bottom-left-radius: 1rem;
+  transition: all 600ms ease-in-out;
+}
+
+.container-title {
+  text-align: center;
+}
+
+.container:hover {
+  width: 96.3%;
+
+}
