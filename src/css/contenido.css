@@ -1,0 +1,12 @@
+.container {
+    overflow-y: auto;
+    position: absolute;
+    width: 79%;
+    height: 89%;
+    right: 0px;
+    bottom: 0px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    border-top-left-radius: 1rem;
+  }

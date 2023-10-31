@@ -1,0 +1,29 @@
+body {
+    overflow-y: hidden;
+}
+.menu {
+    position: absolute;
+    width: 20%;
+    height: 100%;
+    background: #f0f0f0;
+    padding: 0px;
+    bottom: 0rem;
+    border-bottom-right-radius: 2rem;
+  }
+  
+  .menuItem {
+    cursor: pointer;
+    padding: 5px;
+  }
+  
+  .menuItemLabel {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .subMenu {
+    list-style: none;
+    padding-left: 15px;
+  }
+  
