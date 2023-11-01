@@ -17,3 +17,11 @@ body {
     animation: logo-spin infinite 20s linear;
   }
 }
+
+.menu-open .menu {
+  display: none;
+}
+
+.menu-open .container {
+  width: 100%;
+}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./css/menu.css";
 
-const Menu = () => {
+const Menu = ({ toggleMenu, isMenuOpen }) => {
   const [menuItems, setMenuItems] = useState([
     {
       label: "Menu Uno",
@@ -83,7 +83,6 @@ const Menu = () => {
 
   return (
     <section className="menu-container">
-      <figure className="menu-hamburgesa"></figure>
       <nav className="menu">
         {menuItems.map((item, index) => (
           <div key={index} className="menuItem">

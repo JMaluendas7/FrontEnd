@@ -10,11 +10,11 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    transition: all 300ms ease-in-out;
+    transition: all 700ms ease-in-out;
   }
-.banner:hover {
+/* .banner:hover {
   width: 96.3%;
-}
+} */
 
 .nav {
   display: flex;
@@ -27,7 +27,7 @@
   flex-basis: 40%;
   width: 100%;
   height: 100%;
-  margin-left: 2rem;
+  margin-left: 4rem;
 }
 
 .logo-img {
@@ -93,4 +93,15 @@
 .logout-figure:hover .logout-user {
   filter: drop-shadow(0 0 .5em #646cffaa);
   translate: 7px;
+}
+.menu-open .menu {
+  display: none;
+}
+
+.menu-open .container {
+  width: 100%;
+}
+
+.menu-open .banner {
+  width: 100%;
 }

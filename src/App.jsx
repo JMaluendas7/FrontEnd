@@ -1,23 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import Banner from "./banner";
 import Menu from "./menu";
-import Content from "./contenidodos";
+import Container from "./contenido";
 
-const App = () => {
+function App() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
   return (
-    <div style={styles.container}>
-      <Menu />
-      <Banner />
-      <Content />
+    <div>
+      <div className={`main-content ${isMenuOpen ? 'menu-open' : ''}`}>
+        <Banner toggleMenu={toggleMenu} />
+        <Menu />
+        <Container />
+      </div>
     </div>
   );
 };
 
-const styles = {
-  container: {
-    display: "flex",
-    flexDirection: "row",
-  },
-};
 
 export default App;

@@ -13,25 +13,42 @@
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
   color: #000;
   left: 0px;
-  transition: all 500ms ease-in-out;
+  transition: all 710ms ease-in-out;
+}
+
+.menu-open .menu-container {
+  width: 0%;
+}
+
+.menu-open .container {
+  width: 100%;
 }
 
 .menu-hamburgesa {
   background-image: url(/src/img/menu.png);
   background-repeat: no-repeat;
+  background-color: #fff;
   height: 32px;
   width: 32px;
   position: absolute;
-  right: -2rem;
-  top: -0.5rem;
+  left: 1rem;
+  top: 0rem;
+  border-bottom-right-radius: .3rem;
+  border-bottom-left-radius: .3rem;
+  transition: all 300ms ease-in-out;
 }
 
-.menu-container:active {
+.menu-open .menu-hamburgesa {
+  transform: rotate(90deg);
+  border-top-right-radius: .3rem;
+}
+
+/* .menu-container:active {
   left: -14rem;
 }
 .menu-container:active .container {
   width: 90%;
-}
+} */
 
 .menu {
   margin: 1.5rem;
@@ -58,7 +75,9 @@
   opacity: 0;
   transition: all 500ms ease-in-out;
 }
+
 .subMenu-item:hover .menuItem-sublogo {
+  translate: 3rem;
   opacity: 1;
 }
 .menuItem-open {

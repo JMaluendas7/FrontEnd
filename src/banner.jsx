@@ -1,9 +1,11 @@
 import React from "react";
 import "./css/banner.css";
+import "./css/menu.css";
 
-const Banner = () => {
+const Banner = ({ toggleMenu }) => {
   return (
     <header className="banner">
+      <nav className="menu-hamburgesa" onClick={toggleMenu}></nav>
       <nav className="nav">
         <section className="logo">
           <figure className="logo-img"></figure>

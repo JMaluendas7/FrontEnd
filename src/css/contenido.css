@@ -10,14 +10,18 @@
   background: #fff;
   border-top-left-radius: 3rem;
   border-bottom-left-radius: 1rem;
-  transition: all 600ms ease-in-out;
+  color: black;
+  transition: all 720ms ease-in-out;
 }
 
 .container-title {
   text-align: center;
 }
 
-.container:hover {
-  width: 96.3%;
+.menu-open .menu {
+  display: none;
+}
 
+.menu-open .container {
+  width: 100%;
 }
