@@ -1,6 +1,8 @@
 body {
   overflow-y: hidden;
-  background-color: #1cc88a;
+  background-color: #1CC88A;
+  user-select: none;
+  font-size: 10px;
 }
 
 @keyframes logo-spin {

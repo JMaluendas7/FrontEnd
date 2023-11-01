@@ -1,7 +1,7 @@
 import React from "react";
 import "./css/contenido.css";
 
-const Container = ({ children }) => {
+const ContainerDos = ({ children }) => {
   return (
     <div className="container">
       {children}
@@ -10,4 +10,4 @@ const Container = ({ children }) => {
   );
 };
 
-export default Container;
+export default ContainerDos;

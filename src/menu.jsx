@@ -1,74 +1,8 @@
 import React, { useState } from "react";
+
 import "./css/menu.css";
 
-const Menu = ({ toggleMenu, isMenuOpen }) => {
-  const [menuItems, setMenuItems] = useState([
-    {
-      label: "Menu Uno",
-      isOpen: true,
-      subItems: [
-        { label: "Reporte Estampilla NSS", url: "/submenuUnoUno" },
-        { label: "Reporte Submenu Uno Dos", url: "/submenuUnoDos" },
-      ],
-    },
-    {
-      label: "Menu Dos",
-      isOpen: false,
-      subItems: [
-        { label: "Submenu Dos Uno", url: "/submenuDosUno" },
-        { label: "Submenu Dos Dos", url: "/submenuDosDos" },
-      ],
-    },
-    {
-      label: "Menu Tres",
-      isOpen: false,
-      subItems: [
-        { label: "Submenu Tres Uno", url: "/submenuTresUno" },
-        { label: "Submenu Tres Dos", url: "/submenuTresDos" },
-      ],
-    },
-    {
-      label: "Menu Cuatro",
-      isOpen: false,
-      subItems: [
-        { label: "Submenu Tres Uno", url: "/submenuTresUno" },
-        { label: "Submenu Tres Dos", url: "/submenuTresDos" },
-        { label: "Submenu Tres Uno", url: "/submenuTresUno" },
-        { label: "Submenu Tres Dos", url: "/submenuTresDos" },
-      ],
-    },
-    {
-      label: "Menu Cinco",
-      isOpen: false,
-      subItems: [
-        { label: "Submenu Tres Uno", url: "/submenuTresUno" },
-        { label: "Submenu Tres Dos", url: "/submenuTresDos" },
-        { label: "Submenu Tres Uno", url: "/submenuTresUno" },
-        { label: "Submenu Tres Dos", url: "/submenuTresDos" },
-      ],
-    },
-    {
-      label: "Menu Seis",
-      isOpen: false,
-      subItems: [
-        { label: "Submenu Tres Uno", url: "/submenuTresUno" },
-        { label: "Submenu Tres Dos", url: "/submenuTresDos" },
-      ],
-    },
-    {
-      label: "Menu Siete",
-      isOpen: false,
-      subItems: [
-        { label: "Submenu Tres Uno", url: "/submenuTresUno" },
-        { label: "Submenu Tres Dos", url: "/submenuTresDos" },
-        { label: "Submenu Tres Uno", url: "/submenuTresUno" },
-        { label: "Submenu Tres Dos", url: "/submenuTresDos" },
-        { label: "Submenu Tres Uno", url: "/submenuTresUno" },
-        { label: "Submenu Tres Dos", url: "/submenuTresDos" },
-      ],
-    },
-  ]);
-
+const Menu = ({ menuItems, setMenuItems }) => {
   const toggleSubMenu = (index) => {
     setMenuItems((prevMenuItems) => {
       return prevMenuItems.map((item, itemIndex) => {
@@ -81,21 +15,41 @@ const Menu = ({ toggleMenu, isMenuOpen }) => {
     });
   };
 
+  const [menuStates, setMenuStates] = useState(menuItems.map(() => false));
+
+  const toggleMenuMenu = (index) => {
+    const updatedMenuStates = [...menuStates];
+    updatedMenuStates[index] = !updatedMenuStates[index];
+    setMenuStates(updatedMenuStates);
+  };
+
   return (
     <section className="menu-container">
       <nav className="menu">
         {menuItems.map((item, index) => (
           <div key={index} className="menuItem">
             <nav className="menuItem-item" onClick={() => toggleSubMenu(index)}>
-              <img src="/src/img/carpeta.png" className="menuItem-logo"></img>
-              <div className="menuItem-label">{item.label}</div>
-              <div className="menuItem-open"></div>
+              <div
+                className="menuItem-div"
+                onClick={() => toggleMenuMenu(index)}
+              >
+                <img src="/src/img/carpeta.png" className="menuItem-logo"></img>
+                <div className="menuItem-label">{item.label}</div>
+                <div
+                  className={`menuItem-open ${
+                    menuStates[index] ? "menu-openmenu" : ""
+                  }`}
+                ></div>
+              </div>
             </nav>
             {item.isOpen && (
               <ul className="subMenu">
                 {item.subItems.map((subItem, subIndex) => (
                   <li className="subMenu-item" key={subIndex}>
-                    <a className="subMenu-url" href={subItem.url}>
+                    <a
+                      className="subMenu-url"
+                      onClick={() => toggleSubMenu(index, item.component)}
+                    >
                       {subItem.label}
                     </a>
                     <img
