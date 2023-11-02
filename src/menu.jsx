@@ -2,8 +2,16 @@ import React, { useState } from "react";
 
 import "./css/menu.css";
 
-const Menu = ({ menuItems, setMenuItems }) => {
-  const toggleSubMenu = (index) => {
+const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
+  const [menuStates, setMenuStates] = useState(menuItems.map(() => false));
+
+  const toggleMenuMenu = (index) => {
+    const updatedMenuStates = [...menuStates];
+    updatedMenuStates[index] = !updatedMenuStates[index];
+    setMenuStates(updatedMenuStates);
+  };
+  
+  const toggleSubMenu = (index, component) => {
     setMenuItems((prevMenuItems) => {
       return prevMenuItems.map((item, itemIndex) => {
         if (itemIndex === index) {
@@ -13,22 +21,21 @@ const Menu = ({ menuItems, setMenuItems }) => {
         }
       });
     });
+
+    if (component) {
+      // Pasa el componente al Container cuando se hace clic en un subítem
+      setContainerComponent(component);
+    }
   };
 
-  const [menuStates, setMenuStates] = useState(menuItems.map(() => false));
 
-  const toggleMenuMenu = (index) => {
-    const updatedMenuStates = [...menuStates];
-    updatedMenuStates[index] = !updatedMenuStates[index];
-    setMenuStates(updatedMenuStates);
-  };
 
   return (
     <section className="menu-container">
       <nav className="menu">
         {menuItems.map((item, index) => (
           <div key={index} className="menuItem">
-            <nav className="menuItem-item" onClick={() => toggleSubMenu(index)}>
+            <nav className="menuItem-item" onClick={() => toggleSubMenu(index, item.url)}>
               <div
                 className="menuItem-div"
                 onClick={() => toggleMenuMenu(index)}
@@ -48,7 +55,7 @@ const Menu = ({ menuItems, setMenuItems }) => {
                   <li className="subMenu-item" key={subIndex}>
                     <a
                       className="subMenu-url"
-                      onClick={() => toggleSubMenu(index, item.component)}
+                      onClick={() => toggleSubMenu(index, item.url)}
                     >
                       {subItem.label}
                     </a>

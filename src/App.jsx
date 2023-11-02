@@ -2,27 +2,28 @@ import React, { useState } from "react";
 import Banner from "./banner";
 import Menu from "./menu";
 import Container from "./contenido";
-import ContainerDos from "./contenidodos";
+import ContainerDos from "./models/contenido";
 
 function App() {
-  const [containerComponent, setContainerComponent] = useState("Container");
+  const [containerComponent, setContainerComponent] = useState(null);
 
   const [menuItems, setMenuItems] = useState([
     {
       label: "Menu Uno",
       isOpen: false,
-      component: "Container",
+      component: "./models/contenido",
       subItems: [
-        { label: "Reporte Estampilla NSS", url: "./contenido" },
-        { label: "Reporte Submenu Uno Dos", url: "./contenidodos" },
+        { label: "Reporte Estampilla NSS", url: 'ContainerDos' },
+        { label: "Reporte Submenu Uno Dos", url: "ContainerDos" },
       ],
     },
     {
       label: "Menu Dos",
       isOpen: false,
+      component: './Contenidodos',
       subItems: [
-        { label: "Submenu Dos Uno", url: "/submenuDosUno" },
-        { label: "Submenu Dos Dos", url: "/submenuDosDos" },
+        { label: "Submenu Dos Uno", url: './Contenidodos' },
+        { label: "Submenu Dos Dos", url: '/Contenidodos' },
       ],
     },
     {
@@ -74,17 +75,20 @@ function App() {
       ],
     },
   ]);
-
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
   const toggleSubMenu = (index, component) => {
-    import(`./${component}`).then((module) => {
-      setContainerComponent(component);
-    });
+    if (component){
+      import(`./${component}`).then((module) => {
+        setContainerComponent(containerComponent);
+      });
+    }
   };
+
   return (
     <div>
       <div className={`main-content ${isMenuOpen ? "menu-open" : ""}`}>
@@ -93,6 +97,7 @@ function App() {
           menuItems={menuItems}
           setMenuItems={setMenuItems}
           toggleSubMenu={toggleSubMenu}
+          setContainerComponent={setContainerComponent}
         />
         <Container component={containerComponent} />
       </div>
