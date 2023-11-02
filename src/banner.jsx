@@ -2,7 +2,13 @@ import React from "react";
 import "./css/banner.css";
 import "./css/menu.css";
 
-const Banner = ({ toggleMenu }) => {
+const Banner = ({ toggleMenu, setContainerComponent }) => {
+  const toggleSubMenu = (component) => {
+    if (component) {
+      setContainerComponent(component);
+    }
+  };
+
   return (
     <header className="banner">
       <nav className="menu-hamburgesa" onClick={toggleMenu}></nav>
@@ -10,7 +16,7 @@ const Banner = ({ toggleMenu }) => {
         <section className="logo">
           <figure className="logo-img"></figure>
         </section>
-        <div className="title">
+        <div className="title" onClick={() => toggleSubMenu("Home")}>
           <h2 className="title-app">5Apps</h2>
         </div>
         <section className="logout">

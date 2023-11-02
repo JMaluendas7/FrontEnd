@@ -15,6 +15,10 @@
   text-align: center;
 }
 
+.efect {
+  transition: ease-in-out;
+}
+
 .campo {
   padding: 1rem;
 }
@@ -56,16 +60,7 @@
   width: 100%;
 }
 
-
-
-
-
-
-
-
-
-
-
+/* CSS Para inputs */
 .input-container {
   position: relative;
   margin-bottom: 20px;
@@ -116,10 +111,6 @@
 }
 
 
-
-
-
-
 .input-label2 {
   position: absolute;
   top: .5px;
@@ -157,4 +148,10 @@
   left: 3px;
   font-size: .8rem;
   color: #28a745;
+}
+
+/* Estilos para Home.jsx */
+.home__bus {
+  height: 20rem;
+  margin-top: 5rem;
 }

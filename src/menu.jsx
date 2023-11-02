@@ -1,17 +1,23 @@
 import React, { useState } from "react";
-
 import "./css/menu.css";
 
 const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
   const [menuStates, setMenuStates] = useState(menuItems.map(() => false));
 
+  const toggleSubMenu = (index, component) => {
+    if (component) {
+      setContainerComponent(component);
+    }
+  };
+
+  // Funcion de alternar clase para flecha(arriba-abajo)
   const toggleMenuMenu = (index) => {
     const updatedMenuStates = [...menuStates];
     updatedMenuStates[index] = !updatedMenuStates[index];
     setMenuStates(updatedMenuStates);
   };
-  
-  const toggleSubMenu = (index, component) => {
+
+  const abrirSubMenu = (index) => {
     setMenuItems((prevMenuItems) => {
       return prevMenuItems.map((item, itemIndex) => {
         if (itemIndex === index) {
@@ -21,26 +27,28 @@ const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
         }
       });
     });
-
-    if (component) {
-      // Pasa el componente al Container cuando se hace clic en un subítem
-      setContainerComponent(component);
-    }
   };
 
-
+  const abrirMenuFlecha = (index) => {
+    abrirSubMenu(index);
+    toggleMenuMenu(index);
+  };
 
   return (
     <section className="menu-container">
       <nav className="menu">
         {menuItems.map((item, index) => (
           <div key={index} className="menuItem">
-            <nav className="menuItem-item" onClick={() => toggleSubMenu(index, item.url)}>
-              <div
-                className="menuItem-div"
-                onClick={() => toggleMenuMenu(index)}
-              >
-                <img src="/src/img/carpeta.png" className="menuItem-logo"></img>
+            <nav
+              className="menuItem-item"
+              onClick={() => abrirMenuFlecha(index)}
+            >
+              <div className="menuItem-div">
+                <img
+                  src="/src/img/carpeta.png"
+                  className="menuItem-logo"
+                  alt="Carpeta"
+                />
                 <div className="menuItem-label">{item.label}</div>
                 <div
                   className={`menuItem-open ${
@@ -55,14 +63,15 @@ const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
                   <li className="subMenu-item" key={subIndex}>
                     <a
                       className="subMenu-url"
-                      onClick={() => toggleSubMenu(index, item.url)}
+                      onClick={() => toggleSubMenu(index, String(subItem.url))}
                     >
                       {subItem.label}
                     </a>
                     <img
                       src="/src/img/autobus.png"
                       className="menuItem-logo menuItem-sublogo"
-                    ></img>
+                      alt="Autobús"
+                    />
                   </li>
                 ))}
               </ul>

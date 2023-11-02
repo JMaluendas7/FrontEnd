@@ -1,37 +1,35 @@
 import React, { useState } from "react";
 import Banner from "./banner";
 import Menu from "./menu";
-import Container from "./contenido";
-import ContainerDos from "./models/contenido";
+import Container from "./Container";
+import ContainerDos from "./components/Contenido";
 
 function App() {
-  const [containerComponent, setContainerComponent] = useState(null);
+  const [containerComponent, setContainerComponent] = useState("Home");
 
   const [menuItems, setMenuItems] = useState([
     {
       label: "Menu Uno",
       isOpen: false,
-      component: "./models/contenido",
       subItems: [
-        { label: "Reporte Estampilla NSS", url: 'ContainerDos' },
-        { label: "Reporte Submenu Uno Dos", url: "ContainerDos" },
+        { label: "Reporte Estampilla NSS", url: "Contenido" },
+        { label: "Reporte Submenu Uno Dos", url: "Contenidodos" },
       ],
     },
     {
       label: "Menu Dos",
       isOpen: false,
-      component: './Contenidodos',
       subItems: [
-        { label: "Submenu Dos Uno", url: './Contenidodos' },
-        { label: "Submenu Dos Dos", url: '/Contenidodos' },
+        { label: "Submenu Dos Uno", url: "Container" },
+        { label: "Submenu Dos Dos", url: "contenidodos" },
       ],
     },
     {
       label: "Menu Tres",
       isOpen: false,
       subItems: [
-        { label: "Submenu Tres Uno", url: "/submenuTresUno" },
-        { label: "Submenu Tres Dos", url: "/submenuTresDos" },
+        { label: "Submenu Tres Uno", url: "2" },
+        { label: "Submenu Tres Dos", url: "./models/contenido" },
       ],
     },
     {
@@ -75,31 +73,26 @@ function App() {
       ],
     },
   ]);
-  
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  const toggleSubMenu = (index, component) => {
-    if (component){
-      import(`./${component}`).then((module) => {
-        setContainerComponent(containerComponent);
-      });
-    }
-  };
 
   return (
     <div>
       <div className={`main-content ${isMenuOpen ? "menu-open" : ""}`}>
-        <Banner toggleMenu={toggleMenu} />
+        <Banner
+          toggleMenu={toggleMenu}
+          setContainerComponent={setContainerComponent}
+        />
         <Menu
           menuItems={menuItems}
           setMenuItems={setMenuItems}
-          toggleSubMenu={toggleSubMenu}
           setContainerComponent={setContainerComponent}
         />
-        <Container component={containerComponent} />
+        <Container Component={containerComponent} />
       </div>
     </div>
   );
