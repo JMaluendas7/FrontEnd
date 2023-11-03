@@ -49,7 +49,7 @@ const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
                   className="menuItem-logo"
                   alt="Carpeta"
                 />
-                <div className="menuItem-label">{item.label}</div>
+                <div className="menuItem-label">{item.nom_modulo}</div>
                 <div
                   className={`menuItem-open ${
                     menuStates[index] ? "menu-openmenu" : ""
@@ -63,9 +63,9 @@ const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
                   <li className="subMenu-item" key={subIndex}>
                     <a
                       className="subMenu-url"
-                      onClick={() => toggleSubMenu(index, String(subItem.url))}
+                      onClick={() => toggleSubMenu(index, String(subItem.link))}
                     >
-                      {subItem.label}
+                      {subItem.nom_modulo}
                     </a>
                     <img
                       src="/src/img/autobus.png"
