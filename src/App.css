@@ -1,8 +1,22 @@
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('fonts/SourceSansPro-Regular.otf') format('woff2');
+  /* Puedes agregar más formatos de fuente si lo deseas, como woff, ttf, etc. */
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --color-scrollbar: #D3D3D4;
+  --color-background-scrollbar: #eee;
+}
+
 body {
   overflow-y: hidden;
   background-color: #1CC88A;
   user-select: none;
   font-size: 10px;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
 @keyframes logo-spin {
@@ -26,4 +40,82 @@ body {
 
 .menu-open .container {
   width: 100%;
+}
+
+/* Estilos para el checkbox personalizado */
+.custom-checkbox {
+  display: inline-block;
+  position: relative;
+  padding-left: 30px;
+  cursor: pointer;
+}
+
+.custom-checkbox input {
+  display: none;
+}
+
+/* Estilo del ícono de verificación */
+.custom-checkbox .checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #ffffff;
+  border: 2px solid #3498db;
+  border-radius: 3px;
+}
+
+.custom-checkbox input:checked ~ .checkmark:after {
+  content: '\2713';
+  font-size: 16px;
+  color: #3498db;
+  position: absolute;
+  top: -3px;
+  left: 2px;
+}
+
+.custom-checkbox:hover .checkmark {
+  background-color: #f2f2f2;
+}
+
+.submit-button {
+  background: linear-gradient(to right, #1CC88A, #21A3A2);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1rem;
+  margin: 20px 0;
+  cursor: pointer;
+  border-radius: 1rem;
+  box-shadow: 1px 4px 5px -2px rgba(28,200,138,0.49);
+  transition: background 5s ease-in-out, transform 0.3s ease;
+}
+
+.submit-button:hover {
+  background: linear-gradient(to right, #21A3A2, #1CC88A);
+  transform: scale(1.023);
+}
+
+.submit-button:active {
+  background: linear-gradient(to right, #1CC88A, #21A3A2);
+  transform: scale(1);
+}
+
+.opciones {
+  width: 200px;
+  padding: 9px;
+  border: 1px solid #1d8034;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #333;
+  font-size: 15px;
+}
+
+.opciones:focus {
+  border-color: #1CC88A;
+  box-shadow: 0px 0px 5px #1CC88A;
 }

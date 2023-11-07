@@ -5,32 +5,25 @@ import Container from "./Container";
 import ContainerDos from "./components/Contenido";
 
 function App() {
-
-
-
   const [menuData, setMenuData] = useState([]);
   const apiUrl = "http://127.0.0.1:8000/menu/1";
 
+  // Trae los elementos para el menu
   useEffect(() => {
-    // Realiza una solicitud GET a la API
     fetch(apiUrl)
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("No hubo respuesta");
         }
         return response.json();
       })
       .then((data) => {
-        // Almacena los datos en el estado
         setMenuData(data);
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        console.error("Error al obtener respuesta", error);
       });
   }, []);
-
-
-
 
   const [containerComponent, setContainerComponent] = useState("Home");
 
@@ -43,16 +36,16 @@ function App() {
   return (
     <div>
       <div className={`main-content ${isMenuOpen ? "menu-open" : ""}`}>
-        <Banner
-          toggleMenu={toggleMenu}
-          setContainerComponent={setContainerComponent}
-        />
         <Menu
           menuItems={menuData}
           setMenuItems={setMenuData}
           setContainerComponent={setContainerComponent}
         />
         <Container Component={containerComponent} />
+        <Banner
+          toggleMenu={toggleMenu}
+          setContainerComponent={setContainerComponent}
+        />
       </div>
     </div>
   );

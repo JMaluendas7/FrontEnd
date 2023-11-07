@@ -1,0 +1,28 @@
+.form-regUsers {
+  display: grid;
+  grid-template-columns: repeat(2, 20rem);
+  grid-template-rows: repeat(3, 5rem);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  justify-content: center;
+  align-items: center;
+}
+
+.cc {
+  grid-row: 1;
+  grid-column: span 2;
+}
+
+.user {
+  grid-row: 2;
+}
+
+.pass {
+  grid-row: 2;
+}
+
+.custom-checkbox {
+  grid-row: 3;
+  grid-column: span 2;
+  margin: 0 auto;
+}

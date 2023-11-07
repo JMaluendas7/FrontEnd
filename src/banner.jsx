@@ -13,16 +13,43 @@ const Banner = ({ toggleMenu, setContainerComponent }) => {
     <header className="banner">
       <nav className="menu-hamburgesa" onClick={toggleMenu}></nav>
       <nav className="nav">
-        <section className="logo">
+        <a
+          className="logo"
+          target="_blanck"
+          href="https://www.berlinasdelfonce.com/"
+        >
           <figure className="logo-img"></figure>
-        </section>
+        </a>
         <div className="title" onClick={() => toggleSubMenu("Home")}>
           <h2 className="title-app">5Apps</h2>
         </div>
         <section className="logout">
           <figure className="logout-figure">
-            <h3 className="logout-user">User Name</h3>
-            <div className="logout-Button"></div>
+            <div className="logout-div">
+              <h3 className="logout-user">User Name</h3>
+              <div className="logout-Button"></div>
+            </div>
+            <section className="container-logout">
+              <ul className="container-items">
+                <li className="item">
+                  <a className="item-url" href="#">
+                    Configuraciones
+                  </a>
+                </li>
+                <div className="line"></div>
+                <li className="item">
+                  <a className="item-url" href="#">
+                    Preferencias
+                  </a>
+                </li>
+                <div className="line"></div>
+                <li className="item">
+                  <a className="item-url" href="#">
+                    Cerrar Sesion
+                  </a>
+                </li>
+              </ul>
+            </section>
           </figure>
         </section>
       </nav>

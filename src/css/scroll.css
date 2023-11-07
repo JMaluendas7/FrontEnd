@@ -1,0 +1,70 @@
+:root {
+    --color-scrollbar: #1CC88A;
+    --color-background-scrollbar: #1CC88A;
+}
+
+/* Scroll Chrome */
+.container::-webkit-scrollbar {
+    width: 25px;
+    background: transparent;
+}
+
+.container::-webkit-scrollbar-thumb {
+    border: 10px solid transparent;
+    box-shadow: none;
+    border-radius: 40px;
+}
+
+.container:hover::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 0 10px var(--color-scrollbar);
+}
+
+.container:hover::-webkit-scrollbar-thumb:hover {
+    border: 8px solid transparent;
+    box-shadow: inset 0 0 0 10px var(--color-scrollbar);
+}
+
+/* Con esta propiedad damos margenes al scrroll cuando queremos que
+no pase de determinado lugar */
+.container::-webkit-scrollbar-track {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+/* Scroll Chrome */
+
+/* Este es la barra de fondo del scrollbar */
+.menu-container::-webkit-scrollbar {
+    width: 10px;
+    background: transparent;
+}
+
+/* Aca damos el diseno default para el scroll */
+.menu-container::-webkit-scrollbar-thumb {
+    border: 3px solid transparent;
+    box-shadow: none;
+    border-radius: 40px;
+}
+
+/* Esto define como se ve el scroll cuando estamos dentro de container */
+.menu-container:hover::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 0 10px #fff;
+}
+
+/* Esto define como se ve el scroll cuando posamos el mause sobre el */
+.menu-container:hover::-webkit-scrollbar-thumb:hover {
+    border: 2px solid transparent;
+    box-shadow: inset 0 0 0 10px #fff;
+}
+
+.menu-container::-webkit-scrollbar-track {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+    
+/* Scroll Moz*/
+.container,
+.menu-container {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-scrollbar) transparent;
+}
