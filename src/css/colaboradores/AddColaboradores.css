@@ -1,7 +1,7 @@
 .form {
   display: grid;
   grid-template-columns: repeat(3, 20rem);
-  grid-template-rows: repeat(4, 5rem);
+  grid-template-rows: repeat(5, 3rem);
   grid-column-gap: 0px;
   grid-row-gap: 0px;
   justify-content: center;
@@ -71,3 +71,31 @@
   grid-column: 3;
 }
 
+/* Estilos para los campos planos */
+.cedula {
+  width: 5rem;
+}
+.name {
+  width: 8rem;
+}
+.tele {
+  width: 5rem;
+}
+.dire {
+  width: 9rem;
+}
+.correo {
+  width: 12rem;
+}
+.rol {
+  width: 7rem;
+}
+.empresa {
+  width: 10rem;
+}
+.cont {
+  width: 5rem;
+}
+.ciudad {
+  width: 6rem;
+}

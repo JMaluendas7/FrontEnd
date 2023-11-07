@@ -107,7 +107,7 @@ body {
 
 .opciones {
   width: 200px;
-  padding: 9px;
+  padding: 8.5px;
   border: 1px solid #1d8034;
   border-radius: 5px;
   background-color: #fff;
@@ -118,4 +118,52 @@ body {
 .opciones:focus {
   border-color: #1CC88A;
   box-shadow: 0px 0px 5px #1CC88A;
+}
+
+/* Diseño para boton desplegable con busqueda */
+.select {
+  width: 20rem;
+}
+.css-13cymwt-control {
+  border-color: #1d8034 !important;
+}
+.css-t3ipsp-control:focus {
+  border-color: #1CC88A !important;
+}
+.css-t3ipsp-control {
+  border-color: #1CC88A !important;
+  box-shadow: 0 0 0 1px #1CC88A !important;
+}
+.css-1jqq78o-placeholder {
+  font-size: .8rem !important;
+}
+/* Clase para Texto del desplegable */
+.css-1dimb5e-singleValue {
+  font-size: .8rem !important;
+}
+
+/* Estilos para notificaciones exitosas */
+.notificaciones {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  margin: 0;
+  padding: 0;
+  height: auto;
+  width: 20rem;
+  opacity: 1;
+  transition: all 300ms ease-in-out;
+}
+.registro_ok {
+  background-color: #1CC88A;
+  width: 100%;
+  height: 100%;
+  padding: .1rem;
+  border-radius: .5rem;
+}
+
+/*Estilos para los campos planos*/
+.campo_plano {
+  height: auto;
+  width: auto;
 }

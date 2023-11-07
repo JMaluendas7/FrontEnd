@@ -41,10 +41,11 @@ const Contenido = () => {
       });
   }, []);
 
-  // Funcion para envio de datos y registro de Colaboradores
   const enviarSubmit = (event) => {
     event.preventDefault();
+
     const formData = new FormData(event.target);
+
     fetch("http://127.0.0.1:8000/addColaboradores/", {
       method: "POST",
       body: formData,
@@ -53,7 +54,6 @@ const Contenido = () => {
         if (response.status === 200) {
           // Solicitud exitosa RTA 200
           console.log("Colaborador registrado con éxito.");
-          mostrarMensaje();
         } else {
           // Fallo de solicitud
           console.error("Error al registrar el colaborador.");
@@ -64,132 +64,11 @@ const Contenido = () => {
       });
   };
 
-  // Notificacion de Registo *Se debe Mejorar*
-  const [mensajeVisible, setMensajeVisible] = useState(false); // Mueve la declaración aquí
-  const mostrarMensaje = () => {
-    setMensajeVisible(true);
-    setTimeout(() => {
-      setMensajeVisible(false);
-    }, 300000);
-  };
-
-  // Llamado a lista de los colaboradores
-  const [colaboradores, setColaboradores] = useState([]);
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/colaboradores/")
-      .then((response) => response.json())
-      .then((colaboradores) => {
-        setColaboradores(colaboradores);
-      })
-      .catch((error) => {
-        console.error("Error al llamar a la API: ", error);
-      });
-  }, []);
-
-  const [editableFields, setEditableFields] = useState({
-    cedula: false,
-    // nombres: false,
-    // apellidos: false,
-    // telefono: false,
-    // direccion: false,
-    // email: false,
-    // rol: false,
-    // empresa: false,
-    // ciudad: false,
-  });
-
-  const handleInputChange = (campo) => {
-    setEditableFields((prevState) => ({
-      ...prevState,
-      [campo]: !prevState[campo], // Cambia el estado del campo al contrario del estado actual
-    }));
-  };
-
-  // const [inputValue, setInputValue] = useState(""); // Estado para almacenar el valor del input
-
-  // const handleInputChange = (e) => {
-  //   setInputValue(e.target.value); // Actualiza el estado con el valor del input
-  // };
-
-  // <div>
-  //   <input
-  //     type="text"
-  //     value={inputValue}
-  //     onChange={handleInputChange} // Agrega un controlador onChange
-  //   />
-  //   <p>El valor del input es: {inputValue}</p>
-  // </div>;
-
   // Falta tener IDs unicos
   return (
     <div className="Efect">
-      <h1 className="titulo_login">Administracion de Colaboradores</h1>
+      <h1 className="titulo_login">Registro de Colaboradores</h1>
       <h3 className="subtitulo_logi">Gestion Humana</h3>
-
-      <section className="usuarios__container">
-        {colaboradores.map((colaborador, index) => (
-          <div key={index}>
-            <input
-              className={`cedula ${editableFields.cedula ? "editable" : ""}`}
-              type="text"
-              value={colaborador.num_documento}
-              readOnly={editableFields.cedula}
-              onDoubleClick={() => handleInputChange("cedula")}
-            ></input>
-            <input
-              className="campo_plano name"
-              type="text"
-              value={colaborador.nombres}
-            ></input>
-            <input
-              className="campo_plano name"
-              type="text"
-              value={colaborador.apellidos}
-              disabled
-            ></input>
-            <input
-              className="campo_plano tele"
-              type="text"
-              value={colaborador.telefono}
-              disabled
-            ></input>
-            <input
-              className="campo_plano dire"
-              type="text"
-              value={colaborador.direccion}
-              disabled
-            ></input>
-            <input
-              className="campo_plano correo"
-              type="text"
-              value={colaborador.email}
-              disabled
-            ></input>
-            <input
-              className="campo_plano rol"
-              type="text"
-              value={colaborador.rol_id}
-              disabled
-            ></input>
-            <input
-              className="campo_plano empresa"
-              type="text"
-              value={colaborador.empresa_id}
-              disabled
-            ></input>
-
-            <input
-              className="campo_plano ciudad"
-              type="text"
-              value={colaborador.ciudad}
-              disabled
-            ></input>
-          </div>
-        ))}
-      </section>
-
-      {/* Seccion de Registro de colaboraadores */}
-      <h1>Crear Colaborador</h1>
       <form method="post" onSubmit={enviarSubmit}>
         <div className="form">
           <div className="a">
@@ -357,15 +236,6 @@ const Contenido = () => {
           Registrar Usuario
         </button>
       </form>
-      <div>
-        {mensajeVisible && (
-          <div id="notificaciones" className="notificaciones">
-            <div className="registro_ok">
-              <h2>Colaborador Registrado Exitosamente</h2>
-            </div>
-          </div>
-        )}
-      </div>
     </div>
   );
 };
