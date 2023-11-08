@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import TableRow from "./TableRow";
 import "/src/css/colaboradores/AddColaboradores.css";
 
@@ -6,10 +7,10 @@ const Contenido = () => {
   // Llamado a los tipos de documentos de identificacion
   const [dni, setDni] = useState([]);
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/docsti/")
-      .then((response) => response.json())
-      .then((dni) => {
-        setDni(dni);
+    axios
+      .get("http://127.0.0.1:8000/api/docsti/")
+      .then((response) => {
+        setDni(response.data);
       })
       .catch((error) => {
         console.error("Error al llamar a la API: ", error);
@@ -19,10 +20,10 @@ const Contenido = () => {
   // Llamado a las empresas
   const [empresas, setEmpresas] = useState([]);
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/bussines/")
-      .then((response) => response.json())
-      .then((empresas) => {
-        setEmpresas(empresas);
+    axios
+      .get("http://127.0.0.1:8000/api/bussines/")
+      .then((response) => {
+        setEmpresas(response.data);
       })
       .catch((error) => {
         console.error("Error al llamar a la API: ", error);
@@ -32,32 +33,42 @@ const Contenido = () => {
   // Llamado a los diferentes roles de la empresa
   const [roles, setRoles] = useState([]);
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/rol/")
-      .then((response) => response.json())
-      .then((roles) => {
-        setRoles(roles);
+    axios
+      .get("http://127.0.0.1:8000/api/rol/")
+      .then((response) => {
+        setRoles(response.data);
       })
       .catch((error) => {
         console.error("Error al llamar a la API: ", error);
       });
   }, []);
 
+  // Llamado a lista de los colaboradores
+  // Estado para almacenar los colaboradores
+  const [colaboradores, setColaboradores] = useState([]);
+
+  // Función para obtener los datos de los colaboradores desde la API
+  const getColaboradores = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/colaboradores/");
+      const data = response.data;
+      setColaboradores(data);
+    } catch (error) {
+      console.error("Error al llamar a la API: ", error);
+    }
+  };
+
   // Funcion para envio de datos y registro de Colaboradores
   const enviarSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
-    fetch("http://127.0.0.1:8000/addColaboradores/", {
-      method: "POST",
-      body: formData,
-    })
+    axios
+      .post("http://127.0.0.1:8000/addColaboradores/", formData)
       .then((response) => {
         if (response.status === 200) {
-          // Solicitud exitosa RTA 200
-          console.log("Colaborador registrado con éxito.");
           mostrarMensaje();
-          fetchColaboradores();
+          getColaboradores();
         } else {
-          // Fallo de solicitud
           console.error("Error al registrar el colaborador.");
         }
       })
@@ -75,75 +86,51 @@ const Contenido = () => {
     }, 5000);
   };
 
-  // Llamado a lista de los colaboradores
-  // Estado para almacenar los colaboradores
-  const [colaboradores, setColaboradores] = useState([]);
-  const [editableFields, setEditableFields] = useState({});
-  // Función para obtener los datos de los colaboradores desde la API
-  const fetchColaboradores = async () => {
-    fetch("http://127.0.0.1:8000/colaboradores/")
-      .then((response) => response.json())
-      .then((data) => {
-        setColaboradores(data);
-        // Inicializa el estado editableFields con campos editables en falso
-        const initialEditableFields = {};
-        data.forEach((colaborador) => {
-          initialEditableFields[colaborador.id] = false;
-        });
-        setEditableFields(initialEditableFields);
-      })
-      .catch((error) => {
-        console.error("Error al llamar a la API: ", error);
-      });
-  };
-
   // Llama a la función para obtener los datos de los colaboradores cuando el componente se monta
   useEffect(() => {
-    fetchColaboradores();
+    getColaboradores();
   }, []);
 
-  // Función para manejar los cambios de los campos editables
-  const handleFieldChange = (colaboradorId, field, value) => {
-    // Crea una copia de los colaboradores
-    const updatedColaboradores = [...colaboradores];
-    // Encuentra el colaborador que deseas editar
-    const colaborador = updatedColaboradores.find((c) => c.id === colaboradorId);
-    // Actualiza el valor del campo
-    colaborador[field] = value;
-    // Actualiza el estado de los colaboradores
-    setColaboradores(updatedColaboradores);
+  // useState para contener el valor de busqueda
+  const [searchValue, setSearchValue] = useState("");
+
+  // Funcion para actualizar el useState de busqueda
+  const handleSearchChange = (event) => {
+    setSearchValue(event.target.value);
   };
 
-  // Función para cancelar la edición en una fila de la tabla
-  const cancelarEdicion = (colaboradorId) => {
-    // Obtiene el colaborador original antes de cualquier cambio
-    const colaboradorOriginal = colaboradores.find((c) => c.id === colaboradorId);
+  // Funcion para filtrado de datos
+  const filteredColaboradores = colaboradores.filter((colaborador) => {
+    const fullName = `${colaborador.num_documento} ${colaborador.nombres} ${colaborador.apellidos}`;
+    return fullName.toLowerCase().includes(searchValue.toLowerCase());
+  });
 
-    // Crea una copia de los colaboradores
-    const updatedColaboradores = [...colaboradores];
+  // const handleSave = async () => {
+  //   try {
+  //     // Crea un objeto con los datos para enviar al servidor
+  //     const dataToUpdate = {
+  //       nombres: localColaborador.nombres || colaborador.nombres,
+  //       apellidos: localColaborador.apellidos || colaborador.apellidos,
+  //       num_documento:
+  //         localColaborador.num_documento || colaborador.num_documento,
+  //       email: localColaborador.email || colaborador.email,
+  //     };
 
-    // Encuentra el colaborador que deseas editar
-    const colaborador = updatedColaboradores.find((c) => c.id === colaboradorId);
+  //     // Solicitud PUT al servidor para actualizar colaborador
+  //     const response = await axios.put(
+  //       `http://127.0.0.1:8000/colaboradoresput/${colaborador.id}/`,
+  //       dataToUpdate
+  //     );
+  //     if (response.status === 200) {
+  //       // Limpia el objeto localChanges si es necesario, hacer no editable y notificacion
+  //       // setLocalChanges({});
 
-    // Restaura los valores originales del colaborador
-    colaborador.nombres = colaboradorOriginal.nombres;
-    colaborador.apellidos = colaboradorOriginal.apellidos;
-    colaborador.telefono = colaboradorOriginal.telefono;
-
-    // Actualiza el estado de los colaboradores
-    setColaboradores(updatedColaboradores);
-
-    // Luego, cambia el estado para indicar que la fila ya no está en modo de edición.
-    toggleEditField(colaboradorId);
-  };
-
-  // Función para cambiar el estado de editable de un campo
-  const toggleEditField = (colaboradorId) => {
-    setEditableFields((prevEditableFields) => ({
-      ...prevEditableFields,
-      [colaboradorId]: !prevEditableFields[colaboradorId],
-    }));
-  };
+  //       onSaveSuccess(colaborador.id); // Llama a una función que indique que la edición ha finalizado
+  //     }
+  //   } catch (error) {
+  //     console.error("Error al actualizar los datos del colaborador:", error);
+  //   }
+  // };
 
   // Falta tener IDs unicos
   return (
@@ -152,40 +139,54 @@ const Contenido = () => {
       <h3 className="subtitulo_logi">Gestion Humana</h3>
 
       <section className="usuarios__container">
-      <h1>Lista de Colaboradores</h1>
-      <table className="usuarios__container">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Numero Documento</th>
-            <th>Telefono</th>
-            <th>EMail</th>
-            <th>Contrato</th>
-            <th>Direccion</th>
-            <th>Ciudad</th>
-            <th>Rol</th>
-            <th>Empresa</th>
-          </tr>
-        </thead>
-        <tbody>
-        {colaboradores.map((colaborador) => (
-          <TableRow
-            key={colaborador.id}
-            colaborador={colaborador}
-            editable={editableFields[colaborador.id]}
-            onEdit={toggleEditField}
-            // onSave={guardarCambios} // Implementa la función guardarCambios
-            onCancel={cancelarEdicion} // Implementa la función cancelarEdicion
-            onChange={handleFieldChange}
+        <h1>Lista de Colaboradores</h1>
+        <div className="input-container search">
+          <input
+            type="text"
+            name="search"
+            id="search"
+            className="input-field"
+            placeholder=""
+            value={searchValue}
+            onChange={handleSearchChange}
           />
-        ))}
-        </tbody>
-      </table>
+          <label className="input-label" htmlFor="search">
+            Buscar por cedula o nombre
+          </label>
+        </div>
+        <section className="container__usuarios">
+          <table className="usuarios__containerr">
+            <thead>
+              <tr className="title">
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Numero Documento</th>
+                <th>Telefono</th>
+                <th>EMail</th>
+                <th>Contrato</th>
+                <th>Direccion</th>
+                <th>Ciudad</th>
+                <th>Rol</th>
+                <th>Empresa</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredColaboradores.map((colaborador) => (
+                <TableRow
+                  key={colaborador.num_documento} // Establece 'key' directamente aquí
+                  colaborador={colaborador}
+                  colaboradores={filteredColaboradores}
+                  setColaboradores={setColaboradores}
+                  getColaboradores={getColaboradores}
+                />
+              ))}
+            </tbody>
+          </table>
+        </section>
       </section>
 
       {/* Seccion de Registro de colaboraadores */}
-      <h1>Crear Colaborador</h1>
+      <h1>Agregar Colaborador</h1>
       <form method="post" onSubmit={enviarSubmit}>
         <div className="form">
           <div className="a">
