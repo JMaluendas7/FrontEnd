@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import TableRow from "./TableRow";
 import "/src/css/colaboradores/AddColaboradores.css";
 
 const Contenido = () => {
@@ -54,6 +55,7 @@ const Contenido = () => {
           // Solicitud exitosa RTA 200
           console.log("Colaborador registrado con éxito.");
           mostrarMensaje();
+          fetchColaboradores();
         } else {
           // Fallo de solicitud
           console.error("Error al registrar el colaborador.");
@@ -70,55 +72,78 @@ const Contenido = () => {
     setMensajeVisible(true);
     setTimeout(() => {
       setMensajeVisible(false);
-    }, 300000);
+    }, 5000);
   };
 
   // Llamado a lista de los colaboradores
+  // Estado para almacenar los colaboradores
   const [colaboradores, setColaboradores] = useState([]);
-  useEffect(() => {
+  const [editableFields, setEditableFields] = useState({});
+  // Función para obtener los datos de los colaboradores desde la API
+  const fetchColaboradores = async () => {
     fetch("http://127.0.0.1:8000/colaboradores/")
       .then((response) => response.json())
-      .then((colaboradores) => {
-        setColaboradores(colaboradores);
+      .then((data) => {
+        setColaboradores(data);
+        // Inicializa el estado editableFields con campos editables en falso
+        const initialEditableFields = {};
+        data.forEach((colaborador) => {
+          initialEditableFields[colaborador.id] = false;
+        });
+        setEditableFields(initialEditableFields);
       })
       .catch((error) => {
         console.error("Error al llamar a la API: ", error);
       });
-  }, []);
-
-  const [editableFields, setEditableFields] = useState({
-    cedula: false,
-    // nombres: false,
-    // apellidos: false,
-    // telefono: false,
-    // direccion: false,
-    // email: false,
-    // rol: false,
-    // empresa: false,
-    // ciudad: false,
-  });
-
-  const handleInputChange = (campo) => {
-    setEditableFields((prevState) => ({
-      ...prevState,
-      [campo]: !prevState[campo], // Cambia el estado del campo al contrario del estado actual
-    }));
   };
 
-  // const [inputValue, setInputValue] = useState(""); // Estado para almacenar el valor del input
+  // Llama a la función para obtener los datos de los colaboradores cuando el componente se monta
+  useEffect(() => {
+    fetchColaboradores();
+  }, []);
 
-  // const handleInputChange = (e) => {
-  //   setInputValue(e.target.value); // Actualiza el estado con el valor del input
-  // };
+  // Función para manejar los cambios de los campos editables
+  const handleFieldChange = (colaboradorId, field, value) => {
+    // Crea una copia de los colaboradores
+    const updatedColaboradores = [...colaboradores];
+    // Encuentra el colaborador que deseas editar
+    const colaborador = updatedColaboradores.find((c) => c.id === colaboradorId);
+    // Actualiza el valor del campo
+    colaborador[field] = value;
+    // Actualiza el estado de los colaboradores
+    setColaboradores(updatedColaboradores);
+  };
 
-  // <div>
-  //   <input
-  //     type="text"
-  //     value={inputValue}
-  //     onChange={handleInputChange} // Agrega un controlador onChange
-  //   />
-  //   <p>El valor del input es: {inputValue}</p>
-  // </div>;
+  // Función para cancelar la edición en una fila de la tabla
+  const cancelarEdicion = (colaboradorId) => {
+    // Obtiene el colaborador original antes de cualquier cambio
+    const colaboradorOriginal = colaboradores.find((c) => c.id === colaboradorId);
+
+    // Crea una copia de los colaboradores
+    const updatedColaboradores = [...colaboradores];
+
+    // Encuentra el colaborador que deseas editar
+    const colaborador = updatedColaboradores.find((c) => c.id === colaboradorId);
+
+    // Restaura los valores originales del colaborador
+    colaborador.nombres = colaboradorOriginal.nombres;
+    colaborador.apellidos = colaboradorOriginal.apellidos;
+    colaborador.telefono = colaboradorOriginal.telefono;
+
+    // Actualiza el estado de los colaboradores
+    setColaboradores(updatedColaboradores);
+
+    // Luego, cambia el estado para indicar que la fila ya no está en modo de edición.
+    toggleEditField(colaboradorId);
+  };
+
+  // Función para cambiar el estado de editable de un campo
+  const toggleEditField = (colaboradorId) => {
+    setEditableFields((prevEditableFields) => ({
+      ...prevEditableFields,
+      [colaboradorId]: !prevEditableFields[colaboradorId],
+    }));
+  };
 
   // Falta tener IDs unicos
   return (
@@ -127,65 +152,36 @@ const Contenido = () => {
       <h3 className="subtitulo_logi">Gestion Humana</h3>
 
       <section className="usuarios__container">
-        {colaboradores.map((colaborador, index) => (
-          <div key={index}>
-            <input
-              className={`cedula ${editableFields.cedula ? "editable" : ""}`}
-              type="text"
-              value={colaborador.num_documento}
-              readOnly={editableFields.cedula}
-              onDoubleClick={() => handleInputChange("cedula")}
-            ></input>
-            <input
-              className="campo_plano name"
-              type="text"
-              value={colaborador.nombres}
-            ></input>
-            <input
-              className="campo_plano name"
-              type="text"
-              value={colaborador.apellidos}
-              disabled
-            ></input>
-            <input
-              className="campo_plano tele"
-              type="text"
-              value={colaborador.telefono}
-              disabled
-            ></input>
-            <input
-              className="campo_plano dire"
-              type="text"
-              value={colaborador.direccion}
-              disabled
-            ></input>
-            <input
-              className="campo_plano correo"
-              type="text"
-              value={colaborador.email}
-              disabled
-            ></input>
-            <input
-              className="campo_plano rol"
-              type="text"
-              value={colaborador.rol_id}
-              disabled
-            ></input>
-            <input
-              className="campo_plano empresa"
-              type="text"
-              value={colaborador.empresa_id}
-              disabled
-            ></input>
-
-            <input
-              className="campo_plano ciudad"
-              type="text"
-              value={colaborador.ciudad}
-              disabled
-            ></input>
-          </div>
+      <h1>Lista de Colaboradores</h1>
+      <table className="usuarios__container">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Numero Documento</th>
+            <th>Telefono</th>
+            <th>EMail</th>
+            <th>Contrato</th>
+            <th>Direccion</th>
+            <th>Ciudad</th>
+            <th>Rol</th>
+            <th>Empresa</th>
+          </tr>
+        </thead>
+        <tbody>
+        {colaboradores.map((colaborador) => (
+          <TableRow
+            key={colaborador.id}
+            colaborador={colaborador}
+            editable={editableFields[colaborador.id]}
+            onEdit={toggleEditField}
+            // onSave={guardarCambios} // Implementa la función guardarCambios
+            onCancel={cancelarEdicion} // Implementa la función cancelarEdicion
+            onChange={handleFieldChange}
+          />
         ))}
+        </tbody>
+      </table>
       </section>
 
       {/* Seccion de Registro de colaboraadores */}

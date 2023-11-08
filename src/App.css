@@ -144,7 +144,7 @@ body {
 
 /* Estilos para notificaciones exitosas */
 .notificaciones {
-  position: absolute;
+  position: fixed;
   right: 1rem;
   bottom: 1rem;
   margin: 0;
