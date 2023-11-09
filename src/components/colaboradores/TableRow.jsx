@@ -33,49 +33,8 @@ const TableRow = ({
     });
 
     // Actualiza el estado de los colaboradores
-    setLocalColaborador(updatedColaboradores);
-  };
-
-  // Función para manejar los cambios de los campos editables
-  const handleFieldChange = (colaboradorId, field, value) => {
-    // Crea una copia de los colaboradores
-    const updatedColaboradores = [...colaboradores];
-    // Encuentra el colaborador que deseas editar
-    const colaborador = updatedColaboradores.find(
-      (c) => c.id === colaboradorId
-    );
-    // Actualiza el valor del campo
-    colaborador[field] = value;
-    // Actualiza el estado de los colaboradores
-    setLocalColaborador(updatedColaboradores);
-  };
-
-  // Función para cancelar la edición en una fila de la tabla
-  const cancelarEdicion = (colaboradorId) => {
-    // Obtiene el colaborador original antes de cualquier cambio
-    const colaboradorOriginal = colaborador.find((c) => c.id === colaboradorId);
-
-    // Crea una copia de los colaboradores
-    const updatedColaboradores = [...colaborador];
-
-    // Encuentra el colaborador que deseas editar
-    const colaborador = updatedColaboradores.find(
-      (c) => c.id === colaboradorId
-    );
-
-    // Restaura los valores originales del colaborador
-    colaborador.nombres = colaboradorOriginal.nombres;
-    colaborador.apellidos = colaboradorOriginal.apellidos;
-    colaborador.telefono = colaboradorOriginal.telefono;
-
-    // Actualiza el estado de los colaboradores
     setColaboradores(updatedColaboradores);
-
-    // Luego, cambia el estado para indicar que la fila ya no está en modo de edición.
-    toggleEditField(colaboradorId);
   };
-
-  // Función para cambiar el estado de editable de un campo
 
   const toggleEditField = (colaboradorId) => {
     setEditableFields((prevEditableFields) => ({
@@ -83,6 +42,32 @@ const TableRow = ({
       [colaboradorId]: !prevEditableFields[colaboradorId],
     }));
   };
+
+  const handleFieldChange = (field, value) => {
+    // Actualiza el estado local del colaborador en modo edición
+    setLocalColaborador((prevLocalColaborador) => ({
+      ...prevLocalColaborador,
+      [field]: value,
+    }));
+  };
+
+  
+
+  const cancelarEdicion = (colaboradorId) => {
+    // Recupera los datos originales del colaborador
+    const colaboradorOriginal = colaboradores.find(
+      (c) => c.num_documento === colaboradorId
+    );
+
+    if (colaboradorOriginal) {
+      // Revierte los cambios en el estado local del colaborador
+      setLocalColaborador(colaboradorOriginal);
+
+      // Cambia el estado para indicar que la fila ya no está en modo de edición
+      toggleEditField(colaboradorId);
+    }
+  };
+  
 
   return (
     <tr key={colaborador.num_documento}>
@@ -92,11 +77,12 @@ const TableRow = ({
             type="text"
             className="name"
             name="nombres"
+            id="nombres"
             value={localColaborador.nombres}
-            onChange={(e) => handleChange("nombres", e.target.value)}
+            onChange={(e) => handleFieldChange("nombres", e.target.value)}
           />
         ) : (
-          localColaborador.nombres
+          colaborador.nombres
         )}
       </td>
       <td>
@@ -105,11 +91,10 @@ const TableRow = ({
             type="text"
             className="apellidos"
             value={localColaborador.apellidos}
-            onChange={(e) => handleChange("apellidos", e.target.value)}
-            disabled={!editableFields}
+            onChange={(e) => handleChange(colaborador.num_documento, "apellidos", e.target.value)}
           />
         ) : (
-          localColaborador.apellidos
+          colaborador.apellidos
         )}
       </td>
       <td>
@@ -118,12 +103,12 @@ const TableRow = ({
             type="text"
             className="cedula"
             name="num_documento"
-            value={localColaborador.num_documento}
-            onChange={(e) => handleChange("num_documento", e.target.value)}
+            value={colaborador.num_documento}
+            onChange={(e) => handleChange(colaborador.num_documento, "num_documento", e.target.value)}
             disabled={editableFields}
           />
         ) : (
-          localColaborador.num_documento
+          colaborador.num_documento
         )}
       </td>
       <td>
@@ -132,12 +117,11 @@ const TableRow = ({
             type="text"
             className="tele"
             name="telefono"
-            value={localColaborador.telefono}
-            onChange={(e) => handleChange("telefono", e.target.value)}
-            disabled={!editableFields}
+            value={colaborador.telefono}
+            onChange={(e) => handleChange(colaborador.num_documento, "telefono", e.target.value)}
           />
         ) : (
-          localColaborador.telefono
+          colaborador.telefono
         )}
       </td>
       <td>
@@ -147,8 +131,7 @@ const TableRow = ({
             className="correo"
             name="email"
             value={localColaborador.email}
-            onChange={(e) => handleChange("email", e.target.value)}
-            disabled={!editableFields}
+            onChange={(e) => handleChange(colaborador.num_documento, "email", e.target.value)}
           />
         ) : (
           localColaborador.email
@@ -160,12 +143,11 @@ const TableRow = ({
             type="text"
             className="cont"
             name="contrato_id"
-            value={localColaborador.contrato_id}
-            onChange={(e) => handleChange("contrato_id", e.target.value)}
-            disabled={!editableFields}
+            value={colaborador.contrato_id}
+            onChange={(e) => handleChange(colaborador.num_documento, "contrato_id", e.target.value)}
           />
         ) : (
-          localColaborador.contrato_id
+          colaborador.contrato_id
         )}
       </td>
       <td>
@@ -174,12 +156,11 @@ const TableRow = ({
             type="text"
             className="dire"
             name="direccion"
-            value={localColaborador.direccion}
-            onChange={(e) => handleChange("direccion", e.target.value)}
-            disabled={!editableFields}
+            value={colaborador.direccion}
+            onChange={(e) => handleChange(colaborador.num_documento, "direccion", e.target.value)}
           />
         ) : (
-          localColaborador.direccion
+          colaborador.direccion
         )}
       </td>
       <td>
@@ -188,12 +169,11 @@ const TableRow = ({
             type="text"
             className="ciudad"
             name="ciudad"
-            value={localColaborador.ciudad}
-            onChange={(e) => handleChange("ciudad", e.target.value)}
-            disabled={!editableFields}
+            value={colaborador.ciudad}
+            onChange={(e) => handleChange(colaborador.num_documento, "ciudad", e.target.value)}
           />
         ) : (
-          localColaborador.ciudad
+          colaborador.ciudad
         )}
       </td>
       <td>
@@ -202,12 +182,11 @@ const TableRow = ({
             type="text"
             className="rol"
             name="rol_id"
-            value={localColaborador.rol_id}
-            onChange={(e) => handleChange("rol_id", e.target.value)}
-            disabled={!editableFields}
+            value={colaborador.rol_id}
+            onChange={(e) => handleChange(colaborador.num_documento, "rol_id", e.target.value)}
           />
         ) : (
-          localColaborador.rol_id
+          colaborador.rol_id
         )}
       </td>
       <td>
@@ -216,18 +195,18 @@ const TableRow = ({
             type="text"
             className="empresa"
             name="empresa_id"
-            value={localColaborador.empresa_id}
-            onChange={(e) => handleChange("empresa_id", e.target.value)}
-            disabled={!editableFields}
+            value={colaborador.empresa_id}
+            onChange={(e) => handleChange(colaborador.num_documento, "empresa_id", e.target.value)}
           />
         ) : (
-          localColaborador.empresa_id
+          colaborador.empresa_id
         )}
       </td>
       <td className="buttoms-sc">
         {editableFields[colaborador.num_documento] ? (
           <>
             <button
+              type="button"
               className="buttom"
               onClick={() => handleSave(colaborador.num_documento)}
             >
@@ -235,7 +214,7 @@ const TableRow = ({
             </button>
             <button
               className="buttom"
-              onClick={() => cancelarEdicion(colaborador.num_documento)}
+              onClick={() => toggleEditField(colaborador.num_documento)}
             >
               Cancelar
             </button>
