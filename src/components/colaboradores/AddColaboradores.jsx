@@ -43,11 +43,10 @@ const Contenido = () => {
       });
   }, []);
 
-  // Llamado a lista de los colaboradores
   // Estado para almacenar los colaboradores
   const [colaboradores, setColaboradores] = useState([]);
 
-  // Función para obtener los datos de los colaboradores desde la API
+  // Llamado a lista de los colaboradores
   const getColaboradores = async () => {
     try {
       const response = await axios.get("http://127.0.0.1:8000/colaboradores/");
@@ -79,11 +78,11 @@ const Contenido = () => {
 
   // Notificacion de Registo *Se debe Mejorar*
   const [mensajeVisible, setMensajeVisible] = useState(false); // Mueve la declaración aquí
-  const mostrarMensaje = () => {
+  const mostrarMensaje = (mensaje) => {
     setMensajeVisible(true);
     setTimeout(() => {
       setMensajeVisible(false);
-    }, 5000);
+    }, 500000);
   };
 
   // Llama a la función para obtener los datos de los colaboradores cuando el componente se monta
@@ -105,33 +104,6 @@ const Contenido = () => {
     return fullName.toLowerCase().includes(searchValue.toLowerCase());
   });
 
-  // const handleSave = async () => {
-  //   try {
-  //     // Crea un objeto con los datos para enviar al servidor
-  //     const dataToUpdate = {
-  //       nombres: localColaborador.nombres || colaborador.nombres,
-  //       apellidos: localColaborador.apellidos || colaborador.apellidos,
-  //       num_documento:
-  //         localColaborador.num_documento || colaborador.num_documento,
-  //       email: localColaborador.email || colaborador.email,
-  //     };
-
-  //     // Solicitud PUT al servidor para actualizar colaborador
-  //     const response = await axios.put(
-  //       `http://127.0.0.1:8000/colaboradoresput/${colaborador.id}/`,
-  //       dataToUpdate
-  //     );
-  //     if (response.status === 200) {
-  //       // Limpia el objeto localChanges si es necesario, hacer no editable y notificacion
-  //       // setLocalChanges({});
-
-  //       onSaveSuccess(colaborador.id); // Llama a una función que indique que la edición ha finalizado
-  //     }
-  //   } catch (error) {
-  //     console.error("Error al actualizar los datos del colaborador:", error);
-  //   }
-  // };
-
   // Falta tener IDs unicos
   return (
     <div className="Efect">
@@ -139,7 +111,6 @@ const Contenido = () => {
       <h3 className="subtitulo_logi">Gestion Humana</h3>
 
       <section className="usuarios__container">
-        <h1>Lista de Colaboradores</h1>
         <div className="input-container search">
           <input
             type="text"
@@ -158,9 +129,9 @@ const Contenido = () => {
           <table className="usuarios__containerr">
             <thead>
               <tr className="title">
+                <th>Numero Documento</th>
                 <th>Nombre</th>
                 <th>Apellido</th>
-                <th>Numero Documento</th>
                 <th>Telefono</th>
                 <th>EMail</th>
                 <th>Contrato</th>
@@ -178,6 +149,9 @@ const Contenido = () => {
                   colaboradores={filteredColaboradores}
                   setColaboradores={setColaboradores}
                   getColaboradores={getColaboradores}
+                  mostrarMensaje={mostrarMensaje}
+                  empresas={empresas}
+                  roles={roles}
                 />
               ))}
             </tbody>
@@ -358,6 +332,7 @@ const Contenido = () => {
         {mensajeVisible && (
           <div id="notificaciones" className="notificaciones">
             <div className="registro_ok">
+              <img className="imgnoti" src="/src/img/ok.png" alt="" />
               <h2>Colaborador Registrado Exitosamente</h2>
             </div>
           </div>

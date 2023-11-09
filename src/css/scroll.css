@@ -61,10 +61,44 @@ no pase de determinado lugar */
     margin-top: 20px;
     margin-bottom: 40px;
 }
+
+
+/* Scroll Chrome */
+
+/* Este es la barra de fondo del scrollbar */
+.container__usuarios::-webkit-scrollbar {
+    height: 10px;
+    width: 10px;
+    background: transparent;
+}
+
+/* Aca damos el diseno default para el scroll */
+.container__usuarios::-webkit-scrollbar-thumb {
+    border: 3px solid transparent;
+    box-shadow: none;
+    border-radius: 40px;
+}
+
+/* Esto define como se ve el scroll cuando estamos dentro de container */
+.container__usuarios:hover::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 0 10px #1CC88A;
+}
+
+/* Esto define como se ve el scroll cuando posamos el mause sobre el */
+.container__usuarios:hover::-webkit-scrollbar-thumb:hover {
+    border: 2px solid transparent;
+    box-shadow: inset 0 0 0 10px #1CC88A;
+}
+
+.container__usuarios::-webkit-scrollbar-track {
+    margin-left: 0rem;
+    margin-right: 0rem;
+}
     
 /* Scroll Moz*/
 .container,
-.menu-container {
+.menu-container,
+.container__usuarios{
     scrollbar-width: thin;
     scrollbar-color: var(--color-scrollbar) transparent;
 }
