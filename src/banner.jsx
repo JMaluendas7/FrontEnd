@@ -2,7 +2,7 @@ import React from "react";
 import "./css/banner.css";
 import "./css/menu.css";
 
-const Banner = ({ toggleMenu, setContainerComponent }) => {
+const Banner = ({ toggleMenu, setContainerComponent, username }) => {
   const toggleSubMenu = (component) => {
     if (component) {
       setContainerComponent(component);
@@ -26,7 +26,7 @@ const Banner = ({ toggleMenu, setContainerComponent }) => {
         <section className="logout">
           <figure className="logout-figure">
             <div className="logout-div">
-              <h3 className="logout-user">User Name</h3>
+              <h3 className="logout-user">{username}</h3>
               <div className="logout-Button"></div>
             </div>
             <section className="container-logout">
