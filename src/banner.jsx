@@ -1,12 +1,35 @@
 import React from "react";
+import Cookies from "js-cookie";
 import "./css/banner.css";
 import "./css/menu.css";
+import { useNavigate } from "react-router-dom";
 
-const Banner = ({ toggleMenu, setContainerComponent, username }) => {
+const Banner = ({
+  toggleMenu,
+  setContainerComponent,
+  username,
+  nombre,
+  apellido,
+}) => {
+  const navigate = useNavigate();
+
   const toggleSubMenu = (component) => {
     if (component) {
       setContainerComponent(component);
     }
+  };
+
+  const handleLogout = () => {
+    // Borra la cookie que contiene el token JWT
+    Cookies.remove("authToken");
+
+    // Limpia las variables de estado relacionadas con la autenticación
+    setContainerComponent(false); // O establece el componente por defecto
+    // Puedes añadir más acciones según sea necesario
+
+    // Redirige al usuario a la página de inicio de sesión
+    navigate("");
+    window.location.reload();
   };
 
   return (
@@ -26,7 +49,7 @@ const Banner = ({ toggleMenu, setContainerComponent, username }) => {
         <section className="logout">
           <figure className="logout-figure">
             <div className="logout-div">
-              <h3 className="logout-user">{username}</h3>
+              <h3 className="logout-user">{nombre + " " + apellido}</h3>
               <div className="logout-Button"></div>
             </div>
             <section className="container-logout">
@@ -44,7 +67,7 @@ const Banner = ({ toggleMenu, setContainerComponent, username }) => {
                 </li>
                 <div className="line"></div>
                 <li className="item">
-                  <a className="item-url" href="#">
+                  <a className="item-url" href="" onClick={handleLogout}>
                     Cerrar Sesion
                   </a>
                 </li>

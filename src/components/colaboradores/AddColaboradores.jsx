@@ -4,7 +4,7 @@ import TableRow from "./TableRow";
 import "/src/css/colaboradores/AddColaboradores.css";
 
 const Contenido = () => {
-  // Llamado a los tipos de documentos de identificacion
+  // Trae los tipos de documentos de identificacion
   const [dni, setDni] = useState([]);
   useEffect(() => {
     axios

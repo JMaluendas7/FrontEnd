@@ -65,7 +65,7 @@
   top: 0;
   flex-direction: row;
   flex-wrap: wrap;
-  width: 12rem;
+  width: 14rem;
   margin: -0.5rem 0;
   padding: 0;
 }
@@ -117,23 +117,21 @@
 }
 .container-logout {
   position: relative;
-  opacity: 1;
   height: auto;
   width: 10rem;
-  width: 10rem;
   opacity: 0;
-  top: 2.8rem;
-  left: 0.3rem;
+  top: 2.6rem;
+  left: 1.5rem;
   color: transparent;
   background-color: lightgray;
   border-radius: 2rem 0 1rem 1rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transition: all 300ms ease-in-out, transform 1s ease-in-out;
+  transition: all 300ms ease-in-out, transform 700ms ease-in-out;
 }
 .logout-figure:hover .container-logout {
   opacity: 1;
   height: auto;
-  transform: translateY(-1.5rem);
+  transform: translateY(-1.3rem);
 }
 
 .line {
