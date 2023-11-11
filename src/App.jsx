@@ -9,7 +9,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 
 function App() {
   const [menuData, setMenuData] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Estado de autenticación
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado de autenticación
 
   // Trae los elementos para el menu solo si el usuario está autenticado
   useEffect(() => {
@@ -34,7 +34,7 @@ function App() {
     return config;
   });
 
-  const apiUrl = "http://127.0.0.1:8000/menu/1";
+  const apiUrl = "http://127.0.0.1:8000/menu/2/";
 
   // Trae los elementos para el menu
   useEffect(() => {
