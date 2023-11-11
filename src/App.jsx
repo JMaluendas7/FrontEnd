@@ -34,7 +34,7 @@ function App() {
     return config;
   });
 
-  const apiUrl = "http://127.0.0.1:8000/menu/2/";
+  const apiUrl = "http://127.0.0.1:8000/menu/1/";
 
   // Trae los elementos para el menu
   useEffect(() => {
