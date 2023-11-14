@@ -57,7 +57,7 @@ const TableRow = ({
       );
       if (response.status === 200) {
         // Limpia el objeto localChanges si es necesario, hacer no editable y notificacion
-        mostrarMensaje("Edicion de colaborador Exitosa");
+        mostrarMensaje("Edicion de colaborador Exitosa", "", "");
         toggleEditField(colaborador.num_documento); // Pasa a no editable
 
         console.log("Usuario editado exitosamente");

@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import TableRow from "./TableRow";
 import "/src/css/colaboradores/AddColaboradores.css";
 
 const Contenido = () => {
-  // Llamado a los tipos de documentos de identificacion
+  // Trae los tipos de documentos de identificacion
   const [dni, setDni] = useState([]);
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/docsti/")
-      .then((response) => response.json())
-      .then((dni) => {
-        setDni(dni);
+    axios
+      .get("http://127.0.0.1:8000/api/docsti/")
+      .then((response) => {
+        setDni(response.data);
       })
       .catch((error) => {
         console.error("Error al llamar a la API: ", error);
@@ -18,10 +20,10 @@ const Contenido = () => {
   // Llamado a las empresas
   const [empresas, setEmpresas] = useState([]);
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/bussines/")
-      .then((response) => response.json())
-      .then((empresas) => {
-        setEmpresas(empresas);
+    axios
+      .get("http://127.0.0.1:8000/api/bussines/")
+      .then((response) => {
+        setEmpresas(response.data);
       })
       .catch((error) => {
         console.error("Error al llamar a la API: ", error);
@@ -31,44 +33,150 @@ const Contenido = () => {
   // Llamado a los diferentes roles de la empresa
   const [roles, setRoles] = useState([]);
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/rol/")
-      .then((response) => response.json())
-      .then((roles) => {
-        setRoles(roles);
+    axios
+      .get("http://127.0.0.1:8000/api/rol/")
+      .then((response) => {
+        setRoles(response.data);
       })
       .catch((error) => {
         console.error("Error al llamar a la API: ", error);
       });
   }, []);
 
+  // Estado para almacenar los colaboradores
+  const [colaboradores, setColaboradores] = useState([]);
+
+  // Llamado a lista de los colaboradores
+  const getColaboradores = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/colaboradores/");
+      const data = response.data;
+      setColaboradores(data);
+    } catch (error) {
+      console.error("Error al llamar a la API: ", error);
+    }
+  };
+
+  // Funcion para envio de datos y registro de Colaboradores
   const enviarSubmit = (event) => {
     event.preventDefault();
-
     const formData = new FormData(event.target);
-
-    fetch("http://127.0.0.1:8000/addColaboradores/", {
-      method: "POST",
-      body: formData,
-    })
+    axios
+      .post("http://127.0.0.1:8000/addColaboradores/", formData)
       .then((response) => {
         if (response.status === 200) {
-          // Solicitud exitosa RTA 200
-          console.log("Colaborador registrado con éxito.");
+          mostrarMensaje("Colaborador Registrado Exitosamente", "green", "/src/img/ok.png");
+          getColaboradores();
         } else {
-          // Fallo de solicitud
           console.error("Error al registrar el colaborador.");
+          mostrarMensaje("Colaborador No Registrado", "red", "/src/img/error.png");
         }
       })
       .catch((error) => {
         console.error("Error al enviar la solicitud: ", error);
+        mostrarMensaje("Colaborador No Registrado", "red", "/src/img/error.png");
       });
   };
+
+  // Notificacion de Registo *Se debe Mejorar*
+  const [mensaje, setMensaje] = useState({
+    visible: false,
+    mensaje: '',
+    color: '',
+    imagen: ''
+  });
+  const mostrarMensaje = (mensaje, color, imagen) => {
+    setMensaje({
+      visible: true,
+      mensaje,
+      color,
+      imagen
+    });
+    setTimeout(() => {
+      setMensaje({
+        visible: false,
+        mensaje: '',
+        imagen: ''
+      });
+    }, 6000);
+  };
+
+  // Llama a la función para obtener los datos de los colaboradores cuando el componente se monta
+  useEffect(() => {
+    getColaboradores();
+  }, []);
+
+  // useState para contener el valor de busqueda
+  const [searchValue, setSearchValue] = useState("");
+
+  // Funcion para actualizar el useState de busqueda
+  const handleSearchChange = (event) => {
+    setSearchValue(event.target.value);
+  };
+
+  // Funcion para filtrado de datos
+  const filteredColaboradores = colaboradores.filter((colaborador) => {
+    const fullName = `${colaborador.num_documento} ${colaborador.nombres} ${colaborador.apellidos}`;
+    return fullName.toLowerCase().includes(searchValue.toLowerCase());
+  });
 
   // Falta tener IDs unicos
   return (
     <div className="Efect">
-      <h1 className="titulo_login">Registro de Colaboradores</h1>
+      <h1 className="titulo_login">Administracion de Colaboradores</h1>
       <h3 className="subtitulo_logi">Gestion Humana</h3>
+
+      <section className="usuarios__container">
+        <div className="input-container search">
+          <input
+            type="text"
+            name="search"
+            id="search"
+            className="input-field"
+            placeholder=""
+            value={searchValue}
+            onChange={handleSearchChange}
+          />
+          <label className="input-label" htmlFor="search">
+            Buscar por cedula o nombre
+          </label>
+        </div>
+        <section className="container__usuarios">
+          <table className="usuarios__containerr">
+            <thead>
+              <tr className="title">
+                <th>Numero Documento</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Telefono</th>
+                <th>EMail</th>
+                <th>Contrato</th>
+                <th>Direccion</th>
+                <th>Ciudad</th>
+                <th>Rol</th>
+                <th>Empresa</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredColaboradores.map((colaborador) => (
+                <TableRow
+                  key={colaborador.num_documento} // Establece 'key' directamente aquí
+                  colaborador={colaborador}
+                  colaboradores={filteredColaboradores}
+                  setColaboradores={setColaboradores}
+                  getColaboradores={getColaboradores}
+                  mostrarMensaje={mostrarMensaje}
+                  empresas={empresas}
+                  roles={roles}
+                />
+              ))}
+            </tbody>
+          </table>
+        </section>
+      </section>
+
+      {/* Seccion de Registro de colaboraadores */}
+      <h1>Agregar Colaborador</h1>
       <form method="post" onSubmit={enviarSubmit}>
         <div className="form">
           <div className="a">
@@ -236,6 +344,16 @@ const Contenido = () => {
           Registrar Usuario
         </button>
       </form>
+      <div>
+        {mensaje.visible && (
+          <div id="notificaciones" className="notificaciones">
+            <div className={`registro_ok ${mensaje.color}`}>
+              <img className="imgnoti" src={mensaje.imagen} alt="" />
+              <h2>{mensaje.mensaje}</h2>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

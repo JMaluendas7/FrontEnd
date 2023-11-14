@@ -177,3 +177,7 @@ body {
   height: auto;
   width: auto;
 }
+
+.red {
+  background-color: red;
+}

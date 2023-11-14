@@ -15,6 +15,7 @@ function App() {
   useEffect(() => {
     const token = Cookies.get("authToken"); // O localStorage.getItem("authToken");
     if (token) {
+      console.log("Rol_id:", rol_id);
       console.log("Username:", username);
       console.log("Nombre:", nombre);
       console.log("Apellido:", apellido);
@@ -25,6 +26,7 @@ function App() {
   const username = localStorage.getItem("username");
   const nombre = localStorage.getItem("nombre");
   const apellido = localStorage.getItem("apellido");
+  const rol_id = localStorage.getItem("rol_id");
 
   axios.interceptors.request.use((config) => {
     const token = Cookies.get("authToken"); // O localStorage.getItem("authToken");
@@ -34,7 +36,7 @@ function App() {
     return config;
   });
 
-  const apiUrl = "http://127.0.0.1:8000/menu/1/";
+  const apiUrl = `http://127.0.0.1:8000/menu/${rol_id}/`;
 
   // Trae los elementos para el menu
   useEffect(() => {
