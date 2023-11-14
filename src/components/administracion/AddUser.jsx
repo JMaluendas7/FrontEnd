@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import "/src/css/users/AddUser.css";
+import TableUsers from "./TableUsers";
 
 const Contenido = () => {
   // Llamado a lista de los colaboradores
@@ -15,6 +16,33 @@ const Contenido = () => {
         console.error("Error al llamar a la API: ", error);
       });
   }, []);
+
+  // Llamado a lista de los usuarios
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/login/")
+      .then((response) => response.json())
+      .then((users) => {
+        setUsers(users);
+      })
+      .catch((error) => {
+        console.error("Error al llamar a la API: ", error);
+      });
+  }, []);
+
+  // useState para contener el valor de busqueda
+  const [searchValue, setSearchValue] = useState("");
+
+  // Funcion para actualizar el useState de busqueda
+  const handleSearchChange = (event) => {
+    setSearchValue(event.target.value);
+  };
+
+  // Funcion para filtrado de datos
+  const filteredUsers = users.filter((user) => {
+    const fullName = `${user.documento_num} ${user.first_name} ${user.last_name}`;
+    return fullName.toLowerCase().includes(searchValue.toLowerCase());
+  });
 
   // Creacion de Array de los Colaboradores para menu desplegable
   const arrColaboradores = colaboradores.map((item) => ({
@@ -57,11 +85,11 @@ const Contenido = () => {
 
   const mostrarMensaje = () => {
     setMensajeVisible(true);
-
     setTimeout(() => {
       setMensajeVisible(false);
     }, 300000);
   };
+
   return (
     <div className="Efect">
       <h1 className="titulo_login">Registro de Usuarios</h1>
@@ -116,6 +144,47 @@ const Contenido = () => {
           Registrar Usuario
         </button>
       </form>
+
+      <div className="input-container search">
+        <input
+          type="text"
+          name="search"
+          id="search"
+          className="input-field"
+          placeholder=""
+          value={searchValue}
+          onChange={handleSearchChange}
+        />
+        <label className="input-label" htmlFor="search">
+          Buscar por cedula o nombre
+        </label>
+      </div>
+
+      <section className="container__usuarios">
+        <table className="usuarios__containerr">
+          <thead>
+            <tr className="title">
+              <th>Numero Documento</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>UserName</th>
+              <th>Activo</th>
+              <th>Ultima Sesion</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredUsers.map((user) => (
+              <TableUsers
+                key={filteredUsers.num_documento} // Establece 'key' directamente aquí
+                user={user}
+                users={filteredUsers}
+                setUsers={setUsers}
+                mostrarMensaje={mostrarMensaje}
+              />
+            ))}
+          </tbody>
+        </table>
+      </section>
       <div>
         {mensajeVisible && (
           <div id="notificaciones" className="notificaciones">

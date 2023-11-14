@@ -21,6 +21,7 @@ function App() {
       console.log("Apellido:", apellido);
       setIsAuthenticated(true);
     }
+    getMenu();
   }, []);
 
   const username = localStorage.getItem("username");
@@ -36,11 +37,9 @@ function App() {
     return config;
   });
 
-  const apiUrl = `http://127.0.0.1:8000/menu/${rol_id}/`;
-
   // Trae los elementos para el menu
-  useEffect(() => {
-    fetch(apiUrl)
+  const getMenu = () => {
+    fetch(`http://127.0.0.1:8000/menu/${rol_id}/`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("No hubo respuesta");
@@ -53,7 +52,7 @@ function App() {
       .catch((error) => {
         console.error("Error al obtener respuesta", error);
       });
-  }, []);
+  };
 
   const [containerComponent, setContainerComponent] = useState("Home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);

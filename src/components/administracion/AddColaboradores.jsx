@@ -65,38 +65,50 @@ const Contenido = () => {
       .post("http://127.0.0.1:8000/addColaboradores/", formData)
       .then((response) => {
         if (response.status === 200) {
-          mostrarMensaje("Colaborador Registrado Exitosamente", "green", "/src/img/ok.png");
+          mostrarMensaje(
+            "Colaborador Registrado Exitosamente",
+            "green",
+            "/src/img/ok.png"
+          );
           getColaboradores();
         } else {
           console.error("Error al registrar el colaborador.");
-          mostrarMensaje("Colaborador No Registrado", "red", "/src/img/error.png");
+          mostrarMensaje(
+            "Colaborador No Registrado",
+            "red",
+            "/src/img/error.png"
+          );
         }
       })
       .catch((error) => {
         console.error("Error al enviar la solicitud: ", error);
-        mostrarMensaje("Colaborador No Registrado", "red", "/src/img/error.png");
+        mostrarMensaje(
+          "Colaborador No Registrado",
+          "red",
+          "/src/img/error.png"
+        );
       });
   };
 
   // Notificacion de Registo *Se debe Mejorar*
   const [mensaje, setMensaje] = useState({
     visible: false,
-    mensaje: '',
-    color: '',
-    imagen: ''
+    mensaje: "",
+    color: "",
+    imagen: "",
   });
   const mostrarMensaje = (mensaje, color, imagen) => {
     setMensaje({
       visible: true,
       mensaje,
       color,
-      imagen
+      imagen,
     });
     setTimeout(() => {
       setMensaje({
         visible: false,
-        mensaje: '',
-        imagen: ''
+        mensaje: "",
+        imagen: "",
       });
     }, 6000);
   };

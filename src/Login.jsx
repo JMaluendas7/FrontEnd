@@ -13,7 +13,6 @@ function LoginForm({ setIsAuthenticated }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       if (formType === "login") {
         // Lógica para el inicio de sesión
@@ -38,7 +37,6 @@ function LoginForm({ setIsAuthenticated }) {
       } else if (formType === "forgotPassword") {
         // Lógica para recuperación de contraseña
         // ...
-
       } else if (formType === "resetPassword") {
         // Lógica para cambio de contraseña
         // ...
@@ -51,20 +49,32 @@ function LoginForm({ setIsAuthenticated }) {
   // Funcion para reset de pass
   const recPass = async (e) => {
     e.preventDefault();
-  
+
     try {
-      const response = await axios.post("http://127.0.0.1:8000/reset_password/", {
-        email,
-        dni,
-      });
-  
+      const response = await fetch(
+        "http://localhost:8000/api/reset_password/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      const data = await response.json();
+      console.log(data.message);
+
       if (response.status === 200) {
-        // Lógica para manejar la respuesta exitosa, por ejemplo, mostrar un mensaje al usuario
+        // Manejar respuesta exitosa, debo poner la notificacion
+        console.log("RTA exitosa");
       } else {
-        // Lógica para manejar otros escenarios (por ejemplo, correo electrónico no encontrado)
+        // En notificacion datos no coinciden o algo asi
+        console.log("RTA no exitosa");
       }
     } catch (error) {
-      // Manejar errores de conexión o del servidor
+      // Errores del servidor
+      console.log("RTA no exitosa server");
     }
   };
 
@@ -73,11 +83,14 @@ function LoginForm({ setIsAuthenticated }) {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/reset_password/confirm/", {
-        uidb64,  // Obtén el uidb64 del parámetro de la URL o de alguna manera
-        token,   // Obtén el token del parámetro de la URL o de alguna manera
-        new_password,
-      });
+      const response = await axios.post(
+        "http://127.0.0.1:8000/reset_password/confirm/",
+        {
+          uidb64, // Obtén el uidb64 del parámetro de la URL o de alguna manera
+          token, // Obtén el token del parámetro de la URL o de alguna manera
+          new_password,
+        }
+      );
 
       if (response.status === 200) {
         // Lógica para manejar la respuesta exitosa, por ejemplo, redirigir al usuario a la página de inicio de sesión
@@ -88,7 +101,6 @@ function LoginForm({ setIsAuthenticated }) {
       // Manejar errores de conexión o del servidor
     }
   };
-
 
   const renderForm = () => {
     if (formType === "login") {
@@ -103,7 +115,7 @@ function LoginForm({ setIsAuthenticated }) {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                />
+              />
               <label className="input-label2" htmlFor="inputField2">
                 Nombre de Usuario
               </label>
@@ -115,7 +127,7 @@ function LoginForm({ setIsAuthenticated }) {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                />
+              />
               <label className="input-label2" htmlFor="inputField2">
                 Contraseña
               </label>
@@ -124,10 +136,13 @@ function LoginForm({ setIsAuthenticated }) {
               <p className="text_button">Iniciar sesión</p>
               <figure className="icon_bus"></figure>
             </button>
-            <button className="olvide__pass" onClick={() => handleFormChange("forgotPassword")}>
-                Olvidé mi contraseña
-              </button>
           </form>
+          <button
+            className="olvide__pass"
+            onClick={() => handleFormChange("forgotPassword")}
+          >
+            Olvidé mi contraseña
+          </button>
         </>
       );
     } else if (formType === "forgotPassword") {
@@ -135,15 +150,20 @@ function LoginForm({ setIsAuthenticated }) {
         <>
           <form onSubmit={recPass}>
             <h1 className="title__form">Recuperacion de contraseña</h1>
-            <p className="desc__form">Diligencie los campos para la validacion y restablecimiento de la contraseña</p>
+            <p className="desc__form">
+              Diligencie los campos para la validacion y restablecimiento de la
+              contraseña
+            </p>
             <div className="input-container login">
               <input
                 className="input-field2 campos_reg"
                 placeholder=""
                 type="email"
                 value={email}
+                id="email"
+                name="email"
                 onChange={(e) => setEmail(e.target.value)}
-                />
+              />
               <label className="input-label2" htmlFor="inputField2">
                 Correo Electronico
               </label>
@@ -154,8 +174,10 @@ function LoginForm({ setIsAuthenticated }) {
                 placeholder=""
                 type="number"
                 value={dni}
+                id="dni"
+                name="dni"
                 onChange={(e) => setDni(e.target.value)}
-                />
+              />
               <label className="input-label2" htmlFor="inputField2">
                 Documento de identificacion
               </label>
@@ -165,6 +187,12 @@ function LoginForm({ setIsAuthenticated }) {
               <figure className="icon_bus"></figure>
             </button>
           </form>
+          <button
+            className="olvide__pass"
+            onClick={() => handleFormChange("login")}
+          >
+            Tengo mi contraseña
+          </button>
         </>
       );
     } else if (formType === "resetPassword") {
@@ -176,6 +204,7 @@ function LoginForm({ setIsAuthenticated }) {
     }
   };
 
+  // Funcion para el cambio de manejo de formulario
   const handleFormChange = (newFormType) => {
     setAnimationClass("slide-out");
     setTimeout(() => {
@@ -183,7 +212,6 @@ function LoginForm({ setIsAuthenticated }) {
       setAnimationClass("slide-in");
     }, 500); // Ajusta este valor para que coincida con la duración de tu animación
   };
-
 
   return (
     <>
