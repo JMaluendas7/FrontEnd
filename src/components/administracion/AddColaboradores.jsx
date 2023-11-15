@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TableRow from "./TableRow";
-import "/src/css/colaboradores/AddColaboradores.css";
+import "/src/css/administracion/AddColaboradores.css";
 
 const Contenido = () => {
   // Trae los tipos de documentos de identificacion
@@ -136,7 +136,6 @@ const Contenido = () => {
     <div className="Efect">
       <h1 className="titulo_login">Administracion de Colaboradores</h1>
       <h3 className="subtitulo_logi">Gestion Humana</h3>
-
       <section className="usuarios__container">
         <div className="input-container search">
           <input
@@ -152,20 +151,21 @@ const Contenido = () => {
             Buscar por cedula o nombre
           </label>
         </div>
-        <section className="container__usuarios">
-          <table className="usuarios__containerr">
+        <section className="container__table">
+          <table className="filas__container">
             <thead>
-              <tr className="title">
-                <th>Numero Documento</th>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Telefono</th>
-                <th>EMail</th>
-                <th>Contrato</th>
-                <th>Direccion</th>
-                <th>Ciudad</th>
-                <th>Rol</th>
-                <th>Empresa</th>
+              <tr className="title__campos">
+                <th className="colum">Numero Documento</th>
+                <th className="colum">Nombre</th>
+                <th className="colum">Apellido</th>
+                <th className="colum">Telefono</th>
+                <th className="colum">EMail</th>
+                <th className="colum">Contrato</th>
+                <th className="colum">Direccion</th>
+                <th className="colum">Ciudad</th>
+                <th className="colum">Rol</th>
+                <th className="colum">Empresa</th>
+                <th className="fijo">Emp</th>
               </tr>
             </thead>
             <tbody>
@@ -187,8 +187,12 @@ const Contenido = () => {
       </section>
 
       {/* Seccion de Registro de colaboraadores */}
-      <h1>Agregar Colaborador</h1>
+      <button className="agregar">
+        <img className="img__options" src="/src/img/add_user.png"></img>
+        <p>Agregar colaborador</p>
+      </button>
       <form method="post" onSubmit={enviarSubmit}>
+        <h1>Agregar Colaborador</h1>
         <div className="form">
           <div className="a">
             <div className="input-container">
@@ -223,7 +227,7 @@ const Contenido = () => {
           </div>
 
           <div className="b">
-            <div className="input-container nom">
+            <div className="input-container agg_colaborador">
               <input
                 id="nombre"
                 name="nombre"
@@ -235,7 +239,7 @@ const Contenido = () => {
                 Nombres
               </label>
             </div>
-            <div className="input-container nom">
+            <div className="input-container agg_colaborador">
               <input
                 id="apellido"
                 name="apellido"
@@ -249,7 +253,7 @@ const Contenido = () => {
             </div>
           </div>
           <div className="c">
-            <div className="input-container dir">
+            <div className="input-container agg_colaborador">
               <input
                 id="email"
                 name="email"
@@ -261,7 +265,7 @@ const Contenido = () => {
                 Email
               </label>
             </div>
-            <div className="input-container dir">
+            <div className="input-container agg_colaborador">
               <input
                 id="direccion"
                 name="direccion"
@@ -273,7 +277,7 @@ const Contenido = () => {
                 Direccion
               </label>
             </div>
-            <div className="input-container dir">
+            <div className="input-container agg_colaborador">
               <input
                 id="ciudad"
                 className="input-field"
@@ -287,7 +291,7 @@ const Contenido = () => {
             </div>
           </div>
           <div className="d">
-            <div className="input-container tel">
+            <div className="input-container agg_colaborador">
               <input
                 id="telefono"
                 className="input-field"
@@ -299,7 +303,7 @@ const Contenido = () => {
                 Telefono
               </label>
             </div>
-            <div className="input-container tel">
+            <div className="input-container agg_colaborador">
               <input
                 id="contrato_id"
                 className="input-field"
@@ -312,49 +316,56 @@ const Contenido = () => {
               </label>
             </div>
           </div>
-          <div className="input-container">
-            <select
-              className="opciones"
-              name="empresa_id"
-              defaultValue={"empresa"}
-            >
-              <option value="empresa" disabled>
-                Empresa
-              </option>
-              {empresas.map((empresa, index) => (
-                <option key={index} value={empresa.id_empresa}>
-                  {empresa.nombre_empresa}
+          <div className="e">
+            <div className="input-container agg_colaborador">
+              <select
+                className="opciones"
+                name="empresa_id"
+                defaultValue={"empresa"}
+              >
+                <option value="empresa" disabled>
+                  Empresa
                 </option>
-              ))}
-            </select>
-          </div>
-          <div className="input-container">
-            <select className="opciones" name="cargo_id" defaultValue={"cargo"}>
-              <option value="cargo" disabled>
-                Cargo
-              </option>
-              <option value="opciosdfn2">Auxiliar de Recursos Humanos</option>
-              <option value="opciodn3">Opción 3</option>
-              <option value="opcison4">Opción 4</option>
-            </select>
-          </div>
-          <div className="input-container">
-            <select className="opciones" name="rol_id" defaultValue={"rol"}>
-              <option value="rol" disabled>
-                Rol
-              </option>
-              {roles.map((rol, index) => (
-                <option key={index} value={rol.id_rol}>
-                  {rol.detalle_rol}
+                {empresas.map((empresa, index) => (
+                  <option key={index} value={empresa.id_empresa}>
+                    {empresa.nombre_empresa}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="input-container agg_colaborador">
+              <select
+                className="opciones"
+                name="cargo_id"
+                defaultValue={"cargo"}
+              >
+                <option value="cargo" disabled>
+                  Cargo
                 </option>
-              ))}
-            </select>
+                <option value="opciosdfn2">Auxiliar de Recursos Humanos</option>
+                <option value="opciodn3">Opción 3</option>
+                <option value="opcison4">Opción 4</option>
+              </select>
+            </div>
+            <div className="input-container agg_colaborador">
+              <select className="opciones" name="rol_id" defaultValue={"rol"}>
+                <option value="rol" disabled>
+                  Rol
+                </option>
+                {roles.map((rol, index) => (
+                  <option key={index} value={rol.id_rol}>
+                    {rol.detalle_rol}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
         <button className="submit-button" type="submit">
           Registrar Usuario
         </button>
       </form>
+      <div className="container__botton-fixed"></div>
       <div>
         {mensaje.visible && (
           <div id="notificaciones" className="notificaciones">

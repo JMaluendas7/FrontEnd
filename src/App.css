@@ -106,13 +106,13 @@ body {
 }
 
 .opciones {
-  width: 200px;
-  padding: 8.5px;
+  width: auto;
+  padding: 6px;
   border: 1px solid #1d8034;
   border-radius: 5px;
   background-color: #fff;
   color: #333;
-  font-size: 15px;
+  font-size: 14px;
   outline: none;
 }
 
@@ -180,4 +180,111 @@ body {
 
 .red {
   background-color: red;
+}
+
+
+
+/* Estilos para las tablas */
+.select__tb {
+  outline: none;
+  border: none;
+  font-size: .7rem;
+}
+
+td input {
+  font-size: .6rem;
+  border: none;
+  outline: none;
+  padding: 0;
+}
+
+tr {
+  padding: 0;
+  margin: 0;
+}
+td {
+  height: .5rem;
+  padding: 0;
+  margin: 0;
+}
+th, td {
+  border: 1px solid lightgray;
+  border-radius: .3rem;
+}
+
+.buttoms-sc {
+  display: flex;
+  flex-direction: row;
+  width: 5rem;
+  height: 100%;
+  border: none;
+}
+
+.buttom {
+  padding: 0;
+  margin: 0 .1rem;
+  height: 1rem;
+  width: 2.3rem;
+  background-color: #1CC88A;
+  border-radius: .2rem;
+  border: none;
+  outline: none !important;
+  transition: all 300ms ease-in-out;
+}
+.buttom:hover {
+  transform: scale(0.9);
+}
+.buttom:active {
+  transform: scale(0.9);
+}
+
+.search {
+  width: 15rem;
+  margin-bottom: .5rem;
+}
+
+.container__table {
+  max-height: 20rem;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow: auto;
+  transition: all 300ms ease-in-out;
+}
+
+.filas__container {
+  border-collapse: collapse;
+  margin: 0 auto;
+  max-width: 100%;
+  min-width: 100%;
+  /* transition: all 300ms ease-in-out;
+  width: calc(100% - 3rem); */
+}
+
+.title__campos {
+  font-size: .7rem;
+}
+
+
+.campo__input {
+  width: 90%;
+  text-align: center;
+}
+
+
+/* Estilos para el input de busqueda */
+.search {
+  width: 15rem !important;
+  margin-bottom: .5rem !important;
+}
+
+.fijo {
+  width: 2rem;
+}
+
+/* Estilos para botones de agregar usuarios o eliminar */
+.agregar {
+  display: flex;
+  padding: 0;
+  outline: none;
+  border: none;
 }

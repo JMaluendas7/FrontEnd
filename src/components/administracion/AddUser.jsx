@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Select from "react-select";
-import "/src/css/users/AddUser.css";
 import TableUsers from "./TableUsers";
+import "/src/css/administracion/AddUser.css";
 
 const Contenido = () => {
   // Llamado a lista de los colaboradores
   const [colaboradores, setColaboradores] = useState([]);
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/users/")
+    axios
+      .get("http://127.0.0.1:8000/api/users/")
       .then((response) => {
         setColaboradores(response.data);
       })
@@ -19,9 +20,10 @@ const Contenido = () => {
 
   // Llamado a lista de los usuarios
   const [users, setUsers] = useState([]);
-  
+
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/login/")
+    axios
+      .get("http://127.0.0.1:8000/api/login/")
       .then((response) => {
         setUsers(response.data);
       })
@@ -61,8 +63,11 @@ const Contenido = () => {
 
     const formData = new FormData(event.target);
     try {
-      const response = await axios.post("http://127.0.0.1:8000/addUsers/", formData);
-  
+      const response = await axios.post(
+        "http://127.0.0.1:8000/addUsers/",
+        formData
+      );
+
       if (response.status === 200) {
         // Solicitud exitosa RTA 200
         console.log("Colaborador registrado con éxito.");
@@ -156,10 +161,10 @@ const Contenido = () => {
         </label>
       </div>
 
-      <section className="container__usuarios">
-        <table className="usuarios__containerr">
+      <section className="container__table">
+        <table className="filas__container">
           <thead>
-            <tr className="title">
+            <tr className="title__campos">
               <th>Numero Documento</th>
               <th>Nombre</th>
               <th>Apellido</th>

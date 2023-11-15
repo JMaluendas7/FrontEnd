@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const TableUsers = ({
+  key,
   user,
   users,
   setusers,
@@ -82,7 +83,7 @@ const TableUsers = ({
   // };
 
   return (
-    <tr key={user.documento_num}>
+    <tr key={key}>
       <td className="cedula">
         {editableFields[user.documento_num] ? (
           <input
@@ -135,7 +136,6 @@ const TableUsers = ({
         {editableFields[user.documento_num] ? (
           <input
             type="text"
-            className="tele"
             name="telefono"
             id="telefono"
             value={user.username}
@@ -200,13 +200,13 @@ const TableUsers = ({
               className="buttom"
               onClick={() => guardarCambioUsuario(user.documento_num)}
             >
-              Guardar
+              <img className="img__buttom" src="/src/img/guardar.png"></img>
             </button>
             <button
               className="buttom"
               onClick={() => toggleEditField(user.documento_num)}
             >
-              Cancelar
+              <img className="img__buttom" src="/src/img/sin-editar.png"></img>
             </button>
           </>
         ) : (
@@ -215,13 +215,13 @@ const TableUsers = ({
               className="buttom"
               onClick={() => toggleEditField(user.documento_num)}
             >
-              Editar
+              <img className="img__buttom" src="/src/img/editar.png"></img>
             </button>
             <button
               className="buttom"
               onClick={() => eliminarUsuario(user.documento_num)}
             >
-              Eliminar
+              <img className="img__buttom" src="/src/img/eliminar.png"></img>
             </button>
           </>
         )}

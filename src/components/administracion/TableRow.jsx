@@ -86,13 +86,14 @@ const TableRow = ({
 
   return (
     <tr key={colaborador.num_documento}>
-      <td className="cedula">
+      <td className="colum">
         {editableFields[colaborador.num_documento] ? (
           <input
             type="text"
             name="num_documento"
-            className="cedula"
+            className="campo__input"
             value={colaborador.num_documento}
+            onDoubleClick={() => toggleEditField(colaborador.num_documento)}
             onChange={(e) =>
               handleChange(
                 colaborador.num_documento,
@@ -106,12 +107,16 @@ const TableRow = ({
           colaborador.num_documento
         )}
       </td>
-      <td className="name">
+      <td className="colum">
         {editableFields[colaborador.num_documento] ? (
           <input
             type="text"
-            className="name"
+            className="campo__input"
             name="nombres"
+            onDoubleClick={() => toggleEditField(colaborador.num_documento)}
+            onDragEnterCapture={() =>
+              toggleEditField(colaborador.num_documento)
+            }
             id="nombres"
             value={colaborador.nombres}
             onChange={(e) =>
@@ -122,11 +127,11 @@ const TableRow = ({
           colaborador.nombres
         )}
       </td>
-      <td className="name">
+      <td className="colum">
         {editableFields[colaborador.num_documento] ? (
           <input
             type="text"
-            className="name"
+            className="campo__input"
             name="apellidos"
             id="apellidos"
             value={colaborador.apellidos}
@@ -142,11 +147,11 @@ const TableRow = ({
           colaborador.apellidos
         )}
       </td>
-      <td className="tele">
+      <td className="colum">
         {editableFields[colaborador.num_documento] ? (
           <input
             type="text"
-            className="tele"
+            className="campo__input"
             name="telefono"
             id="telefono"
             value={colaborador.telefono}
@@ -162,11 +167,11 @@ const TableRow = ({
           colaborador.telefono
         )}
       </td>
-      <td className="correo">
+      <td className="colum">
         {editableFields[colaborador.num_documento] ? (
           <input
             type="text"
-            className="correo"
+            className="campo__input"
             name="email"
             value={colaborador.email}
             onChange={(e) =>
@@ -177,11 +182,11 @@ const TableRow = ({
           colaborador.email
         )}
       </td>
-      <td className="cont">
+      <td className="colum">
         {editableFields[colaborador.num_documento] ? (
           <input
             type="text"
-            className="cont"
+            className="campo__input"
             name="contrato_id"
             value={colaborador.contrato_id}
             onChange={(e) =>
@@ -196,11 +201,11 @@ const TableRow = ({
           colaborador.contrato_id
         )}
       </td>
-      <td className="dire">
+      <td className="colum">
         {editableFields[colaborador.num_documento] ? (
           <input
             type="text"
-            className="dire"
+            className="campo__input"
             name="direccion"
             value={colaborador.direccion}
             onChange={(e) =>
@@ -215,11 +220,11 @@ const TableRow = ({
           colaborador.direccion
         )}
       </td>
-      <td className="ciudad">
+      <td className="colum">
         {editableFields[colaborador.num_documento] ? (
           <input
             type="text"
-            className="ciudad"
+            className="campo__input"
             name="ciudad"
             value={colaborador.ciudad}
             onChange={(e) =>
@@ -230,11 +235,11 @@ const TableRow = ({
           colaborador.ciudad
         )}
       </td>
-      <td className="rol">
+      <td className="colum">
         {editableFields[colaborador.num_documento] ? (
           <select
             type="text"
-            className="rol select__tb"
+            className="campo__input select__tb"
             name="rol_id"
             value={colaborador.rol_id}
             onChange={(e) =>
@@ -251,10 +256,10 @@ const TableRow = ({
           colaborador.rol_id
         )}
       </td>
-      <td className="empresa">
+      <td className="colum">
         {editableFields[colaborador.num_documento] ? (
           <select
-            className="empresa select__tb"
+            className="campo__input select__tb"
             name="empresa_id"
             value={colaborador.empresa_id}
             onChange={(e) =>
