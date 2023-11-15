@@ -6,7 +6,6 @@ import "/src/css/Login.css";
 function LoginForm({ setIsAuthenticated }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
   const [dni, setDni] = useState("");
   const [formType, setFormType] = useState("login"); // Puede ser "login", "forgotPassword", o "resetPassword"
   const [animationClass, setAnimationClass] = useState("slide-in");
@@ -47,36 +46,22 @@ function LoginForm({ setIsAuthenticated }) {
   };
 
   // Funcion para reset de pass
-  const recPass = async (e) => {
-    e.preventDefault();
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
+  const handlePasswordResetRequest = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:8000/api/reset_password/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email }),
-        }
-      );
+      const response = await axios.post('http://127.0.0.1:8000/password/reset/', {
+        email: 'jmaluendasbautista@gmail.com',
+      });
 
-      const data = await response.json();
-      console.log(data.message);
-
-      if (response.status === 200) {
-        // Manejar respuesta exitosa, debo poner la notificacion
-        console.log("RTA exitosa");
-      } else {
-        // En notificacion datos no coinciden o algo asi
-        console.log("RTA no exitosa");
-      }
+      // La respuesta podría contener un mensaje o información adicional
+      setMessage(response.data.detail);
     } catch (error) {
-      // Errores del servidor
-      console.log("RTA no exitosa server");
+      // Maneja errores, por ejemplo, muestra un mensaje de error al usuario
+      setMessage(error.response.data.detail);
     }
-  };
+  }
 
   // Funcion para el cambio de contrasena
   const changePass = async (e) => {
@@ -148,7 +133,7 @@ function LoginForm({ setIsAuthenticated }) {
     } else if (formType === "forgotPassword") {
       return (
         <>
-          <form onSubmit={recPass}>
+          <form onSubmit={handlePasswordResetRequest}>
             <h1 className="title__form">Recuperacion de contraseña</h1>
             <p className="desc__form">
               Diligencie los campos para la validacion y restablecimiento de la
@@ -160,8 +145,6 @@ function LoginForm({ setIsAuthenticated }) {
                 placeholder=""
                 type="email"
                 value={email}
-                id="email"
-                name="email"
                 onChange={(e) => setEmail(e.target.value)}
               />
               <label className="input-label2" htmlFor="inputField2">

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Select from "react-select";
 import "/src/css/users/AddUser.css";
 import TableUsers from "./TableUsers";
@@ -7,10 +8,9 @@ const Contenido = () => {
   // Llamado a lista de los colaboradores
   const [colaboradores, setColaboradores] = useState([]);
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/users/")
-      .then((response) => response.json())
-      .then((colaboradores) => {
-        setColaboradores(colaboradores);
+    axios.get("http://127.0.0.1:8000/api/users/")
+      .then((response) => {
+        setColaboradores(response.data);
       })
       .catch((error) => {
         console.error("Error al llamar a la API: ", error);
@@ -19,11 +19,11 @@ const Contenido = () => {
 
   // Llamado a lista de los usuarios
   const [users, setUsers] = useState([]);
+  
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/login/")
-      .then((response) => response.json())
-      .then((users) => {
-        setUsers(users);
+    axios.get("http://127.0.0.1:8000/api/login/")
+      .then((response) => {
+        setUsers(response.data);
       })
       .catch((error) => {
         console.error("Error al llamar a la API: ", error);
@@ -56,28 +56,24 @@ const Contenido = () => {
     setSeleccion(seleccion);
   };
 
-  const enviarSubmit = (event) => {
+  const enviarSubmit = async (event) => {
     event.preventDefault();
 
     const formData = new FormData(event.target);
-
-    fetch("http://127.0.0.1:8000/addUsers/", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          // Solicitud exitosa RTA 200
-          console.log("Colaborador registrado con éxito.");
-          mostrarMensaje();
-        } else {
-          // Fallo de solicitud
-          console.error("Error al registrar el colaborador.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error al enviar la solicitud: ", error);
-      });
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/addUsers/", formData);
+  
+      if (response.status === 200) {
+        // Solicitud exitosa RTA 200
+        console.log("Colaborador registrado con éxito.");
+        mostrarMensaje();
+      } else {
+        // Fallo de solicitud
+        console.error("Error al registrar el colaborador.");
+      }
+    } catch (error) {
+      console.error("Error al enviar la solicitud: ", error);
+    }
   };
 
   // Notificacion de Registo *Se debe Mejorar*
@@ -168,6 +164,7 @@ const Contenido = () => {
               <th>Nombre</th>
               <th>Apellido</th>
               <th>UserName</th>
+              <th>EMail</th>
               <th>Activo</th>
               <th>Ultima Sesion</th>
             </tr>
@@ -175,7 +172,7 @@ const Contenido = () => {
           <tbody>
             {filteredUsers.map((user) => (
               <TableUsers
-                key={filteredUsers.num_documento} // Establece 'key' directamente aquí
+                key={user.num_documento} // Establece 'key' directamente aquí
                 user={user}
                 users={filteredUsers}
                 setUsers={setUsers}

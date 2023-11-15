@@ -13,18 +13,18 @@ const TableUsers = ({
 
   const handleChange = (userId, field, value) => {
     // Realiza los cambios en el user correspondiente
-    const updateduser = users.map((c) => {
-      if (c.documento_num === userId) {
+    const updatedUser = users.map((user) => {
+      if (user.documento_num === userId) {
         return {
-          ...c,
+          ...user,
           [field]: value,
         };
       }
-      return c;
+      return user;
     });
 
     // Actualiza el estado de los users
-    setusers(updateduser);
+    setusers(updatedUser);
   };
 
   const toggleEditField = (userId) => {
