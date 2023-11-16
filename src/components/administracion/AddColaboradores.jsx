@@ -74,7 +74,7 @@ const Contenido = () => {
           console.error("Error al registrar el colaborador.");
           mostrarMensaje(
             "Colaborador No Registrado",
-            "red",
+            "#d76969",
             "/src/img/error.png"
           );
         }
@@ -131,7 +131,6 @@ const Contenido = () => {
     return fullName.toLowerCase().includes(searchValue.toLowerCase());
   });
 
-
   // Funcion abrir cerrar formulario
   const [showForm, setShowForm] = useState(false);
 
@@ -142,22 +141,25 @@ const Contenido = () => {
 
   // Estados y funciones para la paginación
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage] = useState(5);
+  const [rowsPerPage] = useState(20);
 
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = filteredColaboradores.slice(indexOfFirstRow, indexOfLastRow);
+  const currentRows = filteredColaboradores.slice(
+    indexOfFirstRow,
+    indexOfLastRow
+  );
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginacion = (pageNumber) => setCurrentPage(pageNumber);
 
   const totalRows = filteredColaboradores.length;
-  const pageNumbers = [];
+  const numeroPaginas = [];
   for (let i = 1; i <= Math.ceil(totalRows / rowsPerPage); i++) {
-    pageNumbers.push(i);
+    numeroPaginas.push(i);
   }
 
   // jK skldjflsfjskdfjs
-    // Estado para el ordenamiento
+  // Estado para el ordenamiento
   const [orderBy, setOrderBy] = useState({
     field: "",
     type: "asc", // o "desc"
@@ -214,11 +216,23 @@ const Contenido = () => {
             <thead>
               <tr className="title__campos">
                 <th className="colum">Numero Documento</th>
-                <th className="colum" onClick={() => handleOrderBy("nombres")}>Nombre</th>
-                <th className="colum" onClick={() => handleOrderBy("apellidos")}>Apellido</th>
+                <th className="colum" onClick={() => handleOrderBy("nombres")}>
+                  Nombre
+                </th>
+                <th
+                  className="colum"
+                  onClick={() => handleOrderBy("apellidos")}
+                >
+                  Apellido
+                </th>
                 <th className="colum">Telefono</th>
                 <th className="colum">EMail</th>
-                <th className="colum">Contrato</th>
+                <th
+                  className="colum"
+                  onClick={() => handleOrderBy("contrato_id")}
+                >
+                  Contrato
+                </th>
                 <th className="colum">Direccion</th>
                 <th className="colum">Ciudad</th>
                 <th className="colum">Rol</th>
@@ -242,10 +256,10 @@ const Contenido = () => {
             </tbody>
           </table>
         </section>
-        <div>
+        <div className="button__paginacion">
           {/* Controles de paginación */}
-          {pageNumbers.map((number) => (
-            <button key={number} onClick={() => paginate(number)}>
+          {numeroPaginas.map((number) => (
+            <button key={number} onClick={() => paginacion(number)}>
               {number}
             </button>
           ))}
@@ -254,14 +268,21 @@ const Contenido = () => {
 
       {/* Seccion de Registro de colaboraadores */}
       <button className="agregar" type="none" onClick={toggleForm}>
-        <img className="img__options" src="/src/img/add_user.png" alt="Add User" />
+        <img
+          className="img__options"
+          src="/src/img/agregar_user.png"
+          alt="Add User"
+        />
         <p>Agregar colaborador</p>
       </button>
-      <section className={`form ${showForm ? 'show-form' : ''}`} >
-
+      <section className={`form ${showForm ? "show-form" : ""}`}>
         <h1>Agregar Colaborador</h1>
         <button className="cerrar__agregar" onClick={toggleForm}>
-          <img className="icon__cerrar" src="/src/img/eliminar.png" alt="Cerrar"/>
+          <img
+            className="icon__cerrar"
+            src="/src/img/cerrar.png"
+            alt="Cerrar"
+          />
         </button>
         <form method="post" onSubmit={enviarSubmit}>
           <div className="camp__form">
@@ -271,7 +292,7 @@ const Contenido = () => {
                   className="opciones dni"
                   name="tipo_documento"
                   defaultValue={"dni"}
-                  >
+                >
                   <option value="dni" disabled>
                     DNI
                   </option>
@@ -290,8 +311,8 @@ const Contenido = () => {
                   className="input-field numId"
                   placeholder=""
                   type="number"
-                  />
-                <label className="input-label" htmlFor="numDocumento">
+                />
+                <label className="input-label label__form">
                   Numero Identificacion
                 </label>
               </div>
@@ -306,9 +327,7 @@ const Contenido = () => {
                   placeholder=""
                   type="text"
                 />
-                <label className="input-label" htmlFor="nombre">
-                  Nombres
-                </label>
+                <label className="input-label label__form">Nombres</label>
               </div>
               <div className="input-container agg_colaborador">
                 <input
@@ -318,9 +337,7 @@ const Contenido = () => {
                   placeholder=""
                   type="text"
                 />
-                <label className="input-label" htmlFor="apellido">
-                  Apellidos
-                </label>
+                <label className="input-label label__form">Apellidos</label>
               </div>
             </div>
             <div className="c">
@@ -331,10 +348,8 @@ const Contenido = () => {
                   className="input-field"
                   placeholder=""
                   type="email"
-                  />
-                <label className="input-label" htmlFor="email">
-                  Email
-                </label>
+                />
+                <label className="input-label label__form">Email</label>
               </div>
               <div className="input-container agg_colaborador">
                 <input
@@ -344,9 +359,7 @@ const Contenido = () => {
                   placeholder=""
                   type="text"
                 />
-                <label className="input-label" htmlFor="direccion">
-                  Direccion
-                </label>
+                <label className="input-label label__form">Direccion</label>
               </div>
               <div className="input-container agg_colaborador">
                 <input
@@ -355,10 +368,8 @@ const Contenido = () => {
                   placeholder=""
                   type="text"
                   name="ciudad"
-                  />
-                <label className="input-label" htmlFor="ciudad">
-                  Ciudad
-                </label>
+                />
+                <label className="input-label label__form">Ciudad</label>
               </div>
             </div>
             <div className="d">
@@ -369,10 +380,8 @@ const Contenido = () => {
                   placeholder="Telefono"
                   type="number"
                   name="telefono"
-                  />
-                <label className="input-label" htmlFor="telefono">
-                  Telefono
-                </label>
+                />
+                <label className="input-label label__form">Telefono</label>
               </div>
               <div className="input-container agg_colaborador">
                 <input
@@ -381,8 +390,8 @@ const Contenido = () => {
                   placeholder=""
                   type="number"
                   name="contrato_id"
-                  />
-                <label className="input-label" htmlFor="contrato_id">
+                />
+                <label className="input-label label__form">
                   Numero de Contrato
                 </label>
               </div>
@@ -393,7 +402,7 @@ const Contenido = () => {
                   className="opciones"
                   name="empresa_id"
                   defaultValue={"empresa"}
-                  >
+                >
                   <option value="empresa" disabled>
                     Empresa
                   </option>
@@ -409,11 +418,13 @@ const Contenido = () => {
                   className="opciones"
                   name="cargo_id"
                   defaultValue={"cargo"}
-                  >
+                >
                   <option value="cargo" disabled>
                     Cargo
                   </option>
-                  <option value="opciosdfn2">Auxiliar de Recursos Humanos</option>
+                  <option value="opciosdfn2">
+                    Auxiliar de Recursos Humanos
+                  </option>
                   <option value="opciodn3">Opción 3</option>
                   <option value="opcison4">Opción 4</option>
                 </select>

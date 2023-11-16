@@ -56,7 +56,6 @@ const TableRow = ({
         dataToUpdate
       );
       if (response.status === 200) {
-        // Limpia el objeto localChanges si es necesario, hacer no editable y notificacion
         mostrarMensaje("Edicion de colaborador Exitosa", "", "");
         toggleEditField(colaborador.num_documento); // Pasa a no editable
 
@@ -69,12 +68,10 @@ const TableRow = ({
 
   const eliminarUsuario = async () => {
     try {
-      // Solicitud PUT al servidor para actualizar colaborador
       const response = await axios.delete(
         `http://127.0.0.1:8000/colaboradoresdel/${colaborador.num_documento}/`
       );
       if (response.status === 200) {
-        // Limpia el objeto localChanges si es necesario, hacer no editable y notificacion
         mostrarMensaje();
         toggleEditField(colaborador.num_documento); // Pasa a no editable
         console.log("Usuario eliminado exitosamente");
@@ -85,7 +82,11 @@ const TableRow = ({
   };
 
   return (
-    <tr key={colaborador.num_documento}>
+    <tr
+      key={colaborador.num_documento}
+      className="tr"
+      onDoubleClick={() => toggleEditField(colaborador.num_documento)}
+    >
       <td className="colum">
         {editableFields[colaborador.num_documento] ? (
           <input
@@ -225,7 +226,6 @@ const TableRow = ({
           <input
             type="text"
             className="campo__input"
-            name="ciudad"
             value={colaborador.ciudad}
             onChange={(e) =>
               handleChange(colaborador.num_documento, "ciudad", e.target.value)
@@ -240,7 +240,6 @@ const TableRow = ({
           <select
             type="text"
             className="campo__input select__tb"
-            name="rol_id"
             value={colaborador.rol_id}
             onChange={(e) =>
               handleChange(colaborador.num_documento, "rol_id", e.target.value)
@@ -260,7 +259,6 @@ const TableRow = ({
         {editableFields[colaborador.num_documento] ? (
           <select
             className="campo__input select__tb"
-            name="empresa_id"
             value={colaborador.empresa_id}
             onChange={(e) =>
               handleChange(
@@ -291,7 +289,7 @@ const TableRow = ({
               Guardar
             </button>
             <button
-              className="buttom"
+              className="buttom buttom__orange"
               onClick={() => toggleEditField(colaborador.num_documento)}
             >
               Cancelar
@@ -306,7 +304,7 @@ const TableRow = ({
               Editar
             </button>
             <button
-              className="buttom"
+              className="buttom buttom__red"
               onClick={() => eliminarUsuario(colaborador.num_documento)}
             >
               Eliminar

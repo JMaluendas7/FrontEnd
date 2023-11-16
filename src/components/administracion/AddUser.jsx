@@ -21,7 +21,7 @@ const Contenido = () => {
   // Llamado a lista de los usuarios
   const [users, setUsers] = useState([]);
 
-  useEffect(() => {
+  const getUsers = () => {
     axios
       .get("http://127.0.0.1:8000/api/login/")
       .then((response) => {
@@ -30,7 +30,9 @@ const Contenido = () => {
       .catch((error) => {
         console.error("Error al llamar a la API: ", error);
       });
-  }, []);
+  };
+
+  useEffect(getUsers);
 
   // useState para contener el valor de busqueda
   const [searchValue, setSearchValue] = useState("");
@@ -54,8 +56,12 @@ const Contenido = () => {
 
   // Manejo de valor para el Select
   const [seleccion, setSeleccion] = useState(null);
+  // useState para desplegar usuario y contraseña
+  const [showUserFields, setShowUserFields] = useState(false);
+
   const cambio = (seleccion) => {
     setSeleccion(seleccion);
+    setShowUserFields(true); // Muestra los campos cuando se selecciona un usuario
   };
 
   const enviarSubmit = async (event) => {
@@ -71,6 +77,7 @@ const Contenido = () => {
       if (response.status === 200) {
         // Solicitud exitosa RTA 200
         console.log("Colaborador registrado con éxito.");
+        getUsers();
         mostrarMensaje();
       } else {
         // Fallo de solicitud
@@ -112,38 +119,42 @@ const Contenido = () => {
               />
             </div>
           </div>
-          <div className="user input-container">
-            <input
-              id="usuario"
-              name="usuario"
-              className="input-field"
-              placeholder=""
-              type="text"
-            />
-            <label className="input-label" htmlFor="usuario">
-              Usuario
+          {showUserFields && (
+            <div className="user input-container">
+              <input
+                id="usuario"
+                name="usuario"
+                className="input-field"
+                placeholder=""
+                type="text"
+              />
+              <label className="input-label">Usuario</label>
+            </div>
+          )}
+          {showUserFields && (
+            <div className="pass input-container">
+              <input
+                id="contrasena"
+                name="contrasena"
+                className="input-field"
+                placeholder=""
+                type="password"
+              />
+              <label className="input-label">Contraseña</label>
+            </div>
+          )}
+          {showUserFields && (
+            <label className="custom-checkbox">
+              <input type="checkbox" name="superuser" />
+              <span className="checkmark"></span> Es Super Usuario
             </label>
-          </div>
-          <div className="pass input-container">
-            <input
-              id="contrasena"
-              name="contrasena"
-              className="input-field"
-              placeholder=""
-              type="password"
-            />
-            <label className="input-label" htmlFor="contrasena">
-              Contraseña
-            </label>
-          </div>
-          <label className="custom-checkbox">
-            <input type="checkbox" name="superuser" />
-            <span className="checkmark"></span> Es Super Usuario
-          </label>
+          )}
         </div>
-        <button className="submit-button" type="submit">
-          Registrar Usuario
-        </button>
+        {showUserFields && (
+          <button className="submit-button" type="submit">
+            Registrar Usuario
+          </button>
+        )}
       </form>
 
       <div className="input-container search">
@@ -156,22 +167,21 @@ const Contenido = () => {
           value={searchValue}
           onChange={handleSearchChange}
         />
-        <label className="input-label" htmlFor="search">
-          Buscar por cedula o nombre
-        </label>
+        <label className="input-label">Buscar por cedula o nombre</label>
       </div>
 
       <section className="container__table">
         <table className="filas__container">
           <thead>
             <tr className="title__campos">
-              <th>Numero Documento</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>UserName</th>
-              <th>EMail</th>
-              <th>Activo</th>
-              <th>Ultima Sesion</th>
+              <th className="colum">Numero Documento</th>
+              <th className="colum">Nombre</th>
+              <th className="colum">Apellido</th>
+              <th className="colum">UserName</th>
+              <th className="colum">EMail</th>
+              <th className="colum">Activo</th>
+              <th className="colum">Ultima Sesion</th>
+              <th className="fijo"></th>
             </tr>
           </thead>
           <tbody>

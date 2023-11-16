@@ -45,8 +45,8 @@ const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
             >
               <div className="menuItem-div">
                 <img
-                  src="/src/img/carpeta.png"
-                  className="menuItem-logo"
+                  src={`src/img/${item.url_img}.png`}
+                  className="menuItem__icon"
                   alt="Carpeta"
                 />
                 <div className="menuItem-label">{item.nom_modulo}</div>
@@ -61,18 +61,16 @@ const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
               <ul className="subMenu">
                 {item.subItems.map((subItem, subIndex) => (
                   <li className="subMenu-item" key={subIndex}>
-                    <img className="subMenu-img" src="src/img/add_user.png"></img>
+                    <img
+                      className="menuItem__icon"
+                      src={`src/img/${subItem.url_img}.png`}
+                    ></img>
                     <a
                       className="subMenu-url"
                       onClick={() => toggleSubMenu(index, String(subItem.link))}
                     >
                       {subItem.nom_modulo}
                     </a>
-                    <img
-                      src="src/img/autobus.png"
-                      className="menuItem-logo menuItem-sublogo"
-                      alt="Autobús"
-                    />
                   </li>
                 ))}
               </ul>

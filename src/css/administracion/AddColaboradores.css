@@ -1,10 +1,10 @@
 .form {
-  /* restante de tus estilos */
   display: flex;
   flex-direction: column;
   position: fixed;
-  bottom: -500px; /* posición inicial fuera de la pantalla */
-  transition: bottom 0.3s ease; /* animación de transición suave */
+  bottom: -500px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  transition: bottom 500ms ease-in-out;
 }
 
 .camp__form {
@@ -14,11 +14,12 @@
 }
 
 .show-form {
-  bottom: 0;    bottom: 0;
+  bottom: 0;
   background-color: aliceblue;
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
   padding: 0 1rem;
+  transition: all 700ms ease-in-out;
 }
 
 .a {
@@ -60,19 +61,12 @@
   margin-top: .4rem;
 }
 
-
-
-.colum {
-  height: auto;
-  width: auto;
-}
-
 .agg_colaborador {
   margin: 0 .2rem;
 }
 
-.input-field:focus + .input-label,
-.input-field:not(:placeholder-shown) + .input-label {
+.input-field:focus + .label__form,
+.input-field:not(:placeholder-shown) + .label__form {
   background-color: aliceblue;
   top: -6px;
   left: 5px;

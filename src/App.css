@@ -146,7 +146,7 @@ body {
 /* Estilos para notificaciones exitosas */
 .notificaciones {
   position: fixed;
-  right: 2rem;
+  right: 3rem;
   bottom: 1rem;
   margin: 0;
   padding: 0;
@@ -160,7 +160,7 @@ body {
   background-color: #1CC88A;
   width: 100%;
   height: 100%;
-  padding: .1rem;
+  padding: 1rem;
   border-radius: .5rem;
   color: #000;
   opacity: 1;
@@ -193,38 +193,62 @@ body {
 
 td input {
   font-size: .6rem;
+  width: 100%;
   border: none;
   outline: none;
   padding: 0;
 }
 
-tr {
+.tr {
   padding: 0;
   margin: 0;
+  font-size: .9rem;
+  transition: all 300ms ease-in-out;
+  height: 1.4rem !important;
+
+}
+.tr:hover {
+  background-color: lightgray;
 }
 td {
-  height: .5rem;
+  height: 1rem;
+  min-height: 1rem;
+  max-height: 1rem;
   padding: 0;
   margin: 0;
 }
 th, td {
   border: 1px solid lightgray;
-  border-radius: .3rem;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+.colum {
+  width: auto;
+  max-width: 2rem;
 }
 
 .buttoms-sc {
   display: flex;
   flex-direction: row;
+  font-size: .7rem;
   width: 5rem;
   height: 100%;
   border: none;
+}
+
+.buttom__red {
+  background-color: rgb(245, 96, 96) !important;
+}
+.buttom__orange {
+  background-color: lightsalmon !important;
 }
 
 .buttom {
   padding: 0;
   margin: 0 .1rem;
   height: 1rem;
-  width: 2.3rem;
+  width: 3rem;
   background-color: #1CC88A;
   border-radius: .2rem;
   border: none;
@@ -244,7 +268,6 @@ th, td {
 }
 
 .container__table {
-  max-height: 20rem;
   max-width: 100%;
   margin: 0 auto;
   overflow: auto;
@@ -261,13 +284,15 @@ th, td {
 }
 
 .title__campos {
-  font-size: .7rem;
+  font-size: 1rem;
+  background-color: #A9A9A9;
 }
 
 
 .campo__input {
-  width: 90%;
+  width: 100%;
   text-align: center;
+  font-size: .9rem;
 }
 
 
@@ -278,13 +303,28 @@ th, td {
 }
 
 .fijo {
-  width: 2rem;
+  width: 5rem;
+  background-color: #fff;
+  border: none;
 }
 
 /* Estilos para botones de agregar usuarios o eliminar */
 .agregar {
   display: flex;
+  position: fixed;
+  bottom: 1rem;
   padding: 0;
   outline: none;
   border: none;
+  align-items: center;
+  outline: none;
+  transition: all 300ms ease-in-out;
+}
+
+.agregar:hover {
+  transform: scale(1.1);
+}
+.agregar:active,
+.agregar:focus {
+  outline: none;
 }

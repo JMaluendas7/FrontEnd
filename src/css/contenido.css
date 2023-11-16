@@ -105,7 +105,7 @@
 .input-field:not(:placeholder-shown) + .input-label {
   background-color: #fff;
   top: -6px;
-  left: 5px;
+  left: 15px;
   padding: 0 .1rem;
   font-size: .7rem;
   color: #28a745;
@@ -172,9 +172,34 @@
 }
 
 .icon__cerrar {
+  position: absolute;
   padding: 0;
   margin: 0 auto;
   top: 0;
-  position: absolute;
   left: 0;
+  width: 20px;
+  height: 20px;
+  padding: .2rem;
+  border: none;
+}
+
+.icon__cerrar:hover {
+  background-color: lightgray;
+  border-radius: .3rem;
+  padding: .2rem;
+}
+.cerrar__agregar:active,
+.cerrar__agregar:focus {
+  border: none;
+  outline: none;
+}
+
+.button__paginacion {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 1rem;
+  margin: 0 auto;
+  left: 50%;
+  right: 50%;
 }
