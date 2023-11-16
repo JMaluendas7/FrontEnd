@@ -104,11 +104,12 @@
 .input-field:focus + .input-label,
 .input-field:not(:placeholder-shown) + .input-label {
   background-color: #fff;
-  top: -10px;
+  top: -6px;
   left: 5px;
-  padding: 0 .3rem;
-  font-size: .8rem;
+  padding: 0 .1rem;
+  font-size: .7rem;
   color: #28a745;
+  line-height: normal;
 }
 
 .input-label2 {
@@ -154,4 +155,26 @@
 .home__bus {
   height: 20rem;
   margin-top: 5rem;
+}
+
+
+
+/* Estilos para pestaña de agregar registros */
+.cerrar__agregar {
+  position: absolute;
+  height: 32px;
+  width: 32px;
+  top: 1rem;
+  right: 1rem;
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+
+.icon__cerrar {
+  padding: 0;
+  margin: 0 auto;
+  top: 0;
+  position: absolute;
+  left: 0;
 }

@@ -1,19 +1,29 @@
 .form {
-  display: grid;
-  grid-template-columns: repeat(3, 12rem);
-  grid-template-rows: repeat(5, 2.5rem);
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
-  justify-content: center;
+  /* restante de tus estilos */
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  bottom: -500px; /* posición inicial fuera de la pantalla */
+  transition: bottom 0.3s ease; /* animación de transición suave */
+}
+
+.camp__form {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-items: center;
+}
+
+.show-form {
+  bottom: 0;    bottom: 0;
+  background-color: aliceblue;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  padding: 0 1rem;
 }
 
 .a {
-  grid-row: 1;
-  grid-column-start: 1;
-  grid-column-end: 4;
   display: flex;
+  justify-content: center;
 }
 .dni {
   width: 4.5rem;
@@ -27,80 +37,30 @@
 }
 
 .b {
-  grid-row: 2;
-  grid-column-start: 1;
-  grid-column-end: 4;
   display: flex;
-}
-.nom {
-  width: 15rem;
-  margin-right: 3rem;
+  justify-content: space-around;
+  margin-top: .4rem;
 }
 
 .c {
-  grid-row: 3;
-  grid-column-start: 1;
-  grid-column-end: 4;
   display: flex;
-}
-.dir {
-  margin-right: 3rem;
-  width: 17rem;
+  justify-content: space-around;
+  margin-top: .4rem;
 }
 
 .d {
-  grid-row: 4;
-  grid-column-start: 1;
-  grid-column-end: 4;
   display: flex;
-}
-.tel {
-  margin-right: 3rem;
+  justify-content: space-around;
+  margin-top: .4rem;
 }
 
 .e {
-  grid-row: 5;
-  grid-column-start: 1;
-  grid-column-end: 4;
   display: flex;
-}
-.e2 {
-  grid-row: 5;
-  grid-column: 2;
-}
-.e3 {
-  grid-row: 5;
-  grid-column: 3;
+  justify-content: space-around;
+  margin-top: .4rem;
 }
 
-/* Estilos para los campos planos */
-.cedula {
-  width: 5rem;
-}
-.name {
-  width: 5.5rem;
-}
-.tele {
-  width: 4rem;
-}
-.dire {
-  width: 8rem;
-}
-.correo {
-  width: 9rem;
-}
-.rol {
-  width: 6rem;
-}
-.empresa {
-  width: 7rem;
-}
-.cont {
-  width: 5rem;
-}
-.ciudad {
-  width: 6rem;
-}
+
 
 .colum {
   height: auto;
@@ -109,4 +69,15 @@
 
 .agg_colaborador {
   margin: 0 .2rem;
+}
+
+.input-field:focus + .input-label,
+.input-field:not(:placeholder-shown) + .input-label {
+  background-color: aliceblue;
+  top: -6px;
+  left: 5px;
+  padding: 0 .3rem;
+  font-size: .7rem;
+  color: #28a745;
+  z-index: 0;
 }
