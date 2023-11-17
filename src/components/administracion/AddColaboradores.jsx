@@ -3,45 +3,29 @@ import axios from "axios";
 import TableRow from "./TableRow";
 import "/src/css/administracion/AddColaboradores.css";
 
-const Contenido = () => {
+const Contenido = ({ mostrarMensaje }) => {
   // Trae los tipos de documentos de identificacion
   const [dni, setDni] = useState([]);
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/api/docsti/")
-      .then((response) => {
-        setDni(response.data);
-      })
-      .catch((error) => {
-        console.error("Error al llamar a la API: ", error);
-      });
-  }, []);
-
+  const docsTi = async () => {
+    await axios.get("http://127.0.0.1:8000/api/docsti/").then((response) => {
+      setDni(response.data);
+    });
+  };
   // Llamado a las empresas
   const [empresas, setEmpresas] = useState([]);
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/api/bussines/")
-      .then((response) => {
-        setEmpresas(response.data);
-      })
-      .catch((error) => {
-        console.error("Error al llamar a la API: ", error);
-      });
-  }, []);
+  const bussines = async () => {
+    await axios.get("http://127.0.0.1:8000/api/bussines/").then((response) => {
+      setEmpresas(response.data);
+    });
+  };
 
   // Llamado a los diferentes roles de la empresa
   const [roles, setRoles] = useState([]);
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/api/rol/")
-      .then((response) => {
-        setRoles(response.data);
-      })
-      .catch((error) => {
-        console.error("Error al llamar a la API: ", error);
-      });
-  }, []);
+  const rol = async () => {
+    await axios.get("http://127.0.0.1:8000/api/rol/").then((response) => {
+      setRoles(response.data);
+    });
+  };
 
   // Estado para almacenar los colaboradores
   const [colaboradores, setColaboradores] = useState([]);
@@ -52,9 +36,21 @@ const Contenido = () => {
       const response = await axios.get("http://127.0.0.1:8000/colaboradores/");
       setColaboradores(response.data);
     } catch (error) {
-      console.error("Error al llamar a la API: ", error);
+      mostrarMensaje(
+        "No se pueden visualizar los colaboradores",
+        "error",
+        "error"
+      );
     }
   };
+
+  // Al cargar la pagina se llaman las sgts funciones
+  useEffect(() => {
+    getColaboradores();
+    docsTi();
+    bussines();
+    rol();
+  }, []);
 
   // Funcion para envio de datos y registro de Colaboradores
   const enviarSubmit = (event) => {
@@ -64,58 +60,14 @@ const Contenido = () => {
       .post("http://127.0.0.1:8000/addColaboradores/", formData)
       .then((response) => {
         if (response.status === 200) {
-          mostrarMensaje(
-            "Colaborador Registrado Exitosamente",
-            "green",
-            "/src/img/ok.png"
-          );
+          mostrarMensaje("Colaborador Registrado Exitosamente", "green", "ok");
           getColaboradores();
-        } else {
-          console.error("Error al registrar el colaborador.");
-          mostrarMensaje(
-            "Colaborador No Registrado",
-            "#d76969",
-            "/src/img/error.png"
-          );
         }
       })
       .catch((error) => {
-        console.error("Error al enviar la solicitud: ", error);
-        mostrarMensaje(
-          "Colaborador No Registrado",
-          "red",
-          "/src/img/error.png"
-        );
+        mostrarMensaje("Colaborador no Registrado", "error", "error");
       });
   };
-
-  // Notificacion de Registo *Se debe Mejorar*
-  const [mensaje, setMensaje] = useState({
-    visible: false,
-    mensaje: "",
-    color: "",
-    imagen: "",
-  });
-  const mostrarMensaje = (mensaje, color, imagen) => {
-    setMensaje({
-      visible: true,
-      mensaje,
-      color,
-      imagen,
-    });
-    setTimeout(() => {
-      setMensaje({
-        visible: false,
-        mensaje: "",
-        imagen: "",
-      });
-    }, 6000);
-  };
-
-  // Llama a la función para obtener los datos de los colaboradores cuando el componente se monta
-  useEffect(() => {
-    getColaboradores();
-  }, []);
 
   // useState para contener el valor de busqueda
   const [searchValue, setSearchValue] = useState("");
@@ -158,7 +110,6 @@ const Contenido = () => {
     numeroPaginas.push(i);
   }
 
-  // jK skldjflsfjskdfjs
   // Estado para el ordenamiento
   const [orderBy, setOrderBy] = useState({
     field: "",
@@ -180,8 +131,6 @@ const Contenido = () => {
     }
   };
 
-  // ... (tu código actual)
-
   // Aplicar el ordenamiento a los datos mostrados
   const sortedRows = [...currentRows].sort((a, b) => {
     if (orderBy.type === "asc") {
@@ -191,7 +140,6 @@ const Contenido = () => {
     }
   });
 
-  // Falta tener IDs unicos
   return (
     <div className="Efect">
       <h1 className="titulo_login">Administracion de Colaboradores</h1>
@@ -217,13 +165,22 @@ const Contenido = () => {
               <tr className="title__campos">
                 <th className="colum">Numero Documento</th>
                 <th className="colum" onClick={() => handleOrderBy("nombres")}>
-                  Nombre
+                  <div className="colum__title">
+                    <p className="colum__name">Nombre</p>
+                    <figure className="colum__icon-cont">
+                      <img className="colum__icon" src="/src/img/ordenar.png" />
+                      <div className="overlay"></div>
+                    </figure>
+                  </div>
                 </th>
                 <th
                   className="colum"
                   onClick={() => handleOrderBy("apellidos")}
                 >
-                  Apellido
+                  <div className="colum__title">
+                    <p className="colum__name">Apellido</p>
+                    <figure className="colum__icon az"></figure>
+                  </div>
                 </th>
                 <th className="colum">Telefono</th>
                 <th className="colum">EMail</th>
@@ -233,17 +190,25 @@ const Contenido = () => {
                 >
                   Contrato
                 </th>
-                <th className="colum">Direccion</th>
+                <th className="colum">
+                  <div className="colum__title">
+                    <p className="colum__name">Direccion</p>
+                    <figure className="colum__icon-cont">
+                      <img className="colum__icon" src="/src/img/ordenar.png" />
+                      <div className="overlay"></div>
+                    </figure>
+                  </div>
+                </th>
                 <th className="colum">Ciudad</th>
                 <th className="colum">Rol</th>
                 <th className="colum">Empresa</th>
-                <th className="fijo">Emp</th>
+                <th className="fijo"></th>
               </tr>
             </thead>
             <tbody>
               {sortedRows.map((colaborador) => (
                 <TableRow
-                  key={colaborador.num_documento} // Establece 'key' directamente aquí
+                  key={colaborador.num_documento}
                   colaborador={colaborador}
                   colaboradores={filteredColaboradores}
                   setColaboradores={setColaboradores}
@@ -449,16 +414,6 @@ const Contenido = () => {
         </form>
       </section>
       <div className="container__botton-fixed"></div>
-      <div>
-        {mensaje.visible && (
-          <div id="notificaciones" className="notificaciones">
-            <div className={`registro_ok ${mensaje.color}`}>
-              <img className="imgnoti" src={mensaje.imagen} alt="" />
-              <h2>{mensaje.mensaje}</h2>
-            </div>
-          </div>
-        )}
-      </div>
     </div>
   );
 };

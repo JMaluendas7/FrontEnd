@@ -3,7 +3,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import "/src/css/Login.css";
 
-function LoginForm({ setIsAuthenticated }) {
+function LoginForm({ setIsAuthenticated, mostrarMensaje }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [dni, setDni] = useState("");
@@ -29,19 +29,12 @@ function LoginForm({ setIsAuthenticated }) {
           localStorage.setItem("rol_id", response.data.rol_id);
 
           // Autenticación exitosa
-          setIsAuthenticated(true); // Establecer como autenticado
-        } else {
-          // Manejar otros escenarios (por ejemplo, credenciales incorrectas)
+          mostrarMensaje("Inicio de sesión Exitoso", "#d76969", "ok");
+          setIsAuthenticated(true); // Sesion Iniciada
         }
-      } else if (formType === "forgotPassword") {
-        // Lógica para recuperación de contraseña
-        // ...
-      } else if (formType === "resetPassword") {
-        // Lógica para cambio de contraseña
-        // ...
       }
     } catch (error) {
-      // Manejar errores de conexión o del servidor
+      mostrarMensaje("Usuario o Contraseña incorrectos", "warning", "warning");
     }
   };
 
@@ -51,9 +44,12 @@ function LoginForm({ setIsAuthenticated }) {
 
   const handlePasswordResetRequest = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/password/reset/', {
-        email: 'jmaluendasbautista@gmail.com',
-      });
+      const response = await axios.post(
+        "http://127.0.0.1:8000/password/reset/",
+        {
+          email: "jmaluendasbautista@gmail.com",
+        }
+      );
 
       // La respuesta podría contener un mensaje o información adicional
       setMessage(response.data.detail);
@@ -61,7 +57,7 @@ function LoginForm({ setIsAuthenticated }) {
       // Maneja errores, por ejemplo, muestra un mensaje de error al usuario
       setMessage(error.response.data.detail);
     }
-  }
+  };
 
   // Funcion para el cambio de contrasena
   const changePass = async (e) => {
@@ -87,6 +83,15 @@ function LoginForm({ setIsAuthenticated }) {
     }
   };
 
+  // Funcion para el cambio de manejo de formulario
+  const handleFormChange = (newFormType) => {
+    setAnimationClass("slide-out");
+    setTimeout(() => {
+      setFormType(newFormType);
+      setAnimationClass("slide-in");
+    }, 500);
+  };
+
   const renderForm = () => {
     if (formType === "login") {
       return (
@@ -101,9 +106,7 @@ function LoginForm({ setIsAuthenticated }) {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
-              <label className="input-label2" htmlFor="inputField2">
-                Nombre de Usuario
-              </label>
+              <label className="input-label2">Nombre de Usuario</label>
             </div>
             <div className="input-container login">
               <input
@@ -113,9 +116,7 @@ function LoginForm({ setIsAuthenticated }) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <label className="input-label2" htmlFor="inputField2">
-                Contraseña
-              </label>
+              <label className="input-label2">Contraseña</label>
             </div>
             <button className="submit-button submit_icon" type="submit">
               <p className="text_button">Iniciar sesión</p>
@@ -147,9 +148,7 @@ function LoginForm({ setIsAuthenticated }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <label className="input-label2" htmlFor="inputField2">
-                Correo Electronico
-              </label>
+              <label className="input-label2">Correo Electronico</label>
             </div>
             <div className="input-container login">
               <input
@@ -157,11 +156,9 @@ function LoginForm({ setIsAuthenticated }) {
                 placeholder=""
                 type="number"
                 value={dni}
-                id="dni"
-                name="dni"
                 onChange={(e) => setDni(e.target.value)}
               />
-              <label className="input-label2" htmlFor="inputField2">
+              <label className="input-label2">
                 Documento de identificacion
               </label>
             </div>
@@ -185,15 +182,6 @@ function LoginForm({ setIsAuthenticated }) {
         </form>
       );
     }
-  };
-
-  // Funcion para el cambio de manejo de formulario
-  const handleFormChange = (newFormType) => {
-    setAnimationClass("slide-out");
-    setTimeout(() => {
-      setFormType(newFormType);
-      setAnimationClass("slide-in");
-    }, 500); // Ajusta este valor para que coincida con la duración de tu animación
   };
 
   return (

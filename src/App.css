@@ -83,7 +83,7 @@ body {
   background: linear-gradient(to right, #1CC88A, #21A3A2);
   color: white;
   border: none;
-  padding: 15px 30px;
+  padding: .5rem 2rem;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -178,8 +178,11 @@ body {
   width: auto;
 }
 
-.red {
-  background-color: red;
+.error {
+  background-color: rgb(219, 119, 119);
+}
+.warning {
+  background-color: rgb(231, 231, 81);
 }
 
 

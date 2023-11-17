@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const TableUsers = ({
-  key,
-  user,
-  users,
-  setusers,
-  mostrarMensaje,
-  empresas,
-  roles,
-}) => {
+const TableUsers = ({ user, users, setusers, mostrarMensaje }) => {
   const [editableFields, setEditableFields] = useState({});
 
   const handleChange = (userId, field, value) => {
@@ -36,7 +28,7 @@ const TableUsers = ({
   };
 
   return (
-    <tr key={key} className="tr">
+    <tr key={user.documento_num} className="tr">
       <td className="colum">
         {editableFields[user.documento_num] ? (
           <input
@@ -107,7 +99,6 @@ const TableUsers = ({
         {editableFields[user.documento_num] ? (
           <input
             type="checkbox"
-            className="custom-checkbox"
             checked={user.is_active} // Establece el estado del checkbox basado en user.is_active
             onChange={(e) =>
               handleChange(user.documento_num, "is_active", e.target.checked)
@@ -119,6 +110,7 @@ const TableUsers = ({
           <span>Inactivo</span>
         )}
       </td>
+
       <td className="colum">
         {editableFields[user.documento_num] ? (
           <input
@@ -143,7 +135,7 @@ const TableUsers = ({
               Guardar
             </button>
             <button
-              className="buttom"
+              className="buttom buttom__orange"
               onClick={() => toggleEditField(user.documento_num)}
             >
               Cancelar
@@ -158,7 +150,7 @@ const TableUsers = ({
               Editar
             </button>
             <button
-              className="buttom"
+              className="buttom buttom__red"
               onClick={() => eliminarUsuario(user.documento_num)}
             >
               Eliminar

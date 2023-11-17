@@ -11,8 +11,6 @@ const Banner = ({
   nombre,
   apellido,
 }) => {
-  const navigate = useNavigate();
-
   const toggleSubMenu = (component) => {
     if (component) {
       setContainerComponent(component);
@@ -20,16 +18,13 @@ const Banner = ({
   };
 
   const handleLogout = () => {
-    // Borra la cookie que contiene el token JWT
-    Cookies.remove("authToken");
-
-    // Limpia las variables de estado relacionadas con la autenticación
-    setContainerComponent(false); // O establece el componente por defecto
-    // Puedes añadir más acciones según sea necesario
-
-    // Redirige al usuario a la página de inicio de sesión
-    navigate("");
-    window.location.reload();
+    Cookies.remove("authToken"); // Borra la cookie que contiene el token JWT
+    setContainerComponent(false); // Limpia las variables de estado de autenticación
+    window.location.reload(); // Recarga la pagina ya sin acceso
+    const username = "";
+    const nombre = "";
+    const apellido = "";
+    const rol_id = "";
   };
 
   return (
@@ -55,21 +50,15 @@ const Banner = ({
             <section className="container-logout">
               <ul className="container-items">
                 <li className="item">
-                  <a className="item-url" href="#">
-                    Configuraciones
-                  </a>
+                  <a className="item-url">Configuraciones</a>
                 </li>
                 <div className="line"></div>
                 <li className="item">
-                  <a className="item-url" href="#">
-                    Preferencias
-                  </a>
+                  <a className="item-url">Preferencias</a>
                 </li>
                 <div className="line"></div>
-                <li className="item">
-                  <a className="item-url" href="" onClick={handleLogout}>
-                    Cerrar Sesion
-                  </a>
+                <li className="item" onClick={handleLogout}>
+                  <a className="item-url">Cerrar sesión</a>
                 </li>
               </ul>
             </section>

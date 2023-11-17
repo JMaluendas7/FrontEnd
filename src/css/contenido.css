@@ -197,9 +197,101 @@
 .button__paginacion {
   display: flex;
   justify-content: center;
-  position: absolute;
+  position: sticky;
   bottom: 1rem;
   margin: 0 auto;
   left: 50%;
   right: 50%;
+}
+
+.colum__title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* .colum__icon-cont {
+  height: 13px;
+  width: 13px;
+  background-color: transparent;
+  border: none !important;
+  outline: none !important;
+  margin: 0;
+  background-image: url(/src/img/ordenar.png);
+  background-repeat: no-repeat;
+  background-size: 13px;
+}
+
+.colum__icon-cont::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 13px;
+  height: 6.5px;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.colum__icon-cont::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 13px;
+  height: 6.5px;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0.5;
+  z-index: 1;
+} */
+
+
+.az {
+}
+.za {
+  background-image: url(/src/img/za.png);
+  background-repeat: no-repeat;
+  background-size: 13px;
+}
+
+.colum__name {
+  margin: 0;
+}
+
+
+
+
+
+
+
+
+
+
+.colum__icon-cont {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  height: 13px;
+  width: 13px;
+  background-color: transparent;
+  border: none !important;
+  outline: none !important;
+  margin: 0;
+}
+
+.colum__icon {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: opacity 0.5s; /* Agregar una transición para un cambio suave */
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: rgba(0, 0, 0, 0.5); /* Por defecto, se oscurece la mitad superior */
+  pointer-events: none; /* Permitir clics en la imagen subyacente */
 }

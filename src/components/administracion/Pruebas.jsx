@@ -4,27 +4,36 @@ import Select from "react-select";
 import TableUsers from "./TableUsers";
 import "/src/css/administracion/AddUser.css";
 
-const Contenido = () => {
+const Pruebas = () => {
   // Llamado a lista de los colaboradores
   const [colaboradores, setColaboradores] = useState([]);
-  const getColaboradores = () => {
-    axios.get("http://127.0.0.1:8000/api/users/").then((response) => {
-      setColaboradores(response.data);
-    });
-  };
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/api/users/")
+      .then((response) => {
+        setColaboradores(response.data);
+      })
+      .catch((error) => {
+        console.error("Error al llamar a la API: ", error);
+      });
+  }, []);
 
   // Llamado a lista de los usuarios
   const [users, setUsers] = useState([]);
 
   const getUsers = () => {
-    axios.get("http://127.0.0.1:8000/api/login/").then((response) => {
-      setUsers(response.data);
-    });
+    axios
+      .get("http://127.0.0.1:8000/api/login/")
+      .then((response) => {
+        setUsers(response.data);
+      })
+      .catch((error) => {
+        console.error("Error al llamar a la API: ", error);
+      });
   };
 
   useEffect(() => {
     getUsers();
-    getColaboradores();
   }, []);
 
   // useState para contener el valor de busqueda
@@ -50,7 +59,7 @@ const Contenido = () => {
   // Manejo de valor para el Select
   const [seleccion, setSeleccion] = useState(null);
   // useState para desplegar usuario y contraseña
-  const [showUserFields, setShowUserFields] = useState(false);
+  const [showUserFields, setShowUserFields] = useState(true);
 
   const cambio = (seleccion) => {
     setSeleccion(seleccion);
@@ -82,21 +91,32 @@ const Contenido = () => {
   };
 
   // Notificacion de Registo *Se debe Mejorar*
-  const [mensajeVisible, setMensajeVisible] = useState(false); // Mueve la declaración aquí
-
-  const mostrarMensaje = () => {
-    setMensajeVisible(true);
+  const [mensaje, setMensaje] = useState({
+    visible: true,
+    mensaje: "Mensaje de Notificaciones",
+    color: "#1CC88A",
+    imagen: "/src/img/ok.png",
+  });
+  const mostrarMensaje = (mensaje, color, imagen) => {
+    setMensaje({
+      visible: true,
+      mensaje,
+      color,
+      imagen,
+    });
     setTimeout(() => {
-      setMensajeVisible(false);
-    }, 300000);
+      setMensaje({
+        visible: false,
+        mensaje: "",
+        imagen: "",
+      });
+    }, 6000);
   };
 
   return (
     <div className="Efect">
-      <h1 className="titulo_login">Registro de Usuarios</h1>
-      <h3 className="subtitulo_logi">
-        Registro de usuarios para acceso al aplicativo
-      </h3>
+      <h1 className="titulo_login">Pruebas</h1>
+      <h3 className="subtitulo_logi">Campo Search con dropdown list</h3>
       <form method="post" onSubmit={enviarSubmit}>
         <div className="form-regUsers">
           <div className="cc input-container">
@@ -112,6 +132,10 @@ const Contenido = () => {
               />
             </div>
           </div>
+          <p>
+            Botones input con bordes 360 y CheckBox modificado; Este Form esta
+            usando Grid
+          </p>
           {showUserFields && (
             <div className="user input-container">
               <input
@@ -189,12 +213,15 @@ const Contenido = () => {
             ))}
           </tbody>
         </table>
+        <p>Campo Fecha</p>
+        <input type="date" className="input-field"></input>
       </section>
       <div>
-        {mensajeVisible && (
+        {mensaje.visible && (
           <div id="notificaciones" className="notificaciones">
-            <div className="registro_ok">
-              <h2>Acceso a Usuario Exitoso</h2>
+            <div className={`registro_ok ${mensaje.color}`}>
+              <img className="imgnoti" src={mensaje.imagen} alt="" />
+              <h2>{mensaje.mensaje}</h2>
             </div>
           </div>
         )}
@@ -203,4 +230,4 @@ const Contenido = () => {
   );
 };
 
-export default Contenido;
+export default Pruebas;
