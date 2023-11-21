@@ -219,9 +219,29 @@ const Pruebas = () => {
       <div>
         {mensaje.visible && (
           <div id="notificaciones" className="notificaciones">
-            <div className={`registro_ok ${mensaje.color}`}>
-              <img className="imgnoti" src={mensaje.imagen} alt="" />
-              <h2>{mensaje.mensaje}</h2>
+            <div className="container_notificacion">
+              <div className={`registro_ok ${mensaje.color}`}>
+                <img className="imgnoti" src={mensaje.imagen} alt="" />
+                <h2>{mensaje.mensaje}</h2>
+              </div>
+              <div className="cerrar_noti" />
+            </div>
+            <div className="container_notificacion">
+              <div className={`registro_ok ${mensaje.color}`}>
+                <img className="imgnoti" src={mensaje.imagen} alt="" />
+                <h2>
+                  Mensaje de notificacion con texto largo para prueba de la
+                  adaptabilidad del componente.
+                </h2>
+              </div>
+              <div className="cerrar_noti" />
+            </div>
+            <div className="container_notificacion">
+              <div className={`registro_ok ${mensaje.color}`}>
+                <img className="imgnoti" src={mensaje.imagen} alt="" />
+                <h2>{mensaje.mensaje}</h2>
+              </div>
+              <div className="cerrar_noti" />
             </div>
           </div>
         )}
