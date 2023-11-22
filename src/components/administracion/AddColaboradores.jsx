@@ -65,7 +65,11 @@ const Contenido = ({ mostrarMensaje }) => {
         }
       })
       .catch((error) => {
-        mostrarMensaje("Colaborador no Registrado", "error", "error");
+        mostrarMensaje(
+          "Colaborador no Registrado",
+          "error_notification",
+          "error"
+        );
       });
   };
 

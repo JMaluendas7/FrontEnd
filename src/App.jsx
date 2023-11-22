@@ -65,27 +65,43 @@ function App() {
   };
 
   const [mensaje, setMensaje] = useState({
-    visible: false,
-    mensaje: "Pestaña de Notificacion",
-    color: "#1CC88A",
-    imagen: "ok",
+    visible: true,
+    mensaje: null,
+    color: null,
+    imagen: null,
   });
+
+  const [notificaciones, setNotificaciones] = useState([]);
+  // Cierra la notificacion y la elimina
+  const cerrarNotificacion = (id) => {
+    setNotificaciones((prevNotificaciones) => {
+      const updatedNotificaciones = prevNotificaciones.map((notificacion) =>
+        notificacion.id === id
+          ? { ...notificacion, visible: false }
+          : notificacion
+      );
+      return updatedNotificaciones.filter(
+        (notificacion) => notificacion.visible
+      );
+    });
+  };
 
   // Función para mostrar la notificación por un tiempo específico
   const mostrarMensaje = (mensaje, color, imagen) => {
-    setMensaje({
-      visible: true,
+    const id = Date.now();
+    const nuevaNotificacion = {
+      id,
       mensaje,
       color,
       imagen,
-    });
-    setTimeout(() => {
-      setMensaje({
-        visible: false,
-        mensaje: "",
-        imagen: "",
-      });
-    }, 6000);
+      visible: true,
+      timeoutId: setTimeout(() => cerrarNotificacion(id), 600000),
+    };
+
+    setNotificaciones((prevNotificaciones) => [
+      ...prevNotificaciones,
+      nuevaNotificacion,
+    ]);
   };
 
   return (
@@ -119,13 +135,10 @@ function App() {
             />
           </div>
         )}
-        {mensaje.visible && (
-          <Notificacion
-            mensaje={mensaje.mensaje}
-            color={mensaje.color}
-            imagen={mensaje.imagen}
-          />
-        )}
+        <Notificacion
+          notificaciones={notificaciones}
+          cerrarNotificacion={cerrarNotificacion}
+        />
       </div>
     </Router>
   );

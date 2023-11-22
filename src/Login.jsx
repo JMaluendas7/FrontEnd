@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import axios from "axios";
 import Cookies from "js-cookie";
 import "/src/css/Login.css";
@@ -9,6 +10,10 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje }) {
   const [dni, setDni] = useState("");
   const [formType, setFormType] = useState("login"); // Puede ser "login", "forgotPassword", o "resetPassword"
   const [animationClass, setAnimationClass] = useState("slide-in");
+
+  const handleResetPassword = () => {
+    setFormType("resetPassword");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,12 +34,20 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje }) {
           localStorage.setItem("rol_id", response.data.rol_id);
 
           // Autenticación exitosa
-          mostrarMensaje("Inicio de sesión Exitoso", "#d76969", "ok");
+          mostrarMensaje(
+            "Inicio de sesión Exitoso",
+            "success_notification",
+            "ok"
+          );
           setIsAuthenticated(true); // Sesion Iniciada
         }
       }
     } catch (error) {
-      mostrarMensaje("Usuario o Contraseña incorrectos", "warning", "warning");
+      mostrarMensaje(
+        "Usuario o contraseña incorrectos.",
+        "warning_notification",
+        "warning"
+      );
     }
   };
 
@@ -45,17 +58,24 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje }) {
   const handlePasswordResetRequest = async () => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/password/reset/",
+        "http://127.0.0.1:8000/reset_password/",
         {
-          email: "jmaluendasbautista@gmail.com",
+          email,
+          dni,
         }
       );
 
-      // La respuesta podría contener un mensaje o información adicional
-      setMessage(response.data.detail);
+      mostrarMensaje(
+        "Correo de recuperacion enviado",
+        "success_notification",
+        "ok"
+      );
     } catch (error) {
-      // Maneja errores, por ejemplo, muestra un mensaje de error al usuario
-      setMessage(error.response.data.detail);
+      mostrarMensaje(
+        "Correo de recuperacion no enviado",
+        "warning_notification",
+        "warning"
+      );
     }
   };
 
@@ -177,9 +197,47 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje }) {
       );
     } else if (formType === "resetPassword") {
       return (
-        <form onSubmit={handleSubmit}>
-          {/* Agrega campos y etiquetas para el formulario de cambio de contraseña */}
-        </form>
+        <>
+          <form onSubmit={handlePasswordResetRequest}>
+            <h1 className="title__form">Recuperacion de contraseña</h1>
+            <p className="desc__form">
+              Diligencie los campos para la validacion y restablecimiento de la
+              contraseña
+            </p>
+            <div className="input-container login">
+              <input
+                className="input-field2 campos_reg"
+                placeholder=""
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <label className="input-label2">Correo Electronico</label>
+            </div>
+            <div className="input-container login">
+              <input
+                className="input-field2 campos_reg"
+                placeholder=""
+                type="number"
+                value={dni}
+                onChange={(e) => setDni(e.target.value)}
+              />
+              <label className="input-label2">
+                Documento de identificacion
+              </label>
+            </div>
+            <button className="submit-button submit_icon" type="submit">
+              <p className="text_button">Enviar solicitud</p>
+              <figure className="icon_bus"></figure>
+            </button>
+          </form>
+          <button
+            className="olvide__pass"
+            onClick={() => handleFormChange("login")}
+          >
+            Tengo mi contraseña
+          </button>
+        </>
       );
     }
   };

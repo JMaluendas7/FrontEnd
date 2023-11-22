@@ -1,0 +1,87 @@
+/* Estilos para notificaciones exitosas */
+.contenedor__notificaciones {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    max-width: 20%;
+}
+.cn2 {
+    max-width: 30%;
+}
+.notificaciones {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    max-height: 80vh;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.container_notificacion {
+    position: relative; /* Agregar posición relativa */
+    display: flex;
+    flex-direction: column;
+    width: fit-content; /* o width: auto; */
+    max-width: 100%;
+    margin-left: auto;
+    margin-top: 10px;
+    border-radius: .3rem;
+    overflow: hidden;
+    background-color: #f4f4f4;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.registro_ok {
+    display: flex;
+    align-items: center;
+    padding: 1rem .8rem;
+    flex-wrap: nowrap;
+    flex-direction: row;
+}
+
+.imgnoti {
+    height: 24px;
+    width: 24px;
+    margin-right: .5rem;
+}
+
+.cerrar_noti {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 13px;
+    height: 13px;
+    background-image: url(/src/img/cerrar.png);
+    background-size: contain;
+    cursor: pointer;
+    border-radius: 1rem;
+    transition: all 400ms ease-in-out;
+}
+
+.cerrar_noti:hover {
+    border-radius: 0;
+}
+
+h2 {
+    font-size: 16px;
+    margin: 0;
+    margin-right: 1rem;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+.error_notification {
+    background-color: rgba(255, 99, 71, 0.5); /* Cambia el valor alfa para hacerlo más transparente */
+    color: #fff;
+}
+
+.warning_notification {
+    background-color: rgba(255, 215, 0, 0.5); /* Cambia el valor alfa para hacerlo más transparente */
+    color: #000;
+}
+
+.success_notification {
+    background-color: rgba(28, 200, 138, 0.5);
+    color: #000;
+}

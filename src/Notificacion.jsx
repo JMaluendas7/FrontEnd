@@ -1,12 +1,31 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import "/src/css/Notificacion.css";
 
-const Notificacion = ({ mensaje, color, imagen }) => {
+const Notificacion = ({ notificaciones, cerrarNotificacion }) => {
   return (
-    <div id="notificaciones" className="notificaciones">
-      <div className={`registro_ok ${color}`}>
-        <img className="imgnoti" src={`src/img/${imagen}.png`} alt="" />
-        <h2>{mensaje}</h2>
-      </div>
+    <div className="contenedor__notificaciones">
+      {notificaciones
+        .filter(
+          (notificacion) => notificacion !== null && notificacion !== undefined
+        )
+        .map(
+          (notificacion) =>
+            notificacion.visible && (
+              <div key={notificacion.id} className="container_notificacion">
+                <div className={`registro_ok ${notificacion.color}`}>
+                  <img
+                    className="imgnoti"
+                    src={`src/img/${notificacion.imagen}.png`}
+                  />
+                  <h2>{notificacion.mensaje}</h2>
+                </div>
+                <div
+                  className="cerrar_noti"
+                  onClick={() => cerrarNotificacion(notificacion.id)}
+                />
+              </div>
+            )
+        )}
     </div>
   );
 };

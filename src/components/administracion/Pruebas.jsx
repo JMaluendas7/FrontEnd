@@ -218,17 +218,17 @@ const Pruebas = () => {
       </section>
       <div>
         {mensaje.visible && (
-          <div id="notificaciones" className="notificaciones">
+          <div className="contenedor__notificaciones cn2">
             <div className="container_notificacion">
-              <div className={`registro_ok ${mensaje.color}`}>
-                <img className="imgnoti" src={mensaje.imagen} alt="" />
-                <h2>{mensaje.mensaje}</h2>
+              <div className={`registro_ok error_notification`}>
+                <img className="imgnoti" src={`src/img/error.png`} alt="" />
+                <h2>Mensaje con notificacion no exitosa</h2>
               </div>
               <div className="cerrar_noti" />
             </div>
             <div className="container_notificacion">
-              <div className={`registro_ok ${mensaje.color}`}>
-                <img className="imgnoti" src={mensaje.imagen} alt="" />
+              <div className={`registro_ok warning_notification`}>
+                <img className="imgnoti" src={`src/img/warning.png`} alt="" />
                 <h2>
                   Mensaje de notificacion con texto largo para prueba de la
                   adaptabilidad del componente.
@@ -237,9 +237,9 @@ const Pruebas = () => {
               <div className="cerrar_noti" />
             </div>
             <div className="container_notificacion">
-              <div className={`registro_ok ${mensaje.color}`}>
-                <img className="imgnoti" src={mensaje.imagen} alt="" />
-                <h2>{mensaje.mensaje}</h2>
+              <div className={`registro_ok success_notification`}>
+                <img className="imgnoti" src={`src/img/ok.png`} alt="" />
+                <h2>Mensaje cuando la respuesta sea exitosa</h2>
               </div>
               <div className="cerrar_noti" />
             </div>

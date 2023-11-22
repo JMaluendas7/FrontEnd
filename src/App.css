@@ -143,55 +143,6 @@ body {
   font-size: .8rem !important;
 }
 
-/* Estilos para notificaciones exitosas */
-.notificaciones {
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  right: 2rem;
-  bottom: 1rem;
-  margin: 0;
-  padding: 0;
-  height: auto;
-  width: 20rem;
-  opacity: 0.8;
-  transition: all 300ms ease-in-out;
-}
-.container_notificacion {
-  display: flex;
-  height: 100%;
-  width: 100%;
-}
-.registro_ok {
-  background-color: #1CC88A;
-  display: flex;
-  width: 100%;
-  height: 100%;
-  padding: 1rem;
-  margin-top: .2rem;
-  border-radius: .5rem;
-  color: #000;
-  opacity: 1;
-  align-items: center;
-}
-.imgnoti {
-  height: 32px;
-  width: 32px;
-  margin: 0 0.5rem;
-}
-.cerrar_noti {
-  position: relative;
-  background-image: url(/src/img/cerrar.png);
-  /* background-color: lightgrey; */
-  background-size: 15px;
-  background-repeat: no-repeat;
-  height: 15px;
-  width: 18px;
-  top: 1rem;
-  right: 2rem;
-  /* border-radius: 0.3rem; */
-}
-
 /*Estilos para los campos planos*/
 .campo_plano {
   height: auto;
