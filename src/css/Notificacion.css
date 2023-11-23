@@ -4,6 +4,7 @@
     bottom: 1rem;
     right: 1rem;
     max-width: 20%;
+    transition: all 300ms ease-in-out;
 }
 .cn2 {
     max-width: 30%;
@@ -16,6 +17,7 @@
     max-height: 80vh;
     overflow-y: auto;
     z-index: 1000;
+    transition: all 300ms ease-in-out;
 }
 
 .container_notificacion {
@@ -30,6 +32,7 @@
     overflow: hidden;
     background-color: #f4f4f4;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 300ms ease-in-out;
 }
 
 .registro_ok {
@@ -72,12 +75,12 @@ h2 {
 }
 
 .error_notification {
-    background-color: rgba(255, 99, 71, 0.5); /* Cambia el valor alfa para hacerlo más transparente */
+    background-color: rgba(255, 99, 71, 0.5);
     color: #fff;
 }
 
 .warning_notification {
-    background-color: rgba(255, 215, 0, 0.5); /* Cambia el valor alfa para hacerlo más transparente */
+    background-color: rgba(255, 215, 0, 0.5);
     color: #000;
 }
 

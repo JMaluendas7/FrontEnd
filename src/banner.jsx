@@ -2,7 +2,6 @@ import React from "react";
 import Cookies from "js-cookie";
 import "./css/banner.css";
 import "./css/menu.css";
-import { useNavigate } from "react-router-dom";
 
 const Banner = ({
   toggleMenu,

@@ -1,15 +1,24 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import "/src/css/Login.css";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import "./css/Login.css";
 
-function LoginForm({ setIsAuthenticated, mostrarMensaje }) {
+function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
   const [dni, setDni] = useState("");
-  const [formType, setFormType] = useState("login"); // Puede ser "login", "forgotPassword", o "resetPassword"
   const [animationClass, setAnimationClass] = useState("slide-in");
+  const [formType, setFormType] = useState("login");
+  useEffect(() => {
+    if (uidb64 && token) {
+      setFormType("resetPassword");
+    } else {
+      setFormType("login");
+    }
+  }, [uidb64, token]);
 
   const handleResetPassword = () => {
     setFormType("resetPassword");
@@ -82,24 +91,49 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje }) {
   // Funcion para el cambio de contrasena
   const changePass = async (e) => {
     e.preventDefault();
+    if (password == password2) {
+      mostrarMensaje("Contraseñas coinciden", "succes_notification", "ok");
+      console.log(password, password2);
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:8000/reset_password/change/",
+          {
+            uidb64,
+            token,
+            password,
+            password2,
+          }
+        );
 
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/reset_password/confirm/",
-        {
-          uidb64, // Obtén el uidb64 del parámetro de la URL o de alguna manera
-          token, // Obtén el token del parámetro de la URL o de alguna manera
-          new_password,
+        if (response.status === 200) {
+          navigate("/");
+          mostrarMensaje(
+            "Se ha cambiado la contraseña satisfactoriamente",
+            "success_notification",
+            "ok"
+          );
+        } else {
+          navigate("/");
+          mostrarMensaje(
+            "No se ha cambiado la contraseña",
+            "success_wuarning",
+            "warning"
+          );
         }
-      );
-
-      if (response.status === 200) {
-        // Lógica para manejar la respuesta exitosa, por ejemplo, redirigir al usuario a la página de inicio de sesión
-      } else {
-        // Lógica para manejar otros escenarios (por ejemplo, token inválido)
+      } catch (error) {
+        navigate("/");
+        mostrarMensaje(
+          "No se ha cambiado la contraseña",
+          "success_wuarning",
+          "warning"
+        );
       }
-    } catch (error) {
-      // Manejar errores de conexión o del servidor
+    } else {
+      mostrarMensaje(
+        "Las contraseñas no coinciden",
+        "warning_notification",
+        "warning"
+      );
     }
   };
 
@@ -193,38 +227,39 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje }) {
           >
             Tengo mi contraseña
           </button>
+          <button
+            className="olvide__pass"
+            onClick={() => handleFormChange("resetPassword")}
+          >
+            Cambiar contraseña
+          </button>
         </>
       );
     } else if (formType === "resetPassword") {
       return (
         <>
-          <form onSubmit={handlePasswordResetRequest}>
-            <h1 className="title__form">Recuperacion de contraseña</h1>
-            <p className="desc__form">
-              Diligencie los campos para la validacion y restablecimiento de la
-              contraseña
-            </p>
+          <form onSubmit={changePass}>
+            <h1 className="title__form">Creacion de nueva contraseña</h1>
+            <p className="desc__form">Diguite su nueva contraseña</p>
             <div className="input-container login">
               <input
                 className="input-field2 campos_reg"
                 placeholder=""
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
-              <label className="input-label2">Correo Electronico</label>
+              <label className="input-label2">Nueva contraseña</label>
             </div>
             <div className="input-container login">
               <input
                 className="input-field2 campos_reg"
                 placeholder=""
-                type="number"
-                value={dni}
-                onChange={(e) => setDni(e.target.value)}
+                type="password"
+                value={password2}
+                onChange={(e) => setPassword2(e.target.value)}
               />
-              <label className="input-label2">
-                Documento de identificacion
-              </label>
+              <label className="input-label2">Verificacion de contraseña</label>
             </div>
             <button className="submit-button submit_icon" type="submit">
               <p className="text_button">Enviar solicitud</p>

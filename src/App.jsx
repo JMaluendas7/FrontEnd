@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+// import { useHistory, useLocation } from "react-router";
+
 import Banner from "./banner";
 import Menu from "./menu";
 import Container from "./Container";
@@ -6,9 +9,27 @@ import LoginForm from "./Login";
 import Notificacion from "./Notificacion";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { BrowserRouter as Router } from "react-router-dom";
 
 function App() {
+  const [uidb64, setUidb64] = useState("");
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    const parm = window.location.search;
+    const searchParams = new URLSearchParams(window.location.search);
+    const uidb64Param = searchParams.get("uidb64");
+    const tokenParam = searchParams.get("token");
+    console.log(uidb64, tokenParam, searchParams, parm);
+
+    if (uidb64Param && tokenParam) {
+      setUidb64(uidb64Param);
+      setToken(tokenParam);
+
+      // Redirigir a la URL sin parámetros
+      window.location.href = "/";
+    }
+  }, []);
+
   const [menuData, setMenuData] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado de autenticación
 
@@ -95,7 +116,7 @@ function App() {
       color,
       imagen,
       visible: true,
-      timeoutId: setTimeout(() => cerrarNotificacion(id), 600000),
+      timeoutId: setTimeout(() => cerrarNotificacion(id), 6000),
     };
 
     setNotificaciones((prevNotificaciones) => [
@@ -105,42 +126,44 @@ function App() {
   };
 
   return (
-    <Router>
-      <div>
-        {isAuthenticated ? ( // Verifica si el usuario está autenticado
-          <div className={`main-content ${isMenuOpen ? "menu-open" : ""}`}>
-            <Menu
-              menuItems={menuData}
-              setMenuItems={setMenuData}
-              setContainerComponent={setContainerComponent}
-            />
-            <Container
-              Component={containerComponent}
-              mostrarMensaje={mostrarMensaje}
-            />
-            <Banner
-              toggleMenu={toggleMenu}
-              setContainerComponent={setContainerComponent}
-              setIsAuthenticated={setIsAuthenticated}
-              username={username}
-              nombre={nombre}
-              apellido={apellido}
-            />
-          </div>
-        ) : (
-          <div>
-            <LoginForm
-              setIsAuthenticated={setIsAuthenticated}
-              mostrarMensaje={mostrarMensaje}
-            />
-          </div>
-        )}
-        <Notificacion
-          notificaciones={notificaciones}
-          cerrarNotificacion={cerrarNotificacion}
-        />
-      </div>
-    </Router>
+    <div>
+      {isAuthenticated ? (
+        <div className={`main-content ${isMenuOpen ? "menu-open" : ""}`}>
+          {/* Componentes cuando el usuario está autenticado */}
+          <Menu
+            menuItems={menuData}
+            setMenuItems={setMenuData}
+            setContainerComponent={setContainerComponent}
+          />
+          <Container
+            Component={containerComponent}
+            mostrarMensaje={mostrarMensaje}
+          />
+          <Banner
+            toggleMenu={toggleMenu}
+            setContainerComponent={setContainerComponent}
+            setIsAuthenticated={setIsAuthenticated}
+            username={username}
+            nombre={nombre}
+            apellido={apellido}
+          />
+        </div>
+      ) : (
+        <div>
+          <LoginForm
+            setIsAuthenticated={setIsAuthenticated}
+            mostrarMensaje={mostrarMensaje}
+            uidb64={uidb64}
+            token={token}
+          />
+        </div>
+      )}
+      {/* Componente de notificaciones */}
+      <Notificacion
+        notificaciones={notificaciones}
+        cerrarNotificacion={cerrarNotificacion}
+      />
+    </div>
   );
 }
 
