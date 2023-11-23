@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Select from "react-select";
 import TableUsers from "./TableUsers";
@@ -91,6 +91,59 @@ const Contenido = () => {
     }, 300000);
   };
 
+
+  const videoRef = useRef();
+  const [fotoTomada, setFotoTomada] = useState(null);
+
+  const tomarFoto = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      videoRef.current.srcObject = stream;
+    } catch (error) {
+      console.error("Error al acceder a la cámara:", error);
+    }
+  };
+
+  const dataURItoBlob = (dataURI) => {
+    const byteString = atob(dataURI.split(',')[1]);
+    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: mimeString });
+  };
+  
+  const capturarImagen = async () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+    canvas.getContext("2d").drawImage(videoRef.current, 0, 0);
+  
+    const imagenCapturada = canvas.toDataURL("image/jpeg");
+    
+    // Convertir la URL base64 a un archivo Blob
+    const imagenBlob = dataURItoBlob(imagenCapturada);
+  
+    const formData = new FormData();
+    formData.append('imagen', imagenBlob, 'nombre_imagen.jpg'); // Adjuntar el archivo al FormData
+    console.log('¿El FormData tiene algún valor adjunto?', formData.has('imagen'));
+    console.log(formData)
+
+
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/subir_foto/', formData);
+      console.log('Imagen enviada correctamente:', response.data);
+      mostrarMensaje("Se ha subido correctamente la imagen a la base de datos");
+    } catch (error) {
+      console.error('Error al enviar la imagen:', error);
+
+    }
+  };
+    
+  
+
   return (
     <div className="Efect">
       <h1 className="titulo_login">Registro de Usuarios</h1>
@@ -149,6 +202,16 @@ const Contenido = () => {
           </button>
         )}
       </form>
+
+      <div>
+        <button onClick={tomarFoto}>Activar Cámara</button>
+        <br />
+        <video ref={videoRef} autoPlay />
+        <br />
+        <button onClick={capturarImagen}>Tomar Foto</button>
+        <br />
+        {fotoTomada && <img src={fotoTomada} alt="Foto Capturada" />}
+      </div>
 
       <div className="input-container search">
         <input
