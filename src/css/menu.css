@@ -11,10 +11,11 @@
   /* Al eliminar lo siguiente se queda en un buen diseño */
   border-bottom-right-radius: 3rem;
   border-top-right-radius: 1rem;
-  box-shadow: 0 0 10px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 0 7px 4px rgba(0,0,0,0.2);
   color: #484141;
   left: 0px;
   transition: all 710ms ease-in-out;
+  scroll-behavior: smooth;
 }
 
 .menu-open .menu-container {

@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import "/src/css/Notificacion.css";
 
 const Notificacion = ({ notificaciones, cerrarNotificacion }) => {

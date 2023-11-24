@@ -1,6 +1,6 @@
 /* Estilos para notificaciones exitosas */
 .contenedor__notificaciones {
-    position: absolute;
+    position: fixed;
     bottom: 1rem;
     right: 1rem;
     max-width: 20%;

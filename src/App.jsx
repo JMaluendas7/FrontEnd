@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-// import { useHistory, useLocation } from "react-router";
 
 import Banner from "./banner";
 import Menu from "./menu";
@@ -13,38 +11,32 @@ import Cookies from "js-cookie";
 function App() {
   const [uidb64, setUidb64] = useState("");
   const [token, setToken] = useState("");
+  const [menuData, setMenuData] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado de autenticación
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const uidb64Param = searchParams.get("uidb64");
     const tokenParam = searchParams.get("token");
-  
-    console.log("uidb64Param:", uidb64Param);
-    console.log("tokenParam:", tokenParam);
-  
+
     if (uidb64Param && tokenParam) {
       setUidb64(uidb64Param);
       setToken(tokenParam);
       // Redirigir a la URL sin parámetros
       window.history.replaceState(null, null, "/");
     }
+    // Trae los elementos para el menu solo si el usuario está autenticado
+    const token = Cookies.get("authToken"); // O localStorage.getItem("authToken");
+    if (token) {
+      console.log("Username:", username);
+      setIsAuthenticated(true);
+    }
   }, []);
-
-  const [menuData, setMenuData] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado de autenticación
-
+  // Almacenamiento de Cookies en variables
   const username = localStorage.getItem("username");
   const nombre = localStorage.getItem("nombre");
   const apellido = localStorage.getItem("apellido");
   const rol_id = localStorage.getItem("rol_id");
-
-  axios.interceptors.request.use((config) => {
-    const token = Cookies.get("authToken"); // O localStorage.getItem("authToken");
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
-    return config;
-  });
 
   // Trae los elementos para el menu
   const getMenu = async () => {
@@ -64,33 +56,17 @@ function App() {
       );
     }
   };
-
+  // Verificacion para llamar el menu
   if (isAuthenticated == true && menuData.length == false) {
     getMenu();
   }
 
-  // Trae los elementos para el menu solo si el usuario está autenticado
-  useEffect(() => {
-    const token = Cookies.get("authToken"); // O localStorage.getItem("authToken");
-    if (token) {
-      console.log("Username:", username);
-      setIsAuthenticated(true);
-    }
-  }, []);
-
   const [containerComponent, setContainerComponent] = useState("Home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  // Funcion para abrir los ites del menu
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
-  const [mensaje, setMensaje] = useState({
-    visible: true,
-    mensaje: null,
-    color: null,
-    imagen: null,
-  });
 
   const [notificaciones, setNotificaciones] = useState([]);
   // Cierra la notificacion y la elimina

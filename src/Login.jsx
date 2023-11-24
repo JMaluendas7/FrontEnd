@@ -5,28 +5,26 @@ import "./css/Login.css";
 
 function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [dni, setDni] = useState("");
   const [animationClass, setAnimationClass] = useState("slide-in");
   const [formType, setFormType] = useState("login");
+
   useEffect(() => {
     if (uidb64 && token) {
-      setFormType("resetPassword");
+      setFormType("changePass");
     } else {
       setFormType("login");
     }
   }, [uidb64, token]);
 
-  const handleResetPassword = () => {
-    setFormType("resetPassword");
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      if (formType === "login") {
-        // Lógica para el inicio de sesión
+    if (formType === "login") {
+      // Inicio de sesión
+      try {
         const response = await axios.post("http://127.0.0.1:8000/login/", {
           username,
           password,
@@ -40,7 +38,6 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
           localStorage.setItem("apellido", response.data.apellido);
           localStorage.setItem("rol_id", response.data.rol_id);
 
-          // Autenticación exitosa
           mostrarMensaje(
             "Inicio de sesión Exitoso",
             "success_notification",
@@ -48,91 +45,84 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
           );
           setIsAuthenticated(true); // Sesion Iniciada
         }
-      }
-    } catch (error) {
-      mostrarMensaje(
-        "Usuario o contraseña incorrectos.",
-        "warning_notification",
-        "warning"
-      );
-    }
-  };
-
-  // Funcion para reset de pass
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-
-  const handlePasswordResetRequest = async () => {
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/reset_password/",
-        {
-          email,
-          dni,
-        }
-      );
-
-      mostrarMensaje(
-        "Correo de recuperacion enviado",
-        "success_notification",
-        "ok"
-      );
-    } catch (error) {
-      mostrarMensaje(
-        "Correo de recuperacion no enviado",
-        "warning_notification",
-        "warning"
-      );
-    }
-  };
-
-  // Funcion para el cambio de contrasena
-  const changePass = async (e) => {
-    e.preventDefault();
-    if (password == password2) {
-      mostrarMensaje("Contraseñas coinciden", "succes_notification", "ok");
-      console.log(password, password2);
-      try {
-        const response = await axios.post(
-          "http://127.0.0.1:8000/reset_password/change/",
-          {
-            uidb64,
-            token,
-            password,
-            password2,
-          }
-        );
-
-        if (response.status === 200) {
-          mostrarMensaje(
-            "Se ha cambiado la contraseña satisfactoriamente",
-            "success_notification",
-            "ok"
-          );
-        } else {
-          mostrarMensaje(
-            "No se ha cambiado la contraseña",
-            "success_wuarning",
-            "warning"
-          );
-        }
-      } catch (error) {
+      } catch {
         mostrarMensaje(
-          "No se ha cambiado la contraseña",
-          "success_wuarning",
+          "Usuario o contraseña incorrectos",
+          "success_warning",
           "warning"
         );
       }
     } else {
-      mostrarMensaje(
-        "Las contraseñas no coinciden",
-        "warning_notification",
-        "warning"
-      );
+      if (formType === "forgotPassword") {
+        try {
+          const response = await axios.post(
+            "http://127.0.0.1:8000/reset_password/",
+            {
+              email,
+              dni,
+            }
+          );
+
+          if (response.status === 200) {
+            mostrarMensaje(
+              "Correo de recuperacion enviado",
+              "success_notification",
+              "ok"
+            );
+          }
+        } catch {
+          mostrarMensaje(
+            "Los datos no coinciden",
+            "warning_notification",
+            "warning"
+          );
+          mostrarMensaje(
+            "Correo de recuperacion no enviado",
+            "error_notification",
+            "error"
+          );
+        }
+      } else {
+        if (formType === "changePass") {
+          if (password == password2) {
+            try {
+              const response = await axios.post(
+                "http://127.0.0.1:8000/reset_password/change/",
+                {
+                  uidb64,
+                  token,
+                  password,
+                  password2,
+                }
+              );
+              if (response.status === 200) {
+                mostrarMensaje(
+                  "Se ha cambiado la contraseña satisfactoriamente",
+                  "success_notification",
+                  "ok"
+                );
+                setFormType("login");
+              }
+            } catch {
+              mostrarMensaje(
+                "No se ha podido cambiar la contraseña",
+                "error_notification",
+                "error"
+              );
+            }
+          } else {
+            mostrarMensaje(
+              "Las contraseñas no coinciden",
+              "warning_notification",
+              "warning"
+            );
+          }
+        }
+      }
     }
   };
 
-  // Funcion para el cambio de manejo de formulario
+  // Funcion para el cambio de manejo de formulario y animacion
   const handleFormChange = (newFormType) => {
     setAnimationClass("slide-out");
     setTimeout(() => {
@@ -183,7 +173,7 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
     } else if (formType === "forgotPassword") {
       return (
         <>
-          <form onSubmit={handlePasswordResetRequest}>
+          <form onSubmit={handleSubmit}>
             <h1 className="title__form">Recuperacion de contraseña</h1>
             <p className="desc__form">
               Diligencie los campos para la validacion y restablecimiento de la
@@ -222,18 +212,12 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
           >
             Tengo mi contraseña
           </button>
-          <button
-            className="olvide__pass"
-            onClick={() => handleFormChange("resetPassword")}
-          >
-            Cambiar contraseña
-          </button>
         </>
       );
-    } else if (formType === "resetPassword") {
+    } else if (formType === "changePass") {
       return (
         <>
-          <form onSubmit={changePass}>
+          <form onSubmit={handleSubmit}>
             <h1 className="title__form">Creacion de nueva contraseña</h1>
             <p className="desc__form">Diguite su nueva contraseña</p>
             <div className="input-container login">

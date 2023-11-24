@@ -60,17 +60,16 @@ const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
             {item.isOpen && (
               <ul className="subMenu">
                 {item.subItems.map((subItem, subIndex) => (
-                  <li className="subMenu-item" key={subIndex}>
+                  <li
+                    className="subMenu-item"
+                    key={subIndex}
+                    onClick={() => toggleSubMenu(index, String(subItem.link))}
+                  >
                     <img
                       className="menuItem__icon"
                       src={`src/img/${subItem.url_img}.png`}
                     ></img>
-                    <a
-                      className="subMenu-url"
-                      onClick={() => toggleSubMenu(index, String(subItem.link))}
-                    >
-                      {subItem.nom_modulo}
-                    </a>
+                    <a className="subMenu-url">{subItem.nom_modulo}</a>
                   </li>
                 ))}
               </ul>

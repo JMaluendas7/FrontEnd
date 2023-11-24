@@ -1,0 +1,38 @@
+.div__flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content__dateDH {
+    position: relative;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.dateDH {
+    width: 20rem;
+}
+
+
+
+
+
+
+.opciones {
+    cursor: pointer;
+}
+
+.option {
+    background-color: #fff;
+    color: #333;
+    padding: .5rem;
+}
+
+
+.option:hover,
+.option:focus {
+    background-color: #f5f5f5 !important;
+}
+  
+  

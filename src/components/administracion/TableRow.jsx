@@ -43,7 +43,7 @@ const TableRow = ({
         num_documento: colaborador.num_documento,
         telefono: colaborador.telefono,
         email: colaborador.email,
-        contrato_id: colaborador.contrato_id,
+        cargo_id: colaborador.cargo_id,
         direccion: colaborador.direccion,
         ciudad: colaborador.ciudad,
         rol_id: colaborador.rol_id,
@@ -188,18 +188,17 @@ const TableRow = ({
           <input
             type="text"
             className="campo__input"
-            name="contrato_id"
-            value={colaborador.contrato_id}
+            value={colaborador.cargo_id}
             onChange={(e) =>
               handleChange(
                 colaborador.num_documento,
-                "contrato_id",
+                "cargo_id",
                 e.target.value
               )
             }
           />
         ) : (
-          colaborador.contrato_id
+          colaborador.cargo_id
         )}
       </td>
       <td className="colum">

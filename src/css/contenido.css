@@ -2,11 +2,11 @@
   overflow-y: auto;
   position: absolute;
   width: 79.8%;
-  height: 90%;
+  height: 91%;
   right: 0px;
   bottom: 0px;
   border: none;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  box-shadow: 0 0 10px 5px rgba(0,0,0,0.2);
   background: #fff;
   border-top-left-radius: 3rem;
   border-bottom-left-radius: 1rem;
@@ -19,6 +19,7 @@
   min-width: 95%;
   max-width: 95%;
   margin: 0 auto;
+  margin-bottom: 10rem; /* Solo temporal por pruebas*/
   transition: ease-in-out;
 }
 
@@ -110,6 +111,10 @@
   font-size: .7rem;
   color: #28a745;
   line-height: normal;
+}
+.input__date--long {
+  width: 25rem;
+  text-align: center;
 }
 
 .input-label2 {

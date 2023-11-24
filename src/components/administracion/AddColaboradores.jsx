@@ -192,7 +192,7 @@ const Contenido = ({ mostrarMensaje }) => {
                   className="colum"
                   onClick={() => handleOrderBy("contrato_id")}
                 >
-                  Contrato
+                  Cargo
                 </th>
                 <th className="colum">
                   <div className="colum__title">

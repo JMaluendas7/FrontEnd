@@ -3,6 +3,9 @@ import axios from "axios";
 import Select from "react-select";
 import TableUsers from "./TableUsers";
 import "/src/css/administracion/AddUser.css";
+import "/src/css/administracion/Pruebas.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Pruebas = () => {
   // Llamado a lista de los colaboradores
@@ -93,24 +96,56 @@ const Pruebas = () => {
   // Notificacion de Registo *Se debe Mejorar*
   const [mensaje, setMensaje] = useState({
     visible: true,
-    mensaje: "Mensaje de Notificaciones",
-    color: "#1CC88A",
-    imagen: "/src/img/ok.png",
   });
   const mostrarMensaje = (mensaje, color, imagen) => {
     setMensaje({
       visible: true,
-      mensaje,
-      color,
-      imagen,
     });
-    setTimeout(() => {
-      setMensaje({
-        visible: false,
-        mensaje: "",
-        imagen: "",
+  };
+
+  // useState para campo de Mes Año
+  const [selectedDate, setSelectedDate] = useState("");
+  const handleDateChange1 = (e) => {
+    setSelectedDate(e.target.value);
+  };
+
+  // Proceso 2 inputs date
+  const [startDate2, setStartDate2] = useState(null);
+  const [endDate2, setEndDate2] = useState(null);
+  const handleStartDateChange = (date) => {
+    setStartDate2(date);
+  };
+  const handleEndDateChange = (date) => {
+    setEndDate2(date);
+  };
+
+  // Manejo de campo date inicioFin
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [dateRangeText, setDateRangeText] = useState("");
+
+  const handleDateChange = (dates) => {
+    const [start, end] = dates;
+    setStartDate(start);
+    setEndDate(end);
+
+    if (start && end) {
+      console.log(start, end);
+      const formattedStartDate = start.toLocaleDateString("es-ES", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
       });
-    }, 6000);
+      const formattedEndDate = end.toLocaleDateString("es-ES", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+      console.log(startDate, endDate);
+      setDateRangeText(`${formattedStartDate} - ${formattedEndDate}`);
+    } else {
+      setDateRangeText("");
+    }
   };
 
   return (
@@ -168,12 +203,16 @@ const Pruebas = () => {
           )}
         </div>
         {showUserFields && (
-          <button className="submit-button" type="submit">
-            Registrar Usuario
-          </button>
+          <>
+            <p>Boton envio de submit</p>
+            <button className="submit-button" type="submit">
+              Registrar Usuario
+            </button>
+          </>
         )}
       </form>
 
+      <p>Input de busqueda adaptable a cualquier busqueda necesaria</p>
       <div className="input-container search">
         <input
           type="text"
@@ -187,6 +226,7 @@ const Pruebas = () => {
         <label className="input-label">Buscar por cedula o nombre</label>
       </div>
 
+      <p>Tabla dinamica con edicion, eliminacion, orden, paginacion, etc</p>
       <section className="container__table">
         <table className="filas__container">
           <thead>
@@ -213,8 +253,80 @@ const Pruebas = () => {
             ))}
           </tbody>
         </table>
+        <p>Campo de Menu desplegable</p>
+        <div className="input-container">
+          <select
+            className="opciones dni"
+            name="tipo_documento"
+            defaultValue={"dni"}
+          >
+            <option value="dni" disabled>
+              DNI
+            </option>
+            <option className="option" value="C.C.">
+              Cedula de ciudadania
+            </option>
+            <option className="option" value="T.I.">
+              Tarjeta de Identidad
+            </option>
+          </select>
+        </div>
         <p>Campo Fecha</p>
         <input type="date" className="input-field"></input>
+        <div>
+          <p>Campo Fecha de mes y año</p>
+          <label className="label">Selecciona año y mes:</label>
+          <input
+            type="month"
+            className="input-field"
+            value={selectedDate}
+            onChange={handleDateChange1}
+            min="YYYY-01"
+            max="YYYY-12"
+          />
+          <p>Campo fecha de rango en 2 inputs</p>
+          <label>Selecciona el rango de fechas:</label>
+          <div className="div__flex">
+            <h3> Desde </h3>
+            <DatePicker
+              className="input-field"
+              selected={startDate2}
+              onChange={handleStartDateChange}
+              selectsStart
+              startDate={startDate2}
+              endDate={endDate2}
+              placeholderText="Fecha inicial"
+            />
+            <h3> Hasta </h3>
+            <DatePicker
+              className="input-field"
+              selected={endDate2}
+              onChange={handleEndDateChange}
+              selectsEnd
+              startDate={startDate2}
+              endDate={endDate2}
+              minDate={startDate2}
+              placeholderText="Fecha final"
+            />
+          </div>
+          <br />
+          <p>Campo fecha de rango en 1 input</p>
+          <div>
+            <label>Selecciona el rango de fechas:</label>
+            <div className="content__dateDH">
+              <DatePicker
+                className="input-field"
+                selected={startDate}
+                onChange={handleDateChange}
+                startDate={startDate}
+                endDate={endDate}
+                selectsRange
+                placeholderText="Selecciona un rango"
+              />
+              <p>{dateRangeText}</p>
+            </div>
+          </div>
+        </div>
       </section>
       <div>
         {mensaje.visible && (
