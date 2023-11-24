@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import "./css/Login.css";
 
 function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
@@ -106,14 +104,12 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
         );
 
         if (response.status === 200) {
-          navigate("/");
           mostrarMensaje(
             "Se ha cambiado la contraseña satisfactoriamente",
             "success_notification",
             "ok"
           );
         } else {
-          navigate("/");
           mostrarMensaje(
             "No se ha cambiado la contraseña",
             "success_wuarning",
@@ -121,7 +117,6 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
           );
         }
       } catch (error) {
-        navigate("/");
         mostrarMensaje(
           "No se ha cambiado la contraseña",
           "success_wuarning",

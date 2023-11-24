@@ -15,18 +15,18 @@ function App() {
   const [token, setToken] = useState("");
 
   useEffect(() => {
-    const parm = window.location.search;
     const searchParams = new URLSearchParams(window.location.search);
     const uidb64Param = searchParams.get("uidb64");
     const tokenParam = searchParams.get("token");
-    console.log(uidb64, tokenParam, searchParams, parm);
-
+  
+    console.log("uidb64Param:", uidb64Param);
+    console.log("tokenParam:", tokenParam);
+  
     if (uidb64Param && tokenParam) {
       setUidb64(uidb64Param);
       setToken(tokenParam);
-
       // Redirigir a la URL sin parámetros
-      window.location.href = "/";
+      window.history.replaceState(null, null, "/");
     }
   }, []);
 
