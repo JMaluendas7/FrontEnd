@@ -1,6 +1,6 @@
 :root {
-    --color-scrollbar: #1CC88A;
-    --color-background-scrollbar: #1CC88A;
+    --color-background-body: #1CC88A;
+
 }
 
 /* Scroll Chrome */
@@ -16,12 +16,12 @@
 }
 
 .container:hover::-webkit-scrollbar-thumb {
-    box-shadow: inset 0 0 0 10px var(--color-scrollbar);
+    box-shadow: inset 0 0 0 10px var(--color-background-body);
 }
 
 .container:hover::-webkit-scrollbar-thumb:hover {
     border: 8px solid transparent;
-    box-shadow: inset 0 0 0 10px var(--color-scrollbar);
+    box-shadow: inset 0 0 0 10px var(--color-background-body);
 }
 
 /* Con esta propiedad damos margenes al scrroll cuando queremos que
@@ -48,13 +48,13 @@ no pase de determinado lugar */
 
 /* Esto define como se ve el scroll cuando estamos dentro de container */
 .menu-container:hover::-webkit-scrollbar-thumb {
-    box-shadow: inset 0 0 0 10px #fff;
+    box-shadow: inset 0 0 0 10px var(background-add);
 }
 
 /* Esto define como se ve el scroll cuando posamos el mause sobre el */
 .menu-container:hover::-webkit-scrollbar-thumb:hover {
     border: 2px solid transparent;
-    box-shadow: inset 0 0 0 10px #fff;
+    box-shadow: inset 0 0 0 10px var(background-add);
 }
 
 .menu-container::-webkit-scrollbar-track {
@@ -100,5 +100,5 @@ no pase de determinado lugar */
 .menu-container,
 .container__table{
     scrollbar-width: thin;
-    scrollbar-color: var(--color-scrollbar) transparent;
+    scrollbar-color: var(--color-background-body) transparent;
 }

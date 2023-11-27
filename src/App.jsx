@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import Banner from "./banner";
 import Menu from "./menu";
 import Container from "./Container";
@@ -18,20 +17,28 @@ function App() {
     const searchParams = new URLSearchParams(window.location.search);
     const uidb64Param = searchParams.get("uidb64");
     const tokenParam = searchParams.get("token");
-
+  
     if (uidb64Param && tokenParam) {
       setUidb64(uidb64Param);
       setToken(tokenParam);
       // Redirigir a la URL sin parámetros
       window.history.replaceState(null, null, "/");
     }
-    // Trae los elementos para el menu solo si el usuario está autenticado
-    const token = Cookies.get("authToken"); // O localStorage.getItem("authToken");
-    if (token) {
-      console.log("Username:", username);
-      setIsAuthenticated(true);
+  
+    // Fetch menu data if authenticated and menuData is empty
+    if (!isAuthenticated) {
+      const token = Cookies.get("authToken");
+      if (token) {
+        const username = localStorage.getItem("username");
+        setIsAuthenticated(true);
+      }
     }
-  }, []);
+    
+    // Fetch menu if authenticated and menuData is empty
+    if (isAuthenticated && menuData.length === 0) {
+      getMenu();
+    }
+  }, [isAuthenticated, menuData.length]);
   // Almacenamiento de Cookies en variables
   const username = localStorage.getItem("username");
   const nombre = localStorage.getItem("nombre");
@@ -56,10 +63,7 @@ function App() {
       );
     }
   };
-  // Verificacion para llamar el menu
-  if (isAuthenticated == true && menuData.length == false) {
-    getMenu();
-  }
+
 
   const [containerComponent, setContainerComponent] = useState("Home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);

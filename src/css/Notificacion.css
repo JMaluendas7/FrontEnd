@@ -75,16 +75,16 @@ h2 {
 }
 
 .error_notification {
-    background-color: rgba(255, 99, 71, 0.5);
-    color: #fff;
+    background-color: var(--color-error);
+    color: var(--color-background-add);
 }
 
 .warning_notification {
-    background-color: rgba(255, 215, 0, 0.5);
-    color: #000;
+    background-color: var(--color-warning);
+    color: #000; /* O variable de texto */
 }
 
 .success_notification {
-    background-color: rgba(28, 200, 138, 0.5);
+    background-color: var(--color-ok);
     color: #000;
 }

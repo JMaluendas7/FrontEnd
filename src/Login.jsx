@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import "./css/Login.css";
 
 function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
   const [username, setUsername] = useState("");

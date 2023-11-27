@@ -1,8 +1,7 @@
-import React, { lazy, Suspense } from "react";
-import "./css/contenido.css";
+import React, { lazy, Suspense, useMemo } from "react";
 
 const Container = ({ Component, mostrarMensaje }) => {
-  const Modulo = lazy(() => import(`./components/${Component}`));
+  const Modulo = useMemo(() => lazy(() => import(`./components/${Component}`)), [Component]);
 
   return (
     <div className="container">

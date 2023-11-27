@@ -3,7 +3,7 @@
   flex-direction: column;
   position: fixed;
   bottom: -500px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  box-shadow: 0 0 10px var(--color-shadow);
   transition: bottom 500ms ease-in-out;
 }
 
@@ -15,7 +15,7 @@
 
 .show-form {
   bottom: 0;
-  background-color: aliceblue;
+  background-color: var(--color-label-form);
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
   padding: 0 1rem;
@@ -67,11 +67,11 @@
 
 .input-field:focus + .label__form,
 .input-field:not(:placeholder-shown) + .label__form {
-  background-color: aliceblue;
+  background-color: var(--color-label-form);
   top: -6px;
   left: 5px;
   padding: 0 .3rem;
   font-size: .7rem;
-  color: #28a745;
+  color: var(--color-input-border-focus);
   z-index: 0;
 }

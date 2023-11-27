@@ -1,0 +1,57 @@
+@media (max-width: 1220px) {
+    .logo_empresas {
+        padding: 0;
+        max-width: 10rem;
+        transform: scale(0.9);
+    }
+    .container__content {
+        flex-basis: 43%;
+        height: 29rem;
+    }
+    .container__login {
+        flex-basis: 43%;
+        height: 26rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .logo_empresas {
+        max-width: 7rem;
+        transform: scale(0.8);
+    }
+    .container__content {
+        flex-basis: 36%;
+        height: 27rem;
+    }
+    .container__login {
+        flex-basis: 36%;
+        height: 25rem;
+    }
+    .login {
+        width: auto;
+        margin: 2rem 1rem 0;
+    }
+}
+
+@media (max-width: 970px) {
+    .panel__login {
+        position: fixed;
+    }
+    .logos__figure {
+        flex-wrap: wrap;
+    }
+    .logo_empresas {
+        max-width: 11rem;
+    }
+    .container__content {
+        flex-basis: 30%;
+        height: 27rem;
+    }
+    .container__login {
+        flex-basis: 30%;
+        height: 25rem;
+    }
+    .title__form {
+        font-size: 1.7rem;
+    }
+}

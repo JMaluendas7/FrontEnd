@@ -1,5 +1,3 @@
-import "/src/css/Notificacion.css";
-
 const Notificacion = ({ notificaciones, cerrarNotificacion }) => {
   return (
     <div className="contenedor__notificaciones">

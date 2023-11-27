@@ -3,7 +3,7 @@
   position: absolute;
   width: 19.4%;
   height: 100%;
-  background: #D3D3D3;
+  background: var(--color-scrollbar);
   padding: 0px;
   margin: .6rem .3rem .4rem 0;
   bottom: 0rem;
@@ -11,8 +11,8 @@
   /* Al eliminar lo siguiente se queda en un buen diseño */
   border-bottom-right-radius: 3rem;
   border-top-right-radius: 1rem;
-  box-shadow: 0 0 7px 4px rgba(0,0,0,0.2);
-  color: #484141;
+  box-shadow: 0 0 7px 4px var(--color-shadow);
+  color: var(--color-text-menu);
   left: 0px;
   transition: all 710ms ease-in-out;
   scroll-behavior: smooth;
@@ -29,7 +29,7 @@
 .menu-hamburgesa {
   background-image: url(/src/img/menu.png);
   background-repeat: no-repeat;
-  background-color: #fff;
+  background-color: var(--color-background-add);
   height: 32px;
   width: 32px;
   position: absolute;
@@ -62,7 +62,7 @@
 .menuItem-item {
   display: flex;
   flex-direction: row;
-  background-color: #A9A9A9;                                                                                                                                              ;
+  background-color: var(--color-background-table-header);                                                                                                                                              ;
   margin: 7px 0 0;
   border-radius: .3rem;
   transition: all 300ms ease-in;
@@ -132,7 +132,7 @@
 .subMenu-item:hover {
   transform: translateX(1px);
   border-radius: .2rem;
-  background-color: #A9A9A9;
+  background-color: var(--color-background-table-header);
 }
 
 .subMenu-img {
@@ -143,13 +143,13 @@
 
 .subMenu-url {
   flex-basis: 100%;
-  color: #484141;
+  color: var(--color-text-menu);
   font-size: .8rem;
   /* background-color: #1cc88a;
   border-radius: .4rem; */
 }
 .subMenu-url:hover {
-  color: #635e5e;
+  color: var(--color-text-item-hover);
 }
 
 .menuItem__icon {

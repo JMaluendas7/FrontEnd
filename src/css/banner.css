@@ -1,11 +1,39 @@
+:root {
+  --color-scrollbar: #D3D3D4;
+  --color-background-scrollbar: #eee;
+  --color-background-body: #1CC88A;
+  --color-text: #333;
+  --color-accent: #3498db;
+  --color-accent-hover: #f5f5f5;
+  --color-accent-dark: #1d8034;
+  --color-error: #FF4136;
+  --color-warning: #FFD700;
+  --color-gradient-end: #21A3A2;
+  --color-background-table-header: #A9A9A9;
+  --color-background-hover: #f0f0f0;
+  --color-background-add: #ffffff;
+  --color-input-border-focus: #28a745;
+  --color-input-border: #007BFF;
+  --color-shadow: rgba(0, 0, 0, 0.2);
+  --color-overlay: rgba(0, 0, 0, 0.5);
+  --color-color-input: #666;
+  --color-button-primary: #27ae60;
+  --color-button-secondary: #3498db;
+  --color-label-form: #f0f8ff;
+
+  --color-logo-hover: #646cffaa;
+  --color-button-hover: darkgray;
+  --color-text-item-hover: #635e5e;
+  --color-text-menu: #484141;
+}
+
 .banner {
   position: fixed;
   height: 2.6rem;
   width: 79%;
   top: 0;
   right: 0;
-  
-  color: #484141;
+  color: var(--color-text);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -39,7 +67,7 @@
   transition: filter 300ms;
 }
 .logo-img:hover {
-  filter: drop-shadow(0 1em 1em #646cffaa);
+  filter: drop-shadow(0 1em 1em var(--color-logo-hover));
 }
 
 .title {
@@ -74,7 +102,7 @@
   flex-basis: 65%;
   height: 100%;
   width: 100%;
-  color: #fff;
+  color: var(--color-background-add);
   font-size: 1.1rem;
   text-align: end;
   margin: 0 15px 0 0;
@@ -92,16 +120,16 @@
   width: 100%;
   border: none;
   margin: 0;
-  color: white;
+  color: var(--color-background-add);
   right: -3.5rem;
   will-change: filter;
   transition: all 300ms ease-in-out;
 }
 .logout-figure:hover .logout-Button {
-  filter: drop-shadow(0 0 .3em #646cffaa);
+  filter: drop-shadow(0 0 .3em var(--color-logo-hover));
 }
 .logout-figure:hover .logout-user {
-  filter: drop-shadow(0 0 .5em #646cffaa);
+  filter: drop-shadow(0 0 .5em var(--color-logo-hover));
   translate: 7px;
 }
 .menu-open .menu {
@@ -123,9 +151,9 @@
   top: 2.6rem;
   left: 1.5rem;
   color: transparent;
-  background-color: lightgray;
+  background-color: var(--color-scrollbar);
   border-radius: 2rem 0 1rem 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px var(--color-shadow);
   transition: transform 700ms ease-in-out;
 }
 .logout-figure:hover .container-logout {
@@ -137,10 +165,10 @@
 
 .line {
   align-content: center;
-  width: calc(100% - 1rem);
-  margin: 0 0.5rem;
+  width: calc(100% - 2rem);
+  margin: 0 auto;
   border-radius: 1rem;
-  border: 0.5px solid lightslategray;
+  border: 0.5px solid rgb(120, 137, 154);
   opacity: 0.5;
 }
 
@@ -173,7 +201,10 @@
 }
 
 .item:hover {
-  background-color: darkgray;
+  background-color: var(--color-button-hover);
+}
+.item:hover .item-url {
+  color: var(--color-text-item-hover);
 }
 
 .logout-figure:hover .item {
@@ -183,8 +214,5 @@
   position: relative;
   margin: 0 1rem;
   top: 20%;
-  color: #484141;
-}
-.item-url:hover {
-  color: #635e5e;
+  color: var(--color-text);
 }

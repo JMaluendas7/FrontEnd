@@ -6,11 +6,11 @@
   right: 0px;
   bottom: 0px;
   border: none;
-  box-shadow: 0 0 10px 5px rgba(0,0,0,0.2);
-  background: #fff;
+  box-shadow: 0 0 10px 5px var(--color-shadow);
+  background: var(--color-background-add);
   border-top-left-radius: 3rem;
   border-bottom-left-radius: 1rem;
-  color: black;
+  color: var(--color-text);
   transition: all 720ms ease-in-out;
   text-align: center;
 }
@@ -33,7 +33,7 @@
 
 .input {
   border: none;
-  border-bottom: 2px solid #007BFF; /* Borde inferior */
+  border-bottom: 2px solid var(--color-input-border); /* Borde inferior */
   padding: 10px;
   font-size: 16px;
   outline: none;
@@ -42,7 +42,7 @@
 }
 
 .input:focus {
-  border-color: #28a745;
+  border-color: var(--color-input-border-focus);
   transform: scale(1.02);
   margin-left: .5rem;
 }
@@ -75,7 +75,7 @@
   top: 3.8px;
   left: 12px;
   font-size: 1rem;
-  color: #999;
+  color: var(--color-color-input);
   pointer-events: none;
   border-radius: 1rem;
   transition: all 300ms ease-in-out;
@@ -84,11 +84,11 @@
 .input-field {
   background-color: transparent;
   width: auto;
-  border: 1px solid #1d8034;
+  border: 1px solid var(--color-accent-dark);
   padding: 6px 12px;
   font-size: 1rem;
   outline: none;
-  color: black;
+  color: var(--color-text);
   border-radius: .5rem;
   transition: all 300ms ease;
 }
@@ -99,17 +99,17 @@
 
 .input-field:focus,
 .input-field:not(:placeholder-shown) {
-  border-color: #1CC88A;
+  border-color: var(--color-input-border-focus);
 }
 
 .input-field:focus + .input-label,
 .input-field:not(:placeholder-shown) + .input-label {
-  background-color: #fff;
+  background-color: var(--color-background-add);
   top: -6px;
   left: 15px;
   padding: 0 .1rem;
   font-size: .7rem;
-  color: #28a745;
+  color: var(--color-input-border-focus);
   line-height: normal;
 }
 .input__date--long {
@@ -122,7 +122,7 @@
   top: .5px;
   left: 10px;
   font-size: 1rem;
-  color: #999;
+  color: var(--color-color-input);
   pointer-events: none;
   transition: all 300ms ease-in-out;
 }
@@ -131,11 +131,11 @@
   background-color: transparent;
   width: 100%;
   border: none;
-  border-bottom: 2px solid #1d8034;
+  border-bottom: 2px solid var(--color-accent-dark);
   padding: 5px 10px 3px;
   font-size: 1rem;
   outline: none;
-  color: black;
+  color: var(--color-text);
   transition: border-color 0.3s ease;
 }
 
@@ -145,7 +145,7 @@
 
 .input-field2:focus,
 .input-field2:not(:placeholder-shown) {
-  border-color: #1CC88A;
+  border-color: var(--color-input-border-focus);
 }
 
 .input-field2:focus + .input-label2,
@@ -153,7 +153,7 @@
   top: -15px;
   left: 3px;
   font-size: .8rem;
-  color: #28a745;
+  color: var(--color-input-border-focus);
 }
 
 /* Estilos para Home.jsx */
@@ -189,7 +189,7 @@
 }
 
 .icon__cerrar:hover {
-  background-color: lightgray;
+  background-color: var(--color-background-hover);
   border-radius: .3rem;
   padding: .2rem;
 }
@@ -234,7 +234,7 @@
   left: 0;
   width: 13px;
   height: 6.5px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--color-overlay);
   z-index: 1;
 }
 
@@ -245,7 +245,7 @@
   right: 0;
   width: 13px;
   height: 6.5px;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--color-overlay);
   opacity: 0.5;
   z-index: 1;
 } */
@@ -294,6 +294,6 @@
   left: 0;
   width: 100%;
   height: 50%;
-  background: rgba(0, 0, 0, 0.5); /* Por defecto, se oscurece la mitad superior */
+  background: var(--color-overlay); /* Por defecto, se oscurece la mitad superior */
   pointer-events: none; /* Permitir clics en la imagen subyacente */
 }

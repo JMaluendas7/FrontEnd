@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./css/menu.css";
 
 const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
   const [menuStates, setMenuStates] = useState(menuItems.map(() => false));
