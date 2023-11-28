@@ -47,7 +47,7 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
       } catch {
         mostrarMensaje(
           "Usuario o contraseña incorrectos",
-          "success_warning",
+          "warning_notification",
           "warning"
         );
       }

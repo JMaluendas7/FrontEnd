@@ -14,7 +14,7 @@ const Notificacion = ({ notificaciones, cerrarNotificacion }) => {
                     className="imgnoti"
                     src={`src/img/${notificacion.imagen}.png`}
                   />
-                  <h2>{notificacion.mensaje}</h2>
+                  <h2 className="txt_noti">{notificacion.mensaje}</h2>
                 </div>
                 <div
                   className="cerrar_noti"

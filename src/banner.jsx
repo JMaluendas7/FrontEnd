@@ -39,11 +39,13 @@ const Banner = ({
           <h2 className="title-app">5Apps</h2>
         </div>
         <section className="logout">
-          <figure className="logout-figure">
-            <div className="logout-div">
-              <h3 className="logout-user">{nombre + " " + apellido}</h3>
-              <div className="logout-Button"></div>
-            </div>
+          <div className="logout-content">
+            <figure className="logout-figure">
+              <div className="logout-div">
+                <h3 className="logout-user">{nombre + " " + apellido}</h3>
+                <div className="logout-Button"></div>
+              </div>
+            </figure>
             <section className="container-logout">
               <ul className="container-items">
                 <li className="item">
@@ -59,7 +61,7 @@ const Banner = ({
                 </li>
               </ul>
             </section>
-          </figure>
+          </div>
         </section>
       </nav>
     </header>

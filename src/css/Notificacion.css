@@ -48,6 +48,9 @@
     width: 24px;
     margin-right: .5rem;
 }
+.txt_noti {
+    font-size: 1rem;
+}
 
 .cerrar_noti {
     position: absolute;
