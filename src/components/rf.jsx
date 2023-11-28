@@ -1,14 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 
-const UploadImage = () => {
+const UploadImage = ({ mostrarMensaje }) => {
+  const videoRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+  const handleCapture = () => {
+    const video = videoRef.current;
+
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream) => {
+          video.srcObject = stream;
+          video.play();
+        })
+        .catch((err) => console.error("Error al acceder a la cámara:", err));
+    }
+  };
+
+  const handleSnapshot = () => {
+    const video = videoRef.current;
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    canvas.toBlob((blob) => {
+      const file = new File([blob], "snapshot.png");
+      setSelectedFile(file);
+      setImagePreview(URL.createObjectURL(file)); // Muestra la vista previa de la imagen
+    }, "image/png");
   };
 
   const handleUpload = () => {
+    if (!selectedFile) {
+      mostrarMensaje("No se ha capturado una imagen aún", "error_notification", "error");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("imageData", selectedFile);
 
@@ -19,23 +52,32 @@ const UploadImage = () => {
         },
         withCredentials: true,
         crossDomain: true,
-        // Añade esto:
         xsrfCookieName: "csrftoken",
         xsrfHeaderName: "X-CSRFToken",
       })
       .then((response) => {
-        console.log("Respuesta del servidor:", response.data);
-        // Aquí puedes manejar la respuesta del servidor como desees
+        mostrarMensaje(response.data.message, "success_notification", "ok");
       })
       .catch((error) => {
-        console.error("Error al enviar la imagen:", error);
+        mostrarMensaje("Error al enviar la imagen", "error_notification", "error");
       });
   };
 
   return (
     <div>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={handleUpload}>Subir Imagen</button>
+      <video ref={videoRef} style={{ width: "100%", maxWidth: "400px" }} />
+      {imagePreview && (
+        <img
+          src={imagePreview}
+          alt="Preview"
+          style={{ width: "100%", maxWidth: "400px" }}
+        />
+      )}
+      <div>
+        <button onClick={handleCapture}>Abrir cámara</button>
+        <button onClick={handleSnapshot}>Tomar foto</button>
+        <button onClick={handleUpload}>Subir Imagen</button>
+      </div>
     </div>
   );
 };

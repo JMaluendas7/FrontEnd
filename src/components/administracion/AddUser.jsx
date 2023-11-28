@@ -133,7 +133,7 @@ const Contenido = () => {
 
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/subir_foto/', formData);
+      const response = await axios.post('http://127.0.0.1:8000/subir_ft/', formData);
       console.log('Imagen enviada correctamente:', response.data);
       mostrarMensaje("Se ha subido correctamente la imagen a la base de datos");
     } catch (error) {
