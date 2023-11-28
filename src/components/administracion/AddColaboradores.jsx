@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TableRow from "./TableRow";
-import "/src/css/administracion/AddColaboradores.css";
 
 const Contenido = ({ mostrarMensaje }) => {
   // Trae los tipos de documentos de identificacion
@@ -38,8 +37,7 @@ const Contenido = ({ mostrarMensaje }) => {
     } catch (error) {
       mostrarMensaje(
         "No se pueden visualizar los colaboradores",
-        "error",
-        "error"
+        "error_notification"
       );
     }
   };
@@ -60,16 +58,15 @@ const Contenido = ({ mostrarMensaje }) => {
       .post("http://127.0.0.1:8000/addColaboradores/", formData)
       .then((response) => {
         if (response.status === 200) {
-          mostrarMensaje("Colaborador Registrado Exitosamente", "green", "ok");
+          mostrarMensaje(
+            "Colaborador Registrado Exitosamente",
+            "success_notification"
+          );
           getColaboradores();
         }
       })
       .catch((error) => {
-        mostrarMensaje(
-          "Colaborador no Registrado",
-          "error_notification",
-          "error"
-        );
+        mostrarMensaje("Colaborador no Registrado", "error_notification");
       });
   };
 
@@ -154,12 +151,12 @@ const Contenido = ({ mostrarMensaje }) => {
             type="text"
             name="search"
             id="search"
-            className="input-field"
+            className="input-field input-field__search"
             placeholder=""
             value={searchValue}
             onChange={handleSearchChange}
           />
-          <label className="input-label" htmlFor="search">
+          <label className="input-label input-label__search" htmlFor="search">
             Buscar por cedula o nombre
           </label>
         </div>
@@ -245,7 +242,7 @@ const Contenido = ({ mostrarMensaje }) => {
         <p>Agregar colaborador</p>
       </button>
       <section className={`form ${showForm ? "show-form" : ""}`}>
-        <h1>Agregar Colaborador</h1>
+        <h1 className="title__form">Agregar Colaborador</h1>
         <button className="cerrar__agregar" onClick={toggleForm}>
           <img
             className="icon__cerrar"
@@ -255,7 +252,7 @@ const Contenido = ({ mostrarMensaje }) => {
         </button>
         <form method="post" onSubmit={enviarSubmit}>
           <div className="camp__form">
-            <div className="a">
+            <div className="dropdown__input">
               <div className="input-container">
                 <select
                   className="opciones dni"
@@ -286,130 +283,119 @@ const Contenido = ({ mostrarMensaje }) => {
                 </label>
               </div>
             </div>
-
-            <div className="b">
-              <div className="input-container agg_colaborador">
-                <input
-                  id="nombre"
-                  name="nombre"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label label__form">Nombres</label>
-              </div>
-              <div className="input-container agg_colaborador">
-                <input
-                  id="apellido"
-                  name="apellido"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label label__form">Apellidos</label>
-              </div>
+            <div className="input-container agg_colaborador">
+              <input
+                id="nombre"
+                name="nombre"
+                className="input-field"
+                placeholder=""
+                type="text"
+              />
+              <label className="input-label label__form">Nombres</label>
             </div>
-            <div className="c">
-              <div className="input-container agg_colaborador">
-                <input
-                  id="email"
-                  name="email"
-                  className="input-field"
-                  placeholder=""
-                  type="email"
-                />
-                <label className="input-label label__form">Email</label>
-              </div>
-              <div className="input-container agg_colaborador">
-                <input
-                  id="direccion"
-                  name="direccion"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label label__form">Direccion</label>
-              </div>
-              <div className="input-container agg_colaborador">
-                <input
-                  id="ciudad"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                  name="ciudad"
-                />
-                <label className="input-label label__form">Ciudad</label>
-              </div>
+            <div className="input-container agg_colaborador">
+              <input
+                id="apellido"
+                name="apellido"
+                className="input-field"
+                placeholder=""
+                type="text"
+              />
+              <label className="input-label label__form">Apellidos</label>
             </div>
-            <div className="d">
-              <div className="input-container agg_colaborador">
-                <input
-                  id="telefono"
-                  className="input-field"
-                  placeholder="Telefono"
-                  type="number"
-                  name="telefono"
-                />
-                <label className="input-label label__form">Telefono</label>
-              </div>
-              <div className="input-container agg_colaborador">
-                <input
-                  id="contrato_id"
-                  className="input-field"
-                  placeholder=""
-                  type="number"
-                  name="contrato_id"
-                />
-                <label className="input-label label__form">
-                  Numero de Contrato
-                </label>
-              </div>
+            <div className="input-container agg_colaborador">
+              <input
+                id="email"
+                name="email"
+                className="input-field"
+                placeholder=""
+                type="email"
+              />
+              <label className="input-label label__form">Email</label>
             </div>
-            <div className="e">
-              <div className="input-container agg_colaborador">
-                <select
-                  className="opciones"
-                  name="empresa_id"
-                  defaultValue={"empresa"}
-                >
-                  <option value="empresa" disabled>
-                    Empresa
+            <div className="input-container agg_colaborador">
+              <input
+                id="direccion"
+                name="direccion"
+                className="input-field"
+                placeholder=""
+                type="text"
+              />
+              <label className="input-label label__form">Direccion</label>
+            </div>
+            <div className="input-container agg_colaborador">
+              <input
+                id="ciudad"
+                className="input-field"
+                placeholder=""
+                type="text"
+                name="ciudad"
+              />
+              <label className="input-label label__form">Ciudad</label>
+            </div>
+            <div className="input-container agg_colaborador">
+              <input
+                id="telefono"
+                className="input-field"
+                placeholder="Telefono"
+                type="number"
+                name="telefono"
+              />
+              <label className="input-label label__form">Telefono</label>
+            </div>
+            <div className="input-container agg_colaborador">
+              <input
+                id="contrato_id"
+                className="input-field"
+                placeholder=""
+                type="number"
+                name="contrato_id"
+              />
+              <label className="input-label label__form">
+                Numero de Contrato
+              </label>
+            </div>
+            <div className="input-container agg_colaborador">
+              <select
+                className="opciones"
+                name="empresa_id"
+                defaultValue={"empresa"}
+              >
+                <option value="empresa" disabled>
+                  Empresa
+                </option>
+                {empresas.map((empresa, index) => (
+                  <option key={index} value={empresa.id_empresa}>
+                    {empresa.nombre_empresa}
                   </option>
-                  {empresas.map((empresa, index) => (
-                    <option key={index} value={empresa.id_empresa}>
-                      {empresa.nombre_empresa}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="input-container agg_colaborador">
-                <select
-                  className="opciones"
-                  name="cargo_id"
-                  defaultValue={"cargo"}
-                >
-                  <option value="cargo" disabled>
-                    Cargo
+                ))}
+              </select>
+            </div>
+            <div className="input-container agg_colaborador">
+              <select
+                className="opciones"
+                name="cargo_id"
+                defaultValue={"cargo"}
+              >
+                <option value="cargo" disabled>
+                  Cargo
+                </option>
+                <option value="opciosdfn2">Auxiliar de Recursos Humanos</option>
+                <option value="opciodn3">Opción 3</option>
+                <option value="opcison4">Opción 4</option>
+              </select>
+            </div>
+            <div className="input-container agg_colaborador">
+              <select className="opciones" name="rol_id" defaultValue={"rol"}>
+                <option value="rol" disabled>
+                  Rol
+                </option>
+                {roles.map((rol, index) => (
+                  <option key={index} value={rol.id_rol}>
+                    {rol.detalle_rol}
                   </option>
-                  <option value="opciosdfn2">
-                    Auxiliar de Recursos Humanos
-                  </option>
-                  <option value="opciodn3">Opción 3</option>
-                  <option value="opcison4">Opción 4</option>
-                </select>
-              </div>
-              <div className="input-container agg_colaborador">
-                <select className="opciones" name="rol_id" defaultValue={"rol"}>
-                  <option value="rol" disabled>
-                    Rol
-                  </option>
-                  {roles.map((rol, index) => (
-                    <option key={index} value={rol.id_rol}>
-                      {rol.detalle_rol}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                ))}
+              </select>
             </div>
           </div>
           <button className="submit-button" type="submit">

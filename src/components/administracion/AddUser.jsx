@@ -4,7 +4,7 @@ import Select from "react-select";
 import TableUsers from "./TableUsers";
 import "/src/css/administracion/AddUser.css";
 
-const Contenido = () => {
+const Contenido = ({ mostrarMensaje }) => {
   // Llamado a lista de los colaboradores
   const [colaboradores, setColaboradores] = useState([]);
   const getColaboradores = () => {
@@ -68,29 +68,19 @@ const Contenido = () => {
       );
 
       if (response.status === 200) {
-        // Solicitud exitosa RTA 200
-        console.log("Colaborador registrado con éxito.");
+        mostrarMensaje(
+          "Ha sido registrado el colaborador",
+          "success_notification"
+        );
         getUsers();
-        mostrarMensaje();
-      } else {
-        // Fallo de solicitud
-        console.error("Error al registrar el colaborador.");
       }
     } catch (error) {
-      console.error("Error al enviar la solicitud: ", error);
+      mostrarMensaje(
+        "No se ha podido eliminar el usuario",
+        "error_notification"
+      );
     }
   };
-
-  // Notificacion de Registo *Se debe Mejorar*
-  const [mensajeVisible, setMensajeVisible] = useState(false); // Mueve la declaración aquí
-
-  const mostrarMensaje = () => {
-    setMensajeVisible(true);
-    setTimeout(() => {
-      setMensajeVisible(false);
-    }, 300000);
-  };
-
 
   const videoRef = useRef();
   const [fotoTomada, setFotoTomada] = useState(null);
@@ -105,8 +95,8 @@ const Contenido = () => {
   };
 
   const dataURItoBlob = (dataURI) => {
-    const byteString = atob(dataURI.split(',')[1]);
-    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    const byteString = atob(dataURI.split(",")[1]);
+    const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
     const ab = new ArrayBuffer(byteString.length);
     const ia = new Uint8Array(ab);
     for (let i = 0; i < byteString.length; i++) {
@@ -114,35 +104,40 @@ const Contenido = () => {
     }
     return new Blob([ab], { type: mimeString });
   };
-  
+
   const capturarImagen = async () => {
     const canvas = document.createElement("canvas");
     canvas.width = videoRef.current.videoWidth;
     canvas.height = videoRef.current.videoHeight;
     canvas.getContext("2d").drawImage(videoRef.current, 0, 0);
-  
+
     const imagenCapturada = canvas.toDataURL("image/jpeg");
-    
+
     // Convertir la URL base64 a un archivo Blob
     const imagenBlob = dataURItoBlob(imagenCapturada);
-  
-    const formData = new FormData();
-    formData.append('imagen', imagenBlob, 'nombre_imagen.jpg'); // Adjuntar el archivo al FormData
-    console.log('¿El FormData tiene algún valor adjunto?', formData.has('imagen'));
-    console.log(formData)
 
+    const formData = new FormData();
+    formData.append("imagen", imagenBlob, "nombre_imagen.jpg"); // Adjuntar el archivo al FormData
+    console.log(
+      "¿El FormData tiene algún valor adjunto?",
+      formData.has("imagen")
+    );
+    console.log(formData);
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/subir_ft/', formData);
-      console.log('Imagen enviada correctamente:', response.data);
-      mostrarMensaje("Se ha subido correctamente la imagen a la base de datos");
+      const response = await axios.post(
+        "http://127.0.0.1:8000/subir_ft/",
+        formData
+      );
+      console.log("Imagen enviada correctamente:", response.data);
+      mostrarMensaje(
+        "Se ha subido correctamente la imagen a la base de datos",
+        "success_notification"
+      );
     } catch (error) {
-      console.error('Error al enviar la imagen:', error);
-
+      console.error("Error al enviar la imagen:", error);
     }
   };
-    
-  
 
   return (
     <div className="Efect">

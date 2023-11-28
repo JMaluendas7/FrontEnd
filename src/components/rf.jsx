@@ -38,7 +38,7 @@ const UploadImage = ({ mostrarMensaje }) => {
 
   const handleUpload = () => {
     if (!selectedFile) {
-      mostrarMensaje("No se ha capturado una imagen aún", "error_notification", "error");
+      mostrarMensaje("No se ha capturado una imagen aún", "error_notification");
       return;
     }
 
@@ -56,10 +56,10 @@ const UploadImage = ({ mostrarMensaje }) => {
         xsrfHeaderName: "X-CSRFToken",
       })
       .then((response) => {
-        mostrarMensaje(response.data.message, "success_notification", "ok");
+        mostrarMensaje(response.data.message, "success_notification");
       })
       .catch((error) => {
-        mostrarMensaje("Error al enviar la imagen", "error_notification", "error");
+        mostrarMensaje("Error al enviar la imagen", "error_notification");
       });
   };
 

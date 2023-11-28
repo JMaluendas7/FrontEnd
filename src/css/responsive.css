@@ -1,4 +1,5 @@
 @media (max-width: 1220px) {
+    /* Estilos responsive para Login */
     .logo_empresas {
         padding: 0;
         max-width: 10rem;
@@ -15,6 +16,7 @@
 }
 
 @media (max-width: 1024px) {
+    /* Estilos responsive para Login */
     .logo_empresas {
         max-width: 7rem;
     }
@@ -33,6 +35,7 @@
 }
 
 @media (max-width: 970px) {
+    /* Estilos responsive para Login */
     .panel__login {
         position: fixed;
     }
@@ -43,12 +46,12 @@
         max-width: 8rem;
         margin: .1rem 0 0;
     }
-
     .title__form {
         font-size: 1.7rem;
     }
 }
 @media (max-width: 880px) {
+    /* Estilos responsive para Login */
     .logos__figure {
         flex-wrap: wrap;
     }
@@ -63,6 +66,7 @@
 }
 
 @media (max-width: 660px) {
+    /* Estilos responsive para Login */
     .logos__figure {
         margin: 0;
     }
@@ -76,6 +80,7 @@
 }
 
 @media (max-width: 540px) {
+    /* Estilos responsive para Login */
     .logo_empresas {
         max-width: 7rem;
     }
@@ -86,6 +91,7 @@
 }
 
 @media (max-width: 500px) {
+    /* Estilos responsive para Login */
     .container__login--colums {
         flex-direction: column;
     }
@@ -98,19 +104,21 @@
     }
 }
 @media (max-width: 440px) {
+    /* Estilos responsive para Login */
     .container__login {
         width: 70%;
     }
 }
 
 @media (max-width: 360px) {
+    /* Estilos responsive para Login */
     .container__login {
         width: 60%;
     }
 }
 
 @media (max-width: 1110px) {
-
+    /* Estilos responsive para Menu y adaptabilidad de los 3 componentes*/
     .menu-container {
         height: auto;
         width: 25%;
@@ -122,7 +130,7 @@
         z-index: 2;
     }
     .menu-container:hover {
-        transform: scale(1.02);
+        transform: scale(1.01);
     }
     .banner {
         width: 73%;
@@ -136,16 +144,17 @@
     .txt_noti {
         font-size: .9rem;
     }
+    .contenedor__notificaciones {
+        max-width: 30%;
+    }
 }
 @media (max-width: 900px) {
+    /* Estilos responsive para Menu y adaptabilidad de los 3 componentes*/
+    .menu-container {
+        width: 28%;
+    }
     .banner {
-        width: 73%;
-    }
-    .container {
-        width: 100%;
-    }
-    .nav {
-        width: 92%;
+        width: 70%;
     }
     .txt_noti {
         font-size: .8rem;
@@ -155,87 +164,104 @@
     }
 }
 @media (max-width: 760px) {
+    /* Estilos responsive para Menu y adaptabilidad de los 3 componentes*/
     .menu-container {
         width: 30%;
     }
     .banner {
         width: 68%;
     }
-    .container {
-        width: 100%;
-    }
-    .nav {
-        width: 92%;
-    }
-    .txt_noti {
-        font-size: .8rem;
-    }
-    .contenedor__notificaciones {
-        max-width: 37%;
-    }
 }
 @media (max-width: 720px) {
+    /* Estilos responsive para Menu y adaptabilidad de los 3 componentes*/
     .menu-container {
-        width: 37%;
+        width: 17rem;
+    }
+    .menu-hamburgesa {
+        left: 19rem;
+    }
+    .menu-open .menu-hamburgesa {
+        left: 1rem;
     }
     .banner {
-        width: 61%;
-    }
-    .container {
         width: 100%;
     }
     .nav {
-        width: 92%;
+        width: 90%;
+    }
+    .logout-user {
+        font-size: .9rem;
+    }
+    .logout-Button {
+        width: 22px;
+        height: 22px;
+    }
+    .logo-img {
+        background-size: 60%;
+        position: relative;
+        top: 20%;
+    }
+    /* Responsive para formularios */
+    .show-form {
+        max-width: 95%;
+    }
+    .input-field,
+    .opciones {
+        max-width: 8rem;
+    }
+    .input-field__search {
+        max-width: 12rem;
+    }
+    .input-label {
+        font-size: .8rem;
+        top: 4.8px;
+    }
+    .colum {
+        max-width: 7rem;
+    }
+}
+@media (max-width: 570px) {
+    /* Responsive para formularios */
+    .input-field,
+    .opciones {
+        max-width: 7rem;
+    }
+    .input-label {
+        font-size: .65rem;
+        top: 7.8px;
+    }
+    .input-field__search {
+        max-width: 12rem;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Estilos responsive para Menu y adaptabilidad de los 3 componentes*/
+    .menu-container {
+        width: 80%;
+    }
+    .menu-hamburgesa {
+        right: 1rem;
+        left: auto;
+        z-index: 3;
     }
     .txt_noti {
-        font-size: .8rem;
+        font-size: .7rem;
     }
     .contenedor__notificaciones {
-        max-width: 37%;
+        max-width: 50%;
     }
-}
-
-
-
-
-/* 
-
-
-@media (max-width: 1024px) {
-    .logout {
-        flex-basis: 35%;
+    .logo-img {
+        background-size: 50%;
+        position: relative;
+        top: 25%;
     }
-}
-
-@media (max-width: 950px) {
-    .logout {
-        flex-basis: 40%;
+    .logout-user {
+        font-size: .7rem;
     }
-}
-@media (max-width: 840px) {
-    .logout {
-        flex-basis: 45%;
-    }
-}
-
-@media (max-width: 720px) {
-    .logout {
-        flex-basis: 50%;
+    .logout-Button {
+        width: 18px;
+        height: 18px;
     }
 
 }
-
-@media (max-width: 540px) {
-
-}
-
-@media (max-width: 500px) {
-
-}
-@media (max-width: 440px) {
-
-}
-
-@media (max-width: 360px) {
-
-} */

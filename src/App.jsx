@@ -17,14 +17,14 @@ function App() {
     const searchParams = new URLSearchParams(window.location.search);
     const uidb64Param = searchParams.get("uidb64");
     const tokenParam = searchParams.get("token");
-  
+
     if (uidb64Param && tokenParam) {
       setUidb64(uidb64Param);
       setToken(tokenParam);
       // Redirigir a la URL sin parámetros
       window.history.replaceState(null, null, "/");
     }
-  
+
     // Fetch menu data if authenticated and menuData is empty
     if (!isAuthenticated) {
       const token = Cookies.get("authToken");
@@ -33,7 +33,7 @@ function App() {
         setIsAuthenticated(true);
       }
     }
-    
+
     // Fetch menu if authenticated and menuData is empty
     if (isAuthenticated && menuData.length === 0) {
       getMenu();
@@ -52,18 +52,16 @@ function App() {
       setMenuData(response.data);
       if (response.data.length == false) {
         setIsAuthenticated(false);
-        mostrarMensaje("No tienes permisos de acceso", "error", "error");
+        mostrarMensaje("No tienes permisos de acceso", "error_notification");
         Cookies.remove("authToken");
       }
     } catch (error) {
       mostrarMensaje(
         "No se pueden visualizar los items del menu",
-        "error",
-        "error"
+        "error_notification"
       );
     }
   };
-
 
   const [containerComponent, setContainerComponent] = useState("Home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -88,15 +86,14 @@ function App() {
   };
 
   // Función para mostrar la notificación por un tiempo específico
-  const mostrarMensaje = (mensaje, color, imagen) => {
+  const mostrarMensaje = (mensaje, color) => {
     const id = Date.now();
     const nuevaNotificacion = {
       id,
       mensaje,
       color,
-      imagen,
       visible: true,
-      timeoutId: setTimeout(() => cerrarNotificacion(id), 6000),
+      timeoutId: setTimeout(() => cerrarNotificacion(id), 600000),
     };
 
     setNotificaciones((prevNotificaciones) => [

@@ -56,13 +56,17 @@ const TableRow = ({
         dataToUpdate
       );
       if (response.status === 200) {
-        mostrarMensaje("Edicion de colaborador Exitosa", "", "");
+        mostrarMensaje(
+          "Edicion de colaborador Exitosa",
+          "success_notification"
+        );
         toggleEditField(colaborador.num_documento); // Pasa a no editable
-
-        console.log("Usuario editado exitosamente");
       }
     } catch (error) {
-      console.error("Error al actualizar los datos del colaborador:", error);
+      mostrarMensaje(
+        "Error al actualizar los datos del colaborador",
+        "error_notification"
+      );
     }
   };
 
@@ -72,12 +76,14 @@ const TableRow = ({
         `http://127.0.0.1:8000/colaboradoresdel/${colaborador.num_documento}/`
       );
       if (response.status === 200) {
-        mostrarMensaje();
+        mostrarMensaje("Ha sido elimiado el usuario", "success_notification");
         toggleEditField(colaborador.num_documento); // Pasa a no editable
-        console.log("Usuario eliminado exitosamente");
       }
     } catch (error) {
-      console.error("Error al eliminar el colaborador:", error);
+      mostrarMensaje(
+        "No se ha podido eliminar el usuario",
+        "error_notification"
+      );
     }
   };
 

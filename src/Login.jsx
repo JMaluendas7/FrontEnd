@@ -37,18 +37,13 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
           localStorage.setItem("apellido", response.data.apellido);
           localStorage.setItem("rol_id", response.data.rol_id);
 
-          mostrarMensaje(
-            "Inicio de sesión Exitoso",
-            "success_notification",
-            "ok"
-          );
+          mostrarMensaje(response.data.message, "success_notification");
           setIsAuthenticated(true); // Sesion Iniciada
         }
       } catch {
         mostrarMensaje(
-          "Usuario o contraseña incorrectos",
-          "warning_notification",
-          "warning"
+          "Usuario o contraseña no corresponde",
+          "warning_notification"
         );
       }
     } else {
@@ -65,20 +60,14 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
           if (response.status === 200) {
             mostrarMensaje(
               "Correo de recuperacion enviado",
-              "success_notification",
-              "ok"
+              "success_notification"
             );
           }
         } catch {
-          mostrarMensaje(
-            "Los datos no coinciden",
-            "warning_notification",
-            "warning"
-          );
+          mostrarMensaje("Los datos no coinciden", "warning_notification");
           mostrarMensaje(
             "Correo de recuperacion no enviado",
-            "error_notification",
-            "error"
+            "error_notification"
           );
         }
       } else {
@@ -96,24 +85,21 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
               );
               if (response.status === 200) {
                 mostrarMensaje(
-                  "Se ha cambiado la contraseña satisfactoriamente",
-                  "success_notification",
-                  "ok"
+                  "La contraseña ha sido cambiada",
+                  "success_notification"
                 );
                 setFormType("login");
               }
             } catch {
               mostrarMensaje(
                 "No se ha podido cambiar la contraseña",
-                "error_notification",
-                "error"
+                "error_notification"
               );
             }
           } else {
             mostrarMensaje(
               "Las contraseñas no coinciden",
-              "warning_notification",
-              "warning"
+              "warning_notification"
             );
           }
         }

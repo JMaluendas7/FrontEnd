@@ -40,7 +40,7 @@
     align-items: center;
     padding: 1rem .8rem;
     flex-wrap: nowrap;
-    flex-direction: row;
+    flex-direction: row-reverse;
 }
 
 .imgnoti {
@@ -56,8 +56,8 @@
     position: absolute;
     top: 5px;
     right: 5px;
-    width: 13px;
-    height: 13px;
+    width: 15px;
+    height: 15px;
     background-image: url(/src/img/cerrar.png);
     background-size: contain;
     cursor: pointer;
@@ -81,13 +81,43 @@ h2 {
     background-color: var(--color-error);
     color: var(--color-background-add);
 }
+.error_notification + .cerrar_noti {
+    filter: invert(1);
+}
+.error_notification::after {
+    content: '';
+    background-image: url(../img/error.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 24px;
+    width: 24px;
+    margin-right: .9rem;
+}
 
 .warning_notification {
     background-color: var(--color-warning);
     color: #000; /* O variable de texto */
 }
+.warning_notification::after {
+    content: '';
+    background-image: url(../img/warning.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 24px;
+    width: 24px;
+    margin-right: .9rem;
+}
 
 .success_notification {
     background-color: var(--color-ok);
     color: #000;
+}
+.success_notification::after {
+    content: '';
+    background-image: url(../img/ok.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 24px;
+    width: 24px;
+    margin-right: .9rem;
 }

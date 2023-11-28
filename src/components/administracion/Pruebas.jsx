@@ -80,16 +80,14 @@ const Pruebas = () => {
       );
 
       if (response.status === 200) {
-        // Solicitud exitosa RTA 200
-        console.log("Colaborador registrado con éxito.");
         getUsers();
-        mostrarMensaje();
-      } else {
-        // Fallo de solicitud
-        console.error("Error al registrar el colaborador.");
+        mostrarMensaje("Ha sido registrado el usuario", "success_notification");
       }
     } catch (error) {
-      console.error("Error al enviar la solicitud: ", error);
+      mostrarMensaje(
+        "No se ha podido registrar el usuario",
+        "error_notification"
+      );
     }
   };
 
