@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import UploadImage from "./components/rf2_for";
 
 function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
   const [username, setUsername] = useState("");
@@ -18,6 +19,16 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
       setFormType("login");
     }
   }, [uidb64, token]);
+
+  const [isLoggedInByFace, setIsLoggedInByFace] = useState(false);
+
+  const handleRecognition = (isRecognized) => {
+    setIsLoggedInByFace(isRecognized);
+    if (isRecognized) {
+      setIsAuthenticated(true); // Establece la autenticación como verdadera si se reconoce
+    }
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -149,6 +160,12 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
           </form>
           <button
             className="olvide__pass"
+            onClick={() => handleFormChange("facePassword")}
+          >
+            FaceId
+          </button>
+          <button
+            className="olvide__pass"
             onClick={() => handleFormChange("forgotPassword")}
           >
             Olvidé mi contraseña
@@ -196,6 +213,25 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
             onClick={() => handleFormChange("login")}
           >
             Tengo mi contraseña
+          </button>
+          <button
+            className="olvide__pass"
+            onClick={() => handleFormChange("facePassword")}
+          >
+            FaceId
+          </button>
+        </>
+      );
+    } else if (formType === "facePassword") {
+      return (
+        <>
+          <h1 className="title__form">Reconocimiento Facial</h1>
+          <UploadImage mostrarMensaje={mostrarMensaje} onRecognition={handleRecognition}/>
+          <button
+            className="olvide__pass"
+            onClick={() => handleFormChange("login")}
+          >
+            Volver al inicio de sesión
           </button>
         </>
       );

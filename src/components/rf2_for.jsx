@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
-const UploadImage = ({ mostrarMensaje }) => {
+const UploadImage = ({ mostrarMensaje, onRecognition }) => {
   const videoRef = useRef(null);
   const [reconocido, setReconocido] = useState(false);
 
@@ -52,7 +52,7 @@ const UploadImage = ({ mostrarMensaje }) => {
     formData.append("imageData", file);
 
     axios
-      .post("http://127.0.0.1:8000/subir_ft/", formData, {
+      .post("http://127.0.0.1:8000/subir_fto/", formData, {
         headers: {
           "content-type": "multipart/form-data",
         },
@@ -68,8 +68,8 @@ const UploadImage = ({ mostrarMensaje }) => {
         } else {
           setReconocido(false); // Vuelve a capturar si no se reconoce
         }
+        onRecognition(true);
         setReconocido(true); // Detiene la captura si se reconoce
-        // onRecognition(true); // Detiene la captura si se reconoce
         mostrarMensaje(response.data.message, "success_notification");
       })
       .catch((error) => {

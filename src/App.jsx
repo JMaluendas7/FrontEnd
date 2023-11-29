@@ -93,7 +93,7 @@ function App() {
       mensaje,
       color,
       visible: true,
-      timeoutId: setTimeout(() => cerrarNotificacion(id), 600000),
+      timeoutId: setTimeout(() => cerrarNotificacion(id), 6000),
     };
 
     setNotificaciones((prevNotificaciones) => [
