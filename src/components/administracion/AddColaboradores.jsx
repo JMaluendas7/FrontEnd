@@ -17,6 +17,13 @@ const Contenido = ({ mostrarMensaje }) => {
       setEmpresas(response.data);
     });
   };
+  // Llamado a los cargos
+  const [cargos, setCargos] = useState([]);
+  const getCargos = async () => {
+    await axios.get("http://127.0.0.1:8000/api/cargos/").then((response) => {
+      setCargos(response.data);
+    });
+  };
 
   // Llamado a los diferentes roles de la empresa
   const [roles, setRoles] = useState([]);
@@ -48,6 +55,7 @@ const Contenido = ({ mostrarMensaje }) => {
     docsTi();
     bussines();
     rol();
+    getCargos();
   }, []);
 
   // Funcion para envio de datos y registro de Colaboradores
@@ -217,6 +225,7 @@ const Contenido = ({ mostrarMensaje }) => {
                   mostrarMensaje={mostrarMensaje}
                   empresas={empresas}
                   roles={roles}
+                  cargos={cargos}
                 />
               ))}
             </tbody>

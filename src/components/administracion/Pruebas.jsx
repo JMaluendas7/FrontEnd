@@ -331,7 +331,6 @@ const Pruebas = () => {
           <div className="contenedor__notificaciones cn2">
             <div className="container_notificacion">
               <div className={`registro_ok error_notification`}>
-                <img className="imgnoti" src={`src/img/error.png`} alt="" />
                 <h2 className="txt_noti">
                   Mensaje con notificacion no exitosa
                 </h2>
@@ -340,7 +339,6 @@ const Pruebas = () => {
             </div>
             <div className="container_notificacion">
               <div className={`registro_ok warning_notification`}>
-                <img className="imgnoti" src={`src/img/warning.png`} alt="" />
                 <h2 className="txt_noti">
                   Mensaje de notificacion con texto largo para prueba de la
                   adaptabilidad del componente.
@@ -350,7 +348,6 @@ const Pruebas = () => {
             </div>
             <div className="container_notificacion">
               <div className={`registro_ok success_notification`}>
-                <img className="imgnoti" src={`src/img/ok.png`} alt="" />
                 <h2 className="txt_noti">
                   Mensaje cuando la respuesta sea exitosa
                 </h2>

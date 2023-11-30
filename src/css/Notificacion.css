@@ -68,6 +68,9 @@
 .cerrar_noti:hover {
     border-radius: 0;
 }
+.cerrar_noti:active {
+    transform: scale(0.3);
+}
 
 h2 {
     font-size: 16px;

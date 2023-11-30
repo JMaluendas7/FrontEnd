@@ -9,7 +9,7 @@ const UploadImage = ({ mostrarMensaje, onRecognition }) => {
     let intervalId;
 
     if (!reconocido) {
-      intervalId = setInterval(captureAndSend, 3000); // Captura y envía cada 5 segundos
+      intervalId = setInterval(captureAndSend, 3000); // Envia als imagenes cada 3 segundos
     }
 
     return () => {
@@ -64,7 +64,7 @@ const UploadImage = ({ mostrarMensaje, onRecognition }) => {
       .then((response) => {
         if (response.data.status == 200) {
           clearInterval(intervalId); // Detiene el intervalo después del reconocimiento
-          console.log('aqui pase')
+          console.log("aqui pase");
         } else {
           setReconocido(false); // Vuelve a capturar si no se reconoce
         }
@@ -78,7 +78,6 @@ const UploadImage = ({ mostrarMensaje, onRecognition }) => {
       });
   };
 
-
   const stopCamera = () => {
     const video = videoRef.current;
     if (video && video.srcObject) {
@@ -87,7 +86,6 @@ const UploadImage = ({ mostrarMensaje, onRecognition }) => {
       video.srcObject = null;
     }
   };
-
 
   return (
     <div>

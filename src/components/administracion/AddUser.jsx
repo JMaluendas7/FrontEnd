@@ -248,15 +248,6 @@ const Contenido = ({ mostrarMensaje }) => {
           </tbody>
         </table>
       </section>
-      <div>
-        {mensajeVisible && (
-          <div id="notificaciones" className="notificaciones">
-            <div className="registro_ok">
-              <h2>Acceso a Usuario Exitoso</h2>
-            </div>
-          </div>
-        )}
-      </div>
     </div>
   );
 };

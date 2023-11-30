@@ -25,10 +25,30 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
   const handleRecognition = (isRecognized) => {
     setIsLoggedInByFace(isRecognized);
     if (isRecognized) {
-      setIsAuthenticated(true); // Establece la autenticación como verdadera si se reconoce
+      LoginFaceId();
     }
   };
 
+  const LoginFaceId = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://127.0.0.1:8080/loginFace/", {
+        documento_num,
+      });
+      if (response.status === 200) {
+        const token = response.data.token;
+        Cookies.set("authToken", token);
+        localStorage.setItem("username", response.data.username);
+        localStorage.setItem("nombre", response.data.nombre);
+        localStorage.setItem("apellido", response.data.apellido);
+        localStorage.setItem("rol_id", response.data.rol_id);
+        mostrarMensaje(response.data.message, "success_notification");
+        setIsAuthenticated(true);
+      }
+    } catch {
+      mostrarMensaje(response.data.message, "error_notification");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,7 +67,6 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
           localStorage.setItem("nombre", response.data.nombre);
           localStorage.setItem("apellido", response.data.apellido);
           localStorage.setItem("rol_id", response.data.rol_id);
-
           mostrarMensaje(response.data.message, "success_notification");
           setIsAuthenticated(true); // Sesion Iniciada
         }
@@ -226,7 +245,10 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
       return (
         <>
           <h1 className="title__form">Reconocimiento Facial</h1>
-          <UploadImage mostrarMensaje={mostrarMensaje} onRecognition={handleRecognition}/>
+          <UploadImage
+            mostrarMensaje={mostrarMensaje}
+            onRecognition={handleRecognition}
+          />
           <button
             className="olvide__pass"
             onClick={() => handleFormChange("login")}

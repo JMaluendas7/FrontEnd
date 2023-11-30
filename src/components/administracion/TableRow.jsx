@@ -8,6 +8,7 @@ const TableRow = ({
   mostrarMensaje,
   empresas,
   roles,
+  cargos,
 }) => {
   const [editableFields, setEditableFields] = useState({});
 
@@ -191,9 +192,9 @@ const TableRow = ({
       </td>
       <td className="colum">
         {editableFields[colaborador.num_documento] ? (
-          <input
+          <select
             type="text"
-            className="campo__input"
+            className="campo__input select__tb"
             value={colaborador.cargo_id}
             onChange={(e) =>
               handleChange(
@@ -202,9 +203,15 @@ const TableRow = ({
                 e.target.value
               )
             }
-          />
+          >
+            {cargos.map((cargo, index) => (
+              <option key={index} value={cargo.id_cargo}>
+                {cargo.detalle_cargo}
+              </option>
+            ))}
+          </select>
         ) : (
-          colaborador.cargo_id
+          colaborador.rol_id
         )}
       </td>
       <td className="colum">
