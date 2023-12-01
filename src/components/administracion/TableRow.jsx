@@ -6,9 +6,13 @@ const TableRow = ({
   colaboradores,
   setColaboradores,
   mostrarMensaje,
+  selectColaborador,
+  getColaboradores,
   empresas,
   roles,
   cargos,
+  selectedUser, // Usuario seleccionado para editar
+  setSelectedUser,
 }) => {
   const [editableFields, setEditableFields] = useState({});
 
@@ -39,24 +43,24 @@ const TableRow = ({
     try {
       // Crea un objeto con los datos para enviar al servidor
       const dataToUpdate = {
+        num_documento: colaborador.num_documento,
         nombres: colaborador.nombres,
         apellidos: colaborador.apellidos,
-        num_documento: colaborador.num_documento,
         telefono: colaborador.telefono,
         email: colaborador.email,
-        cargo_id: colaborador.cargo_id,
         direccion: colaborador.direccion,
         ciudad: colaborador.ciudad,
+        cargo_id: colaborador.cargo_id,
         rol_id: colaborador.rol_id,
         empresa_id: colaborador.empresa_id,
       };
-
       // Solicitud PUT al servidor para actualizar colaborador
       const response = await axios.put(
         `http://127.0.0.1:8000/colaboradoresput/${colaborador.num_documento}/`,
         dataToUpdate
       );
       if (response.status === 200) {
+        getColaboradores();
         mostrarMensaje(
           "Edicion de colaborador Exitosa",
           "success_notification"
@@ -86,6 +90,11 @@ const TableRow = ({
         "error_notification"
       );
     }
+  };
+
+  const handleEditClick = () => {
+    setSelectedUser(colaborador); // Establece el usuario seleccionado
+    toggleEditField(colaborador.num_documento); // Activa el modo de edición
   };
 
   return (
@@ -271,7 +280,6 @@ const TableRow = ({
         {editableFields[colaborador.num_documento] ? (
           <select
             className="campo__input select__tb"
-            value={colaborador.empresa_id}
             onChange={(e) =>
               handleChange(
                 colaborador.num_documento,
@@ -311,7 +319,21 @@ const TableRow = ({
           <>
             <button
               className="buttom"
-              onClick={() => toggleEditField(colaborador.num_documento)}
+              onClick={() =>
+                selectColaborador(
+                  colaborador.tipo_documento,
+                  colaborador.num_documento,
+                  colaborador.nombres,
+                  colaborador.apellidos,
+                  colaborador.telefono,
+                  colaborador.email,
+                  colaborador.cargo_id,
+                  colaborador.direccion,
+                  colaborador.ciudad,
+                  colaborador.rol_id,
+                  colaborador.empresa_id
+                )
+              }
             >
               Editar
             </button>

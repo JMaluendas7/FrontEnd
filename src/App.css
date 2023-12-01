@@ -1,5 +1,5 @@
 :root {
-  --color-scrollbar: rgba(189, 189, 190, 1); /* CMYK ~0, 0, 0, 25 */
+  --color-scrollbar: #ebeff2; /* CMYK ~0, 0, 0, 25 */
   --color-background-scrollbar: rgba(242, 242, 242, 1); /* CMYK ~0, 0, 0, 5 */
   --color-background-body: rgba(52, 214, 162, 1); /* CMYK ~75, 0, 24, 16 */
   --color-text: rgba(68, 68, 68, 1); /* CMYK ~0, 0, 0, 73 */

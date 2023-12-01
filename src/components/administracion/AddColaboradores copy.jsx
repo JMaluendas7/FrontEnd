@@ -52,31 +52,31 @@ const Contenido = ({ mostrarMensaje }) => {
   // Al cargar la pagina se llaman las sgts funciones
   useEffect(() => {
     getColaboradores();
-    getCargos();
-    bussines();
     docsTi();
+    bussines();
     rol();
+    getCargos();
   }, []);
 
   // Funcion para envio de datos y registro de Colaboradores
-  // const enviarSubmit = (event) => {
-  //   event.preventDefault();
-  //   const formData = new FormData(event.target);
-  //   axios
-  //     .post("http://127.0.0.1:8000/addColaboradores/", formData)
-  //     .then((response) => {
-  //       if (response.status === 200) {
-  //         mostrarMensaje(
-  //           "Colaborador Registrado Exitosamente",
-  //           "success_notification"
-  //         );
-  //         getColaboradores();
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       mostrarMensaje("Colaborador no Registrado", "error_notification");
-  //     });
-  // };
+  const enviarSubmit = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    axios
+      .post("http://127.0.0.1:8000/addColaboradores/", formData)
+      .then((response) => {
+        if (response.status === 200) {
+          mostrarMensaje(
+            "Colaborador Registrado Exitosamente",
+            "success_notification"
+          );
+          getColaboradores();
+        }
+      })
+      .catch((error) => {
+        mostrarMensaje("Colaborador no Registrado", "error_notification");
+      });
+  };
 
   // useState para contener el valor de busqueda
   const [searchValue, setSearchValue] = useState("");
@@ -153,100 +153,12 @@ const Contenido = ({ mostrarMensaje }) => {
       return a[orderBy.field] < b[orderBy.field] ? 1 : -1;
     }
   });
-
-  // Estado para almacenar los detalles del colaborador seleccionado para editar
   const [editColaborador, setEditColaborador] = useState(null);
-  const [editColaboradorData, setEditColaboradorData] = useState(null);
 
-  const selectColaborador = (
-    tipo_documento,
-    numDocumento,
-    nombres,
-    apellidos,
-    telefono,
-    email,
-    cargo_id,
-    direccion,
-    ciudad,
-    rol_id,
-    empresa_id
-  ) => {
-    setEditColaborador(numDocumento);
-    setShowForm(true); // Muestra el formulario al seleccionar un colaborador para editar
-    setEditColaboradorData({
-      tipo_documento,
-      numDocumento,
-      nombres,
-      apellidos,
-      telefono,
-      email,
-      cargo_id,
-      direccion,
-      ciudad,
-      rol_id,
-      empresa_id,
-    });
-    console.log(editColaboradorData.empresa_id);
-  };
-
-  // Función para envío de datos y registro de Colaboradores
-  const enviarSubmit = async (event) => {
-    event.preventDefault();
-    const dataToUpdate = {
-      num_documento: editColaboradorData.num_documento,
-      nombres: editColaboradorData.nombres,
-      apellidos: editColaboradorData.apellidos,
-      telefono: editColaboradorData.telefono,
-      email: editColaboradorData.email,
-      direccion: editColaboradorData.direccion,
-      ciudad: editColaboradorData.ciudad,
-      cargo_id: editColaboradorData.cargo_id,
-      rol_id: editColaboradorData.rol_id,
-      empresa_id: editColaboradorData.empresa_id,
-    };
-
-    // Usa editColaborador para determinar si estás editando o agregando un nuevo colaborador
-    const apiUrl = editColaborador
-      ? `http://127.0.0.1:8000/colaboradoresput/${editColaboradorData.numDocumento}/`
-      : "http://127.0.0.1:8000/addColaboradores/";
-
-    axios
-      .post(apiUrl, dataToUpdate)
-      .then((response) => {
-        if (response.status === 200) {
-          mostrarMensaje(
-            editColaborador
-              ? "Colaborador Actualizado Exitosamente"
-              : "Colaborador Registrado Exitosamente",
-            "success_notification"
-          );
-          setShowForm(false); // Oculta el formulario después de editar/agregar
-          setEditColaborador(null); // Reinicia el colaborador seleccionado
-          getColaboradores();
-        }
-      })
-      .catch(() => {
-        mostrarMensaje(
-          `Colaborador ${editColaborador ? "no Actualizado" : "no Registrado"}`,
-          "error_notification"
-        );
-      });
-  };
-
-  const handleInputChange = (colaboradorId, field, value) => {
-    // Realiza los cambios en el colaborador correspondiente
-    const updatedColaboradores = colaboradores.map((c) => {
-      if (c.num_documento === colaboradorId) {
-        return {
-          ...c,
-          [field]: value,
-        };
-      }
-      return c;
-    });
-
-    // Actualiza el estado de los colaboradores
-    setColaboradores(updatedColaboradores);
+  // Función para establecer el colaborador seleccionado para editar
+  const selectColaborador = (colaborador) => {
+    setEditColaborador(colaborador);
+    setShowForm(true); // Mostrar el formulario al seleccionar un colaborador para editar
   };
 
   return (
@@ -352,9 +264,7 @@ const Contenido = ({ mostrarMensaje }) => {
         <p>Agregar colaborador</p>
       </button>
       <section className={`form ${showForm ? "show-form" : ""}`}>
-        <h1 className="title__form">
-          {editColaborador ? "Editar Colaborador" : "Agregar Colaborador"}
-        </h1>
+        <h1 className="title__form">Agregar Colaborador</h1>
         <button className="cerrar__agregar" onClick={toggleForm}>
           <img
             className="icon__cerrar"
@@ -390,16 +300,10 @@ const Contenido = ({ mostrarMensaje }) => {
                   className="input-field numId"
                   placeholder=""
                   type="number"
-                  value={
-                    editColaboradorData ? editColaboradorData.numDocumento : ""
-                  }
-                  onChange={(e) =>
-                    setEditColaboradorData({
-                      ...editColaboradorData,
-                      numDocumento: e.target.value,
-                    })
-                  }
+                  value={editColaborador ? editColaborador.numDocumento : ""}
+                  onChange={(e) => handleInputChange(e.target.value)}
                 />
+
                 <label className="input-label label__form">
                   Numero Identificacion
                 </label>
@@ -412,13 +316,7 @@ const Contenido = ({ mostrarMensaje }) => {
                 className="input-field"
                 placeholder=""
                 type="text"
-                value={editColaboradorData ? editColaboradorData.nombres : ""}
-                onChange={(e) =>
-                  setEditColaboradorData({
-                    ...editColaboradorData,
-                    nombres: e.target.value,
-                  })
-                }
+                value={editColaborador ? editColaborador.nombres : ""}
               />
               <label className="input-label label__form">Nombres</label>
             </div>
@@ -429,13 +327,6 @@ const Contenido = ({ mostrarMensaje }) => {
                 className="input-field"
                 placeholder=""
                 type="text"
-                value={editColaboradorData ? editColaboradorData.apellidos : ""}
-                onChange={(e) =>
-                  setEditColaboradorData({
-                    ...editColaboradorData,
-                    apellidos: e.target.value,
-                  })
-                }
               />
               <label className="input-label label__form">Apellidos</label>
             </div>
@@ -446,13 +337,6 @@ const Contenido = ({ mostrarMensaje }) => {
                 className="input-field"
                 placeholder=""
                 type="email"
-                value={editColaboradorData ? editColaboradorData.email : ""}
-                onChange={(e) =>
-                  setEditColaboradorData({
-                    ...editColaboradorData,
-                    email: e.target.value,
-                  })
-                }
               />
               <label className="input-label label__form">Email</label>
             </div>
@@ -463,13 +347,6 @@ const Contenido = ({ mostrarMensaje }) => {
                 className="input-field"
                 placeholder=""
                 type="text"
-                value={editColaboradorData ? editColaboradorData.direccion : ""}
-                onChange={(e) =>
-                  setEditColaboradorData({
-                    ...editColaboradorData,
-                    direccion: e.target.value,
-                  })
-                }
               />
               <label className="input-label label__form">Direccion</label>
             </div>
@@ -480,13 +357,6 @@ const Contenido = ({ mostrarMensaje }) => {
                 placeholder=""
                 type="text"
                 name="ciudad"
-                value={editColaboradorData ? editColaboradorData.ciudad : ""}
-                onChange={(e) =>
-                  setEditColaboradorData({
-                    ...editColaboradorData,
-                    ciudad: e.target.value,
-                  })
-                }
               />
               <label className="input-label label__form">Ciudad</label>
             </div>
@@ -497,13 +367,6 @@ const Contenido = ({ mostrarMensaje }) => {
                 placeholder="Telefono"
                 type="number"
                 name="telefono"
-                value={editColaboradorData ? editColaboradorData.telefono : ""}
-                onChange={(e) =>
-                  setEditColaboradorData({
-                    ...editColaboradorData,
-                    telefono: e.target.value,
-                  })
-                }
               />
               <label className="input-label label__form">Telefono</label>
             </div>
@@ -511,16 +374,11 @@ const Contenido = ({ mostrarMensaje }) => {
               <select
                 className="opciones"
                 name="empresa_id"
-                defaultValue={
-                  editColaboradorData ? editColaboradorData.empresa_id : ""
-                }
-                onChange={(e) =>
-                  setEditColaboradorData({
-                    ...editColaboradorData,
-                    empresa_id: e.target.value,
-                  })
-                }
+                defaultValue={"empresa"}
               >
+                <option value="empresa" disabled>
+                  Empresa
+                </option>
                 {empresas.map((empresa, index) => (
                   <option key={index} value={empresa.id_empresa}>
                     {empresa.nombre_empresa}
@@ -529,19 +387,7 @@ const Contenido = ({ mostrarMensaje }) => {
               </select>
             </div>
             <div className="input-container agg_colaborador">
-              <select
-                className="opciones"
-                name="cargo_id"
-                defaultValue={
-                  editColaboradorData ? editColaboradorData.cargo_id : ""
-                }
-                onChange={(e) =>
-                  setEditColaboradorData({
-                    ...editColaboradorData,
-                    cargo_id: e.target.value,
-                  })
-                }
-              >
+              <select className="opciones" name="cargo_id">
                 {cargos.map((cargo, index) => (
                   <option key={index} value={cargo.id_cargo}>
                     {cargo.detalle_cargo}
@@ -550,19 +396,10 @@ const Contenido = ({ mostrarMensaje }) => {
               </select>
             </div>
             <div className="input-container agg_colaborador">
-              <select
-                className="opciones"
-                name="rol_id"
-                defaultValue={
-                  editColaboradorData ? editColaboradorData.rol_id : ""
-                }
-                onChange={(e) =>
-                  setEditColaboradorData({
-                    ...editColaboradorData,
-                    rol_id: e.target.value,
-                  })
-                }
-              >
+              <select className="opciones" name="rol_id" defaultValue={"rol"}>
+                <option value="rol" disabled>
+                  Rol
+                </option>
                 {roles.map((rol, index) => (
                   <option key={index} value={rol.id_rol}>
                     {rol.detalle_rol}

@@ -3,7 +3,7 @@
   position: absolute;
   width: 19.4%;
   height: 100%;
-  background: #D3D3D3;
+  background: var(--color-scrollbar);
   padding: 0px;
   margin: .6rem .3rem .4rem 0;
   bottom: 0rem;
