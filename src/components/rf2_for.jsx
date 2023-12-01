@@ -8,8 +8,23 @@ const UploadImage = ({ mostrarMensaje, onRecognition }) => {
   useEffect(() => {
     let intervalId;
 
+    const captureAndSend = () => {
+      const video = videoRef.current;
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob((blob) => {
+        const file = new File([blob], "snapshot.png");
+        sendImageToDjango(file);
+      }, "image/png");
+    };
+
     if (!reconocido) {
-      intervalId = setInterval(captureAndSend, 3000); // Envia als imagenes cada 3 segundos
+      intervalId = setInterval(captureAndSend, 3000); // Envía las imágenes cada 3 segundos
     }
 
     return () => {
@@ -32,21 +47,6 @@ const UploadImage = ({ mostrarMensaje, onRecognition }) => {
     }
   }, []);
 
-  const captureAndSend = () => {
-    const video = videoRef.current;
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
-
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    canvas.toBlob((blob) => {
-      const file = new File([blob], "snapshot.png");
-      sendImageToDjango(file);
-    }, "image/png");
-  };
-
   const sendImageToDjango = (file) => {
     const formData = new FormData();
     formData.append("imageData", file);
@@ -63,17 +63,15 @@ const UploadImage = ({ mostrarMensaje, onRecognition }) => {
       })
       .then((response) => {
         if (response.data.status == 200) {
-          clearInterval(intervalId); // Detiene el intervalo después del reconocimiento
-          console.log("aqui pase");
+          setReconocido(true); // Detiene la captura si se reconoce
+          const userId = response.data.user_id;
+          onRecognition(true, userId); // Informa sobre el reconocimiento y pasa el userId
+          mostrarMensaje(response.data.message, "success_notification");
         } else {
-          setReconocido(false); // Vuelve a capturar si no se reconoce
+          mostrarMensaje(response.data.message, "error_notification");
         }
-        onRecognition(true);
-        setReconocido(true); // Detiene la captura si se reconoce
-        mostrarMensaje(response.data.message, "success_notification");
       })
       .catch((error) => {
-        setReconocido(false); // Vuelve a capturar si hay un error
         mostrarMensaje("Error al enviar la imagen", "error_notification");
       });
   };

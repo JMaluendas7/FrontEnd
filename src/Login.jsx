@@ -21,18 +21,10 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
   }, [uidb64, token]);
 
   const [isLoggedInByFace, setIsLoggedInByFace] = useState(false);
-
-  const handleRecognition = (isRecognized) => {
-    setIsLoggedInByFace(isRecognized);
-    if (isRecognized) {
-      LoginFaceId();
-    }
-  };
-
-  const LoginFaceId = async (e) => {
-    e.preventDefault();
+  
+  const LoginFaceId = async (documento_num) => {
     try {
-      const response = await axios.post("http://127.0.0.1:8080/loginFace/", {
+      const response = await axios.post("http://127.0.0.1:8000/loginface/", {
         documento_num,
       });
       if (response.status === 200) {
@@ -45,8 +37,20 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
         mostrarMensaje(response.data.message, "success_notification");
         setIsAuthenticated(true);
       }
-    } catch {
-      mostrarMensaje(response.data.message, "error_notification");
+    } catch (error) {
+      console.log(documento_num);
+      mostrarMensaje("Error al iniciar sesión por reconocimiento facial", "error_notification");
+      console.error("Error en la solicitud de reconocimiento facial: ", error);
+    }
+  };
+  
+  const [userId, setUserId] = useState(null);
+  const handleRecognition = (isRecognized, user_id) => {
+    setIsLoggedInByFace(isRecognized);
+    if (isRecognized) {
+      console.log(user_id);
+      setUserId(user_id);
+      LoginFaceId(user_id);
     }
   };
 
