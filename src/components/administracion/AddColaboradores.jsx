@@ -58,25 +58,21 @@ const Contenido = ({ mostrarMensaje }) => {
     rol();
   }, []);
 
-  // Funcion para envio de datos y registro de Colaboradores
-  // const enviarSubmit = (event) => {
-  //   event.preventDefault();
-  //   const formData = new FormData(event.target);
-  //   axios
-  //     .post("http://127.0.0.1:8000/addColaboradores/", formData)
-  //     .then((response) => {
-  //       if (response.status === 200) {
-  //         mostrarMensaje(
-  //           "Colaborador Registrado Exitosamente",
-  //           "success_notification"
-  //         );
-  //         getColaboradores();
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       mostrarMensaje("Colaborador no Registrado", "error_notification");
-  //     });
-  // };
+  const generarExcel = async () => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/generar_excel/", colaboradores, {
+        responseType: 'blob',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        withCredentials: true, // Asegúrate de enviar las credenciales
+      });
+      // Resto del código
+    } catch (error) {
+      console.error("Error al generar el archivo Excel:", error);
+    }
+  };
 
   // useState para contener el valor de busqueda
   const [searchValue, setSearchValue] = useState("");
@@ -186,8 +182,9 @@ const Contenido = ({ mostrarMensaje }) => {
       rol_id,
       empresa_id,
     });
-    console.log(editColaboradorData.empresa_id);
+    console.log(editColaboradorData.empresa_id); // Use optional chaining to avoid errors if editColaboradorData is null
   };
+  
 
   // Función para envío de datos y registro de Colaboradores
   const enviarSubmit = async (event) => {
@@ -343,14 +340,25 @@ const Contenido = ({ mostrarMensaje }) => {
       </section>
 
       {/* Seccion de Registro de colaboraadores */}
-      <button className="agregar" type="none" onClick={toggleForm}>
-        <img
-          className="img__options"
-          src="/src/img/agregar_user.png"
-          alt="Add User"
-        />
-        <p>Agregar colaborador</p>
-      </button>
+      <section className="container_buttons">
+        <button className="agregar" type="none" onClick={toggleForm}>
+          <img
+            className="img__options"
+            src="/src/img/agregar_user.png"
+            alt="Add User"
+          />
+          <p>Agregar colaborador</p>
+        </button>
+        <button className="agregar" type="none" onClick={generarExcel}>
+          <img
+            className="img__options"
+            src="/src/img/agregar_user.png"
+            alt="Add User"
+          />
+          <p>Excel Colaboradores</p>
+        </button>
+
+      </section>
       <section className={`form ${showForm ? "show-form" : ""}`}>
         <h1 className="title__form">
           {editColaborador ? "Editar Colaborador" : "Agregar Colaborador"}

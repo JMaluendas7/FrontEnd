@@ -319,7 +319,7 @@ th, td {
 /* Estilos para botones de agregar usuarios o eliminar */
 .agregar {
   display: flex;
-  position: fixed;
+  /* position: fixed; */
   bottom: 1rem;
   padding: 0;
   outline: none;
