@@ -60,14 +60,18 @@ const Contenido = ({ mostrarMensaje }) => {
 
   const generarExcel = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/generar_excel/", colaboradores, {
-        responseType: 'blob',
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        withCredentials: true, // Asegúrate de enviar las credenciales
-      });
+      const response = await axios.post(
+        "http://127.0.0.1:8000/generar_excel/",
+        colaboradores,
+        {
+          responseType: "blob",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          withCredentials: true, // Asegúrate de enviar las credenciales
+        }
+      );
       // Resto del código
     } catch (error) {
       console.error("Error al generar el archivo Excel:", error);
@@ -184,11 +188,11 @@ const Contenido = ({ mostrarMensaje }) => {
     });
     console.log(editColaboradorData.empresa_id); // Use optional chaining to avoid errors if editColaboradorData is null
   };
-  
 
   // Función para envío de datos y registro de Colaboradores
   const enviarSubmit = async (event) => {
     event.preventDefault();
+    const formData = new FormData(event.target);
     const dataToUpdate = {
       num_documento: editColaboradorData.num_documento,
       nombres: editColaboradorData.nombres,
@@ -205,10 +209,10 @@ const Contenido = ({ mostrarMensaje }) => {
     // Usa editColaborador para determinar si estás editando o agregando un nuevo colaborador
     const apiUrl = editColaborador
       ? `http://127.0.0.1:8000/colaboradoresput/${editColaboradorData.numDocumento}/`
-      : "http://127.0.0.1:8000/addColaboradores/";
+      : `http://127.0.0.1:8000/addColaboradores/6/1/`;
 
     axios
-      .post(apiUrl, dataToUpdate)
+      .put(apiUrl, editColaborador ? dataToUpdate : formData)
       .then((response) => {
         if (response.status === 200) {
           mostrarMensaje(
@@ -352,12 +356,11 @@ const Contenido = ({ mostrarMensaje }) => {
         <button className="agregar" type="none" onClick={generarExcel}>
           <img
             className="img__options"
-            src="/src/img/agregar_user.png"
+            src="/src/img/rpto_excel.png"
             alt="Add User"
           />
           <p>Excel Colaboradores</p>
         </button>
-
       </section>
       <section className={`form ${showForm ? "show-form" : ""}`}>
         <h1 className="title__form">
