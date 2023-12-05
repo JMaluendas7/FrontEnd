@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
-const DynamicTable = ({ data, columns, itemsPerPage, updatedData }) => {  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+const DynamicTable = ({ data, columns, itemsPerPage, updatedData }) => {
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
   const [editableRow, setEditableRow] = useState(null);
   const [editedValues, setEditedValues] = useState({});
@@ -30,6 +31,7 @@ const DynamicTable = ({ data, columns, itemsPerPage, updatedData }) => {  const 
     return data;
   };
 
+  // Paginacion
   const totalPages = Math.ceil(sortedData().length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -38,7 +40,7 @@ const DynamicTable = ({ data, columns, itemsPerPage, updatedData }) => {  const 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
+  // Manejo de doble click en las filas
   const handleDoubleClick = (rowIndex) => {
     if (editableRow === rowIndex) {
       setEditableRow(null);
@@ -48,20 +50,21 @@ const DynamicTable = ({ data, columns, itemsPerPage, updatedData }) => {  const 
       setEditedValues({});
     }
   };
+  // Manejo de evento boton enter
   const handleKeyPress = (e, rowIndex) => {
     if (e.key === "Enter") {
       setEditableRow(null);
       setEditedValues({});
     }
   };
-
+  // Manejo de edicion de campos
   const handleEditChange = (columnKey, value) => {
     setEditedValues((prevValues) => ({
       ...prevValues,
       [columnKey]: value,
     }));
   };
-
+  // Manejo de guardar la data en local
   const handleSaveEdit = () => {
     const updateddData = data.map((item, index) => {
       if (index === editableRow) {
@@ -75,20 +78,21 @@ const DynamicTable = ({ data, columns, itemsPerPage, updatedData }) => {  const 
 
     // Actualizar los datos originales con los valores editados
     updatedData(updateddData);
-
     setEditableRow(null);
     setEditedValues({});
   };
-
+  // Manejo de fila seleccionada
   const handleSelectRow = (index, isSelected) => {
     if (isSelected) {
       setSelectedRows([...selectedRows, index]);
     } else {
-      const updatedSelection = selectedRows.filter((rowIndex) => rowIndex !== index);
+      const updatedSelection = selectedRows.filter(
+        (rowIndex) => rowIndex !== index
+      );
       setSelectedRows(updatedSelection);
     }
   };
-
+  // Renderizado de celda
   const renderCell = (item, column, rowIndex) => {
     const cellValue = item[column.key];
     // Checkbox en la primera columna
@@ -104,17 +108,21 @@ const DynamicTable = ({ data, columns, itemsPerPage, updatedData }) => {  const 
         </td>
       );
     }
-  
+
     if (editableRow === rowIndex) {
       if (column.type === "editable" && typeof cellValue === "boolean") {
         return (
           <td key={column.key} className="colum">
             <input
               type="checkbox"
-              checked={editedValues[column.key] !== undefined ? editedValues[column.key] : cellValue}
+              checked={
+                editedValues[column.key] !== undefined
+                  ? editedValues[column.key]
+                  : cellValue
+              }
               onChange={(e) => handleEditChange(column.key, e.target.checked)}
               className="campo__input"
-              />
+            />
           </td>
         );
       } else {
@@ -122,7 +130,11 @@ const DynamicTable = ({ data, columns, itemsPerPage, updatedData }) => {  const 
           <td key={column.key}>
             <input
               type="text"
-              value={editedValues[column.key] !== undefined ? editedValues[column.key] : cellValue}
+              value={
+                editedValues[column.key] !== undefined
+                  ? editedValues[column.key]
+                  : cellValue
+              }
               onChange={(e) => handleEditChange(column.key, e.target.value)}
               className="campo__input"
             />
@@ -130,11 +142,19 @@ const DynamicTable = ({ data, columns, itemsPerPage, updatedData }) => {  const 
         );
       }
     }
-  
+
     if (column.type === "text") {
-      return <td key={column.key} className="colum">{cellValue}</td>;
+      return (
+        <td key={column.key} className="colum">
+          {cellValue}
+        </td>
+      );
     } else if (column.type === "number") {
-      return <td key={column.key} className="colum">{parseFloat(cellValue).toFixed(0)}</td>;
+      return (
+        <td key={column.key} className="colum">
+          {parseFloat(cellValue).toFixed(0)}
+        </td>
+      );
     } else if (column.type === "select") {
       return (
         <td key={column.key} className="colum">
@@ -151,7 +171,7 @@ const DynamicTable = ({ data, columns, itemsPerPage, updatedData }) => {  const 
       return <td key={column.key}>{cellValue}</td>;
     }
   };
-  
+
   return (
     <section className="container__table">
       <table className="filas__container">
@@ -159,7 +179,11 @@ const DynamicTable = ({ data, columns, itemsPerPage, updatedData }) => {  const 
           <tr className="title__campos">
             {/* Cabecera de la tabla */}
             {columns.map((column) => (
-              <th key={column.key} onClick={() => sortBy(column.key)} className="colum">
+              <th
+                key={column.key}
+                onClick={() => sortBy(column.key)}
+                className="colum"
+              >
                 {column.label}
               </th>
             ))}
