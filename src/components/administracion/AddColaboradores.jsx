@@ -72,7 +72,21 @@ const Contenido = ({ mostrarMensaje }) => {
           withCredentials: true, // Asegúrate de enviar las credenciales
         }
       );
-      // Resto del código
+      // Crear un objeto URL para el blob
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      // Crear un enlace (link) para iniciar la descarga
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "colaboradores.xlsx"); // Nombre del archivo
+      document.body.appendChild(link);
+
+      // Hacer clic en el enlace para iniciar la descarga
+      link.click();
+
+      // Limpiar el objeto URL y el enlace después de la descarga
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error al generar el archivo Excel:", error);
     }
