@@ -1,0 +1,231 @@
+.content {
+    width: 612px;
+    /* Ancho de página carta en puntos (8.5 x 72) */
+    height: 792px;
+    margin: 100px auto;
+}
+
+h1 {
+    text-align: center;
+}
+
+p {
+    text-align: justify;
+    line-height: 1.6;
+    color: #272727;
+}
+
+div {
+    color: #272727;
+}
+
+hr {
+    margin: 0 .5rem;
+}
+
+.title_doc {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px solid black;
+    text-align: center;
+    font-size: 12px;
+}
+
+.title_con {
+    display: flex;
+    text-align: center;
+    margin: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.num_viaje {
+    font-weight: bold;
+    text-align: center;
+}
+
+.fecha {
+    position: relative;
+    right: -10rem;
+    font-size: .6rem;
+    color: rgb(63, 61, 61);
+}
+
+.container_cont {
+    display: flex;
+    flex-direction: row;
+}
+
+.cont_a {
+    flex-basis: 75%;
+}
+
+.cont_b {
+    flex-basis: 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.items {
+    display: flex;
+    /* height: 1rem; */
+    line-height: 1rem;
+}
+
+.items_center {
+    text-align: center;
+}
+
+.item_name,
+.item_nit {
+    width: 5rem;
+    height: 1rem;
+    line-height: 1rem;
+    border: 1px solid black;
+    margin-top: .1rem;
+    padding: 0 .6rem;
+    font-weight: bold;
+}
+
+.no_line {
+    border: none;
+}
+
+.line_rpt {
+    border: 1px solid black;
+}
+
+.item_nit {
+    width: 1.5rem;
+}
+
+.item_3rem {
+    width: 3rem;
+}
+
+.item_full {
+    width: -webkit-fill-available;
+}
+
+.item_desc {
+    margin-left: .5rem;
+    margin-top: .1rem;
+}
+
+.center {
+    margin: 0 auto;
+    width: fit-content;
+}
+
+.containers {
+    margin-top: 1rem;
+}
+
+.item_100 {
+    width: auto;
+    height: 2rem;
+}
+
+.text_6 {
+    font-size: .6rem;
+}
+
+.text_5 {
+    font-size: .5rem;
+}
+
+.text_4 {
+    font-size: .45rem;
+}
+
+.item_55 {
+    width: 55%;
+}
+
+.height_2rem {
+    height: 2rem;
+}
+
+.height_100 {
+    height: 100%;
+}
+
+.height_5rem {
+    height: 5rem;
+}
+
+.lineh_2rem {
+    line-height: 2rem;
+}
+
+.item_table {
+    padding: 0;
+}
+
+.terms {
+    line-height: 10px;
+    font-style: italic;
+    color: #272727;
+}
+
+.img_firmapj {
+    background-image: url("./src/img/rpt_pdf/FIRMA PJC.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 3rem;
+    width: 5rem;
+    margin: 0 auto;
+}
+
+.banner__logos {
+    display: flex;
+    align-items: center;
+    width: 96%;
+    padding: 0 1.9%;
+    margin: 0 auto;
+    border: 1px solid black;
+}
+
+.logo_mint {
+    background-image: url("./src/img/rpt_pdf/logo_mint.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 3rem;
+    width: 15rem;
+    margin: 0 auto;
+}
+
+.logo_iso {
+    background-image: url("./src/img/rpt_pdf/logo_iso.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 4.5rem;
+    width: 6rem;
+    margin: 0 auto;
+}
+
+.logo_ber {
+    background-image: url("./src/img/rpt_pdf/logo_ber.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 3rem;
+    width: 10rem;
+    margin: 0 auto;
+}
+
+.logo_st {
+    background-image: url("./src/img/rpt_pdf/logo_st.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 3rem;
+    width: 7rem;
+    margin: 0 auto;
+}
+
+.hr_logos {
+    height: 3rem;
+}
