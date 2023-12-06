@@ -199,14 +199,14 @@ const DynamicTable = ({ data, columns, itemsPerPage, updatedData }) => {
               className="tr"
             >
               {/* Checkbox en la primera columna de cada fila */}
-              <td className="colum">
+              {/* <td className="colum">
                 <input
                   type="checkbox"
                   checked={selectedRows.includes(index)}
                   onChange={(e) => handleSelectRow(index, e.target.checked)}
                   className="campo__input"
                 />
-              </td>
+              </td> */}
               {/* Resto de las celdas */}
               {columns.map((column) => renderCell(item, column, index))}
             </tr>

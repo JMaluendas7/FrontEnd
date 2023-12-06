@@ -27,7 +27,8 @@
   padding: 1rem;
 }
 .label {
-  font-size: .8rem;
+  font-size: 1rem;
+  margin-right: .5rem;
   transition: all 300ms ease-in-out;
 }
 
@@ -71,7 +72,7 @@
 .input-container {
   position: relative;
   margin: 0 auto;
-  width: auto;
+  width: fit-content;
 }
 
 .input-label {
