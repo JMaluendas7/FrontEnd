@@ -69,7 +69,7 @@ const Contenido = ({ mostrarMensaje }) => {
             "Content-Type": "application/json",
             Accept: "application/json",
           },
-          withCredentials: true, // Asegúrate de enviar las credenciales
+          withCredentials: true,
         }
       );
       // Crear un objeto URL para el blob
