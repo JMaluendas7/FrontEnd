@@ -4,6 +4,35 @@ import "/src/css/fuec/Rpto_fuec.css";
 import DynamicTable from "../administracion/PruebaTabla";
 
 const Fuec = () => {
+  const [showTable, setShowTable] = useState(false);
+  const [showData, setShowData] = useState(false);
+  const [showFormI, setShowFormI] = useState(true);
+  const [datosForm1, setDatosForm1] = useState({
+    fecha: "",
+    searchV: null,
+  })
+  const [datosForm2, setDatosForm2] = useState({
+    campo1: "",
+  })
+  const [datosForm3, setDatosForm3] = useState({
+    campo1: "",
+  })
+
+  const handleInputChangeForm1 = (fieldName, value) => {
+    setDatosForm1({
+      ...datosForm1,
+      [fieldName]: value,
+    });
+  };
+
+  const handleInputChangeForm2 = (event) => {
+    const {name, value} = event.target;
+    setDatosForm2({...datosForm2, [name]: value})
+  }
+  const handleInputChangeForm3 = (event) => {
+    const {name, value} = event.target;
+    setDatosForm3({...datosForm3, [name]: value})
+  }
   // useState para contener el valor de busqueda
   const [searchValue, setSearchValue] = useState("");
 
@@ -14,12 +43,9 @@ const Fuec = () => {
 
   // Manejo de valor para el Select
   const [seleccion, setSeleccion] = useState(null);
-  // useState para desplegar usuario y contraseña
-  const [showUserFields, setShowUserFields] = useState(true);
 
   const cambio = (seleccion) => {
     setSeleccion(seleccion);
-    setShowUserFields(true); // Muestra los campos cuando se selecciona un usuario
   };
 
   // Notificacion de Registo *Se debe Mejorar*
@@ -42,7 +68,7 @@ const Fuec = () => {
       );
 
       if (response.status === 200) {
-        getUsers();
+        setShowTable(true);
         mostrarMensaje("Ha sido registrado el usuario", "success_notification");
       }
     } catch (error) {
@@ -93,13 +119,14 @@ const Fuec = () => {
     <div className="Efect">
       <h1 className="titulo_login">Reporte FUEC</h1>
       <hr />
+      {showFormI && (
       <form method="post" onSubmit={enviarSubmit}>
         <div className="form__init">
           <div className="">
             <div>
               <Select
-                value={seleccion}
-                onChange={cambio}
+                value={datosForm1.searchV}
+                onChange={(selected) => handleInputChangeForm1("searchV", selected)}
                 options={arrColaboradores}
                 isSearchable
                 name="id_user"
@@ -110,27 +137,32 @@ const Fuec = () => {
           </div>
           <div>
             <label className="label">Fecha</label>
-            <input type="date" className="input-field"></input>
+            <input type="date" className="input-field" value={datosForm1.fecha} onChange={(selected) => handleInputChangeForm1("fecha", selected)}></input>
           </div>
           <button className="submit-button" type="submit">
             Buscar
           </button>
         </div>
       </form>
-      <hr className="hr" />
-      <div className="table_60p">
-        <DynamicTable
-          data={tableData}
-          columns={columns}
-          itemsPerPage={itemsPerPage}
-          updatedData={updateTableData}
-        />
-      </div>
-      <hr className="hr" />
+      )}
+      {showTable && (
+        <>
+          <div className="table_60p">
+            <DynamicTable
+              data={tableData}
+              columns={columns}
+              itemsPerPage={itemsPerPage}
+              updatedData={updateTableData}
+            />
+          </div>
+          <hr className="hr" />
+        </>
+      )}
+      {showData && (
+      <>
       <section className="form__init">
         <div className="input-container">
           <input
-            id="usuario"
             name="usuario"
             className="input-field"
             placeholder=""
@@ -140,7 +172,6 @@ const Fuec = () => {
         </div>
         <div className="input-container">
           <input
-            id="usuario"
             name="usuario"
             className="input-field"
             placeholder=""
@@ -150,7 +181,6 @@ const Fuec = () => {
         </div>
         <div className="input-container">
           <input
-            id="usuario"
             name="usuario"
             className="input-field"
             placeholder=""
@@ -168,7 +198,6 @@ const Fuec = () => {
         <div className="form__colum">
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -178,7 +207,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -188,7 +216,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -200,7 +227,6 @@ const Fuec = () => {
         <div className="form__colum">
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -210,7 +236,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -220,7 +245,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -239,7 +263,6 @@ const Fuec = () => {
         <div className="form__colum">
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -249,7 +272,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -259,7 +281,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -271,7 +292,6 @@ const Fuec = () => {
         <div className="form__colum">
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -281,7 +301,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -291,7 +310,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -303,7 +321,6 @@ const Fuec = () => {
         <div className="form__colum">
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -313,7 +330,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -323,7 +339,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -343,7 +358,6 @@ const Fuec = () => {
         <div className="form__colum">
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -353,7 +367,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -363,7 +376,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -375,7 +387,6 @@ const Fuec = () => {
         <div className="form__colum">
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -385,7 +396,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -398,7 +408,6 @@ const Fuec = () => {
         <div className="form__colum">
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -408,7 +417,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -418,7 +426,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -430,7 +437,6 @@ const Fuec = () => {
         <div className="form__colum">
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -440,7 +446,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -460,7 +465,6 @@ const Fuec = () => {
         <div className="form__colum">
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -470,7 +474,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -480,7 +483,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -492,7 +494,6 @@ const Fuec = () => {
         <div className="form__colum">
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -502,7 +503,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -515,7 +515,6 @@ const Fuec = () => {
         <div className="form__colum">
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -525,7 +524,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -535,7 +533,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -547,7 +544,6 @@ const Fuec = () => {
         <div className="form__colum">
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -557,7 +553,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -567,7 +562,6 @@ const Fuec = () => {
           </div>
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -586,7 +580,6 @@ const Fuec = () => {
         <div className="form__colum">
           <div className="input-container">
             <input
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -598,7 +591,6 @@ const Fuec = () => {
         <div className="form__colum">
           <div className="input-container">
             <textarea
-              id="usuario"
               name="usuario"
               className="input-field"
               placeholder=""
@@ -611,6 +603,8 @@ const Fuec = () => {
           Enviar
         </button>
       </section>
+      </>
+      )}
     </div>
   );
 };
