@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 
-const DynamicTable = ({ data, columns, itemsPerPage, updatedData }) => {
+const DynamicTable = ({
+  data,
+  columns,
+  itemsPerPage,
+  updatedData,
+  enviarSubmitRpt,
+}) => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
   const [editableRow, setEditableRow] = useState(null);
@@ -193,7 +199,7 @@ const DynamicTable = ({ data, columns, itemsPerPage, updatedData }) => {
           {currentItems.map((item, index) => (
             <tr
               key={index}
-              onDoubleClick={() => handleDoubleClick(index)}
+              onDoubleClick={() => enviarSubmitRpt(index)}
               onKeyPress={(e) => handleKeyPress(e, index)}
               tabIndex={0}
               className="tr"

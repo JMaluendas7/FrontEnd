@@ -8,10 +8,14 @@ import DynamicTable from "../administracion/PruebaTabla";
 const Fuec = () => {
   const [showTable, setShowTable] = useState(false);
   const [showFormMo, setshowFormMo] = useState(false);
-  const [showData, setShowData] = useState(true);
+  const [showData, setShowData] = useState(false);
   const [showFormI, setShowFormI] = useState(true);
   const [datosForm1, setDatosForm1] = useState({
     fecha: "",
+    searchV: 933,
+  });
+  const [datosViaje, setDatosViaje] = useState({
+    viaje: 621975,
     searchV: 933,
   });
   const [datosTable, setDatosTable] = useState([]);
@@ -20,50 +24,7 @@ const Fuec = () => {
     motivo: "04/12/2023 12:15:00 p. m.",
     empresa: "",
   });
-  const [datosForm3, setDatosForm3] = useState({
-    bus: "933",
-    nTargetaOpe: "333033",
-    placa: "WFQ435",
-    modelo: "2016",
-    marca: "MERCEDES BENZ",
-    clase: "MICROBUS",
-
-    empresa: "TRANSPORTES Y TURISMO BERLINAS DEL FONCE S.A.",
-    nitEmpresa: "860015624-1",
-    origen: "BARRANQUILLA Y SU AREA METROPOLITANA",
-    destino: "SANTA MARTA-RODADERO-ZIRUMA-CENTRO-MAMATOCO, TRONCAL DEL CARIBE",
-    ciudad: "sf",
-    telefono: "dfsdf",
-    telefono1: "sdfs",
-    email: "sdf",
-    direccion: "sdfs",
-
-    docConductor1: "88288351",
-    nombreCond: "HECTOR DARIO",
-    apellidoCond: "GUERRA JIMENEZ",
-    pase1: "88288351",
-    fecVencimiento1: "Jul 11 2025 12:00AM",
-    docConductor2: "",
-    nombreCond2: "",
-    apellidoCond2: "",
-    pase2: "",
-    fecVencimiento2: "",
-
-    nitCliente: "860015624-1",
-    nombreCli: "AGENCIA DE VIAJES OPERADORA BERLINASTUR S.A.",
-    direccionCli: "Calle 93 No. 46-136",
-    ciudadCli: "werw",
-    telefonoCli: "317 638 2363",
-    ccRep: "72194995",
-    nombreRep: "GUILLERMO",
-    apellidoRep: "CIFUENTES TORRES",
-    direccionRep: "sx",
-    ciudadRep: "sdf",
-    telefonoRep: "wer",
-
-    fuec: "N° 324234234-2023-3101-3096",
-    objeto: "TRANSPORTE DE PARTICULARES (GRUPO - PERSONA NATURAL)",
-  });
+  const [datosForm3, setDatosForm3] = useState([]);
 
   const handleInputChangeForm1 = (fieldName, value) => {
     setDatosForm1({
@@ -92,23 +53,6 @@ const Fuec = () => {
     setSearchValue(event.target.value);
   };
 
-  // Manejo de valor para el Select
-  const [seleccion, setSeleccion] = useState(null);
-
-  const cambio = (seleccion) => {
-    setSeleccion(seleccion);
-  };
-
-  // Notificacion de Registo *Se debe Mejorar*
-  const [mensaje, setMensaje] = useState({
-    visible: true,
-  });
-  const mostrarMensaje = (mensaje, color, imagen) => {
-    setMensaje({
-      visible: true,
-    });
-  };
-
   const enviarSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -127,23 +71,38 @@ const Fuec = () => {
 
       if (response.status === 200) {
         setShowTable(true);
-        mostrarMensaje("Ha sido registrado el usuario", "success_notification");
-        // for (let fila in response.data) {
-        //   setDatosForm2({
-        //     viaje: fila.viaje,
-        //     motivo: fila.motivo,
-        //     empresa: fila.empresa,
-        //   })
-        // }
-        const responseData = response.data;
         setTableData(response.data.results);
       }
     } catch (error) {
-      mostrarMensaje(
-        "No se ha podido registrar el usuario",
-        "error_notification"
+      mostrarMensaje("No se ha", "error_notification");
+    }
+  };
+  const enviarSubmitRpt = async (event) => {
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/callRptoViaje/",
+        datosViaje,
+        {
+          responseType: "json",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          withCredentials: true,
+        }
       );
-      console.log(error);
+
+      if (response.status === 200) {
+        setShowData(false);
+        setShowData(true);
+        setDatosForm3(response.data.results);
+        // console.log(response.data.results.data);
+        console.log(datosForm3);
+        console.log(datosForm3.data);
+        console.log(datosForm3.data.Viaje);
+      }
+    } catch (error) {
+      console.log("error: " + error);
     }
   };
 
@@ -215,6 +174,7 @@ const Fuec = () => {
               columns={columns}
               itemsPerPage={itemsPerPage}
               updatedData={updateTableData}
+              enviarSubmitRpt={enviarSubmitRpt}
             />
           </div>
           <hr className="hr" />
