@@ -40,3 +40,30 @@
 .tablaFuecOD {
     margin-top: 2rem;
 }
+
+.tr {
+    cursor: pointer;
+}
+.buttons__VE {
+    display: flex;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+}
+.volver {
+    display: flex;
+    background: transparent;
+    color: black;
+    box-shadow: none;
+    width: fit-content;
+}
+.volver:hover {
+    background: transparent;
+}
+.volver_img {
+    margin-right: .2rem;
+}
+
+.volver:hover {
+    transform: translate(-0.3rem);
+}

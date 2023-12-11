@@ -9,13 +9,14 @@ const Fuec = () => {
   const [showTable, setShowTable] = useState(false);
   const [showFormMo, setshowFormMo] = useState(false);
   const [showData, setShowData] = useState(false);
+  const [showPdf, setShowDataPdf] = useState(false);
   const [showFormI, setShowFormI] = useState(true);
   const [datosForm1, setDatosForm1] = useState({
     fecha: "",
     searchV: 933,
   });
   const [datosViaje, setDatosViaje] = useState({
-    viaje: 621975,
+    viaje: 0,
     searchV: 933,
   });
   const [datosTable, setDatosTable] = useState([]);
@@ -70,18 +71,30 @@ const Fuec = () => {
       );
 
       if (response.status === 200) {
-        setShowTable(true);
         setTableData(response.data.results);
+        setShowTable(true);
+        // setshowFormMo(true);
       }
     } catch (error) {
       mostrarMensaje("No se ha", "error_notification");
     }
   };
-  const enviarSubmitRpt = async (event) => {
+
+  const enviarSubmitRpt = async (viaje) => {
+    // Actualizar el estado con el nuevo valor de viaje
+    setDatosViaje((prevDatosViaje) => ({
+      ...prevDatosViaje,
+      viaje: viaje,
+    }));
+
+    // Usar el valor actualizado directamente en la llamada axios
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/callRptoViaje/",
-        datosViaje,
+        {
+          viaje: viaje,
+          searchV: datosViaje.searchV,
+        },
         {
           responseType: "json",
           headers: {
@@ -93,17 +106,31 @@ const Fuec = () => {
       );
 
       if (response.status === 200) {
-        setDatosForm3(response.data.results);
-        setShowData(false);
-        setShowData(true);
-        // console.log(response.data.results.data);
-        console.log(datosForm3);
-        console.log(datosForm3.data);
-        console.log(datosForm3.data.Viaje);
+        setDatosForm3(response.data.data);
+        setShowTable(false);
+        setShowFormI(false);
+        // setShowData(true); //
+        // setShowData(false);
+        setShowDataPdf(true);
       }
     } catch (error) {
       console.log("error: " + error);
     }
+  };
+  const enviarSubmitRpt2 = async () => {
+    setShowData(false);
+    setShowDataPdf(false);
+    setShowDataPdf(true);
+  };
+
+  const volverAFormIni = () => {
+    setShowDataPdf(false);
+    setShowFormI(true);
+  };
+
+  const volverAFormEdi = () => {
+    setShowDataPdf(false);
+    setShowData(true);
   };
 
   const [tableData, setTableData] = useState([]);
@@ -121,8 +148,6 @@ const Fuec = () => {
     setTableData(updatedData);
   };
 
-  const arrColaboradores = { value: "dfs", label: "sdf" };
-
   return (
     <div className="Efect">
       <h1 className="titulo_login">Reporte FUEC</h1>
@@ -137,7 +162,9 @@ const Fuec = () => {
                 placeholder=""
                 type="text"
                 value={datosForm1.searchV}
-                onChange={(addvalue) => handleInputChangeForm1("searchV", addvalue.target.value)}
+                onChange={(addvalue) =>
+                  handleInputChangeForm1("searchV", addvalue.target.value)
+                }
               />
               <label className="input-label">Nr de bus</label>
             </div>
@@ -178,6 +205,13 @@ const Fuec = () => {
       )}
       {showFormMo && (
         <>
+          <button
+            onClick={() => enviarSubmitRpt2()}
+            className="submit-button volver"
+            type="submit"
+          >
+            Volver
+          </button>
           <section className="form__init">
             <div className="input-container">
               <input
@@ -223,7 +257,6 @@ const Fuec = () => {
       )}
       {showData && (
         <>
-          <hr className="hr" />
           <section className="form__row">
             <p>Vehiculo</p>
             <div className="form__colum">
@@ -231,9 +264,9 @@ const Fuec = () => {
                 <input
                   name="usuario"
                   className="input-field"
-                  value={datosForm3.bus}
+                  value={datosForm3.Bus}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("bus", addvalue.target.value)
+                    handleInputChangeForm3("Bus", addvalue.target.value)
                   }
                   placeholder=""
                   type="text"
@@ -243,10 +276,10 @@ const Fuec = () => {
               <div className="input-container">
                 <input
                   name="usuario"
-                  value={datosForm3.nTargetaOperacion}
+                  value={datosForm3.Num_Tarjeta_Operacion}
                   onChange={(addvalue) =>
                     handleInputChangeForm3(
-                      "nTargetaOperacion",
+                      "Num_Tarjeta_Operacion",
                       addvalue.target.value
                     )
                   }
@@ -259,9 +292,9 @@ const Fuec = () => {
               <div className="input-container">
                 <input
                   name="usuario"
-                  value={datosForm3.placa}
+                  value={datosForm3.Placa}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("placa", addvalue.target.value)
+                    handleInputChangeForm3("Placa", addvalue.target.value)
                   }
                   className="input-field"
                   placeholder=""
@@ -273,9 +306,9 @@ const Fuec = () => {
             <div className="form__colum">
               <div className="input-container">
                 <input
-                  value={datosForm3.modelo}
+                  value={datosForm3.Modelo}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("modelo", addvalue.target.value)
+                    handleInputChangeForm3("Modelo", addvalue.target.value)
                   }
                   name="usuario"
                   className="input-field"
@@ -286,9 +319,12 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.marca}
+                  value={datosForm3.Descripcion_Marca}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("marca", addvalue.target.value)
+                    handleInputChangeForm3(
+                      "Descripcion_Marca",
+                      addvalue.target.value
+                    )
                   }
                   name="usuario"
                   className="input-field"
@@ -299,9 +335,12 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.clase}
+                  value={datosForm3.Descripcion_Clase}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("clase", addvalue.target.value)
+                    handleInputChangeForm3(
+                      "Descripcion_Clase",
+                      addvalue.target.value
+                    )
                   }
                   name="usuario"
                   className="input-field"
@@ -319,9 +358,12 @@ const Fuec = () => {
               <div className="input-container">
                 <input
                   name="usuario"
-                  value={datosForm3.empresa}
+                  value={datosForm3.Empresa_Registrado}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("empresa", addvalue.target.value)
+                    handleInputChangeForm3(
+                      "Empresa_Registrado",
+                      addvalue.target.value
+                    )
                   }
                   className="input-field"
                   placeholder=""
@@ -331,9 +373,9 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.nitEmpresa}
+                  value={datosForm3.Nit_Emp}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("nitEmpresa", addvalue.target.value)
+                    handleInputChangeForm3("Nit_Emp", addvalue.target.value)
                   }
                   name="usuario"
                   className="input-field"
@@ -344,9 +386,9 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.origen}
+                  value={datosForm3.Origen}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("origen", addvalue.target.value)
+                    handleInputChangeForm3("Origen", addvalue.target.value)
                   }
                   name="usuario"
                   className="input-field"
@@ -360,9 +402,9 @@ const Fuec = () => {
               <div className="input-container">
                 <input
                   name="usuario"
-                  value={datosForm3.destino}
+                  value={datosForm3.Destino}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("destino", addvalue.target.value)
+                    handleInputChangeForm3("Destino", addvalue.target.value)
                   }
                   className="input-field"
                   placeholder=""
@@ -372,9 +414,12 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.ciudad}
+                  value={datosForm3.Ciudad_Empresa}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("ciudad", addvalue.target.value)
+                    handleInputChangeForm3(
+                      "Ciudad_Empresa",
+                      addvalue.target.value
+                    )
                   }
                   name="usuario"
                   className="input-field"
@@ -385,9 +430,9 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.telefono}
+                  value={datosForm3.tel_emp}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("telefono", addvalue.target.value)
+                    handleInputChangeForm3("tel_emp", addvalue.target.value)
                   }
                   name="usuario"
                   className="input-field"
@@ -400,9 +445,9 @@ const Fuec = () => {
             <div className="form__colum">
               <div className="input-container">
                 <input
-                  value={datosForm3.telefono1}
+                  value={datosForm3.tel_emp1}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("telefono1", addvalue.target.value)
+                    handleInputChangeForm3("tel_emp1", addvalue.target.value)
                   }
                   name="usuario"
                   className="input-field"
@@ -413,9 +458,9 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.email}
+                  value={datosForm3.ema_emp}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("email", addvalue.target.value)
+                    handleInputChangeForm3("ema_emp", addvalue.target.value)
                   }
                   name="usuario"
                   className="input-field"
@@ -426,9 +471,9 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.direccion}
+                  value={datosForm3.dir_Emp}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("direccion", addvalue.target.value)
+                    handleInputChangeForm3("dir_Emp", addvalue.target.value)
                   }
                   name="usuario"
                   className="input-field"
@@ -446,10 +491,10 @@ const Fuec = () => {
             <div className="form__colum">
               <div className="input-container">
                 <input
-                  value={datosForm3.docConductor1}
+                  value={datosForm3.Cedula_Conductor1}
                   onChange={(addvalue) =>
                     handleInputChangeForm3(
-                      "docConductor1",
+                      "Cedula_Conductor1",
                       addvalue.target.value
                     )
                   }
@@ -463,9 +508,12 @@ const Fuec = () => {
               <div className="input-container">
                 <input
                   name="usuario"
-                  value={datosForm3.nombreCond}
+                  value={datosForm3.Nombre_Conductor1}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("nombreCond", addvalue.target.value)
+                    handleInputChangeForm3(
+                      "Nombre_Conductor1",
+                      addvalue.target.value
+                    )
                   }
                   className="input-field"
                   placeholder=""
@@ -475,10 +523,10 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.apellidoCond}
+                  value={datosForm3.Apellido_Conductor1}
                   onChange={(addvalue) =>
                     handleInputChangeForm3(
-                      "apellidoCond",
+                      "Apellido_Conductor1",
                       addvalue.target.value
                     )
                   }
@@ -493,9 +541,12 @@ const Fuec = () => {
             <div className="form__colum">
               <div className="input-container">
                 <input
-                  value={datosForm3.pase1}
+                  value={datosForm3.Pase1_Conductor1}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("pase1", addvalue.target.value)
+                    handleInputChangeForm3(
+                      "Pase1_Conductor1",
+                      addvalue.target.value
+                    )
                   }
                   name="usuario"
                   className="input-field"
@@ -506,10 +557,10 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.fecVencimiento1}
+                  value={datosForm3.fechavencimiento1_Conductor1}
                   onChange={(addvalue) =>
                     handleInputChangeForm3(
-                      "fecVencimiento1",
+                      "fechavencimiento1_Conductor1",
                       addvalue.target.value
                     )
                   }
@@ -525,10 +576,10 @@ const Fuec = () => {
             <div className="form__colum">
               <div className="input-container">
                 <input
-                  value={datosForm3.docConductor2}
+                  value={datosForm3.Cedula_Conductor2}
                   onChange={(addvalue) =>
                     handleInputChangeForm3(
-                      "docConductor2",
+                      "Cedula_Conductor2",
                       addvalue.target.value
                     )
                   }
@@ -541,9 +592,12 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.nombreCond2}
+                  value={datosForm3.Nombre_Conductor2}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("nombreCond2", addvalue.target.value)
+                    handleInputChangeForm3(
+                      "Nombre_Conductor2",
+                      addvalue.target.value
+                    )
                   }
                   name="usuario"
                   className="input-field"
@@ -554,10 +608,10 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.apellidoCond2}
+                  value={datosForm3.Apellido_Conductor2}
                   onChange={(addvalue) =>
                     handleInputChangeForm3(
-                      "apellidoCond2",
+                      "Apellido_Conductor2",
                       addvalue.target.value
                     )
                   }
@@ -572,9 +626,12 @@ const Fuec = () => {
             <div className="form__colum">
               <div className="input-container">
                 <input
-                  value={datosForm3.pase2}
+                  value={datosForm3.Pase1_Conductor2}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("pase2", addvalue.target.value)
+                    handleInputChangeForm3(
+                      "Pase1_Conductor2",
+                      addvalue.target.value
+                    )
                   }
                   name="usuario"
                   className="input-field"
@@ -585,10 +642,10 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.fecVencimiento2}
+                  value={datosForm3.fechavencimiento1_Conductor2}
                   onChange={(addvalue) =>
                     handleInputChangeForm3(
-                      "fecVencimiento2",
+                      "fechavencimiento1_Conductor2",
                       addvalue.target.value
                     )
                   }
@@ -608,9 +665,9 @@ const Fuec = () => {
             <div className="form__colum">
               <div className="input-container">
                 <input
-                  value={datosForm3.nitCliente}
+                  value={datosForm3.NIT_Cliente}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("nitCliente", addvalue.target.value)
+                    handleInputChangeForm3("NIT_Cliente", addvalue.target.value)
                   }
                   name="usuario"
                   className="input-field"
@@ -621,9 +678,12 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.nombreCli}
+                  value={datosForm3.Nombre_Cliente}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("nombreCli", addvalue.target.value)
+                    handleInputChangeForm3(
+                      "Nombre_Cliente",
+                      addvalue.target.value
+                    )
                   }
                   name="usuario"
                   className="input-field"
@@ -634,10 +694,10 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.direccionCli}
+                  value={datosForm3.Direccion_Cliente}
                   onChange={(addvalue) =>
                     handleInputChangeForm3(
-                      "nodireccionClimbreCli",
+                      "Direccion_Cliente",
                       addvalue.target.value
                     )
                   }
@@ -652,9 +712,12 @@ const Fuec = () => {
             <div className="form__colum">
               <div className="input-container">
                 <input
-                  value={datosForm3.ciudadCli}
+                  value={datosForm3.Ciudad_Cliente}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("ciudadCli", addvalue.target.value)
+                    handleInputChangeForm3(
+                      "Ciudad_Cliente",
+                      addvalue.target.value
+                    )
                   }
                   name="usuario"
                   className="input-field"
@@ -665,9 +728,12 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.telefonoCli}
+                  value={datosForm3.Telefono_Cliente}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("telefonoCli", addvalue.target.value)
+                    handleInputChangeForm3(
+                      "Telefono_Cliente",
+                      addvalue.target.value
+                    )
                   }
                   name="usuario"
                   className="input-field"
@@ -682,9 +748,9 @@ const Fuec = () => {
               <div className="input-container">
                 <input
                   name="usuario"
-                  value={datosForm3.ccRep}
+                  value={datosForm3.Rep_cedula}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("ccRep", addvalue.target.value)
+                    handleInputChangeForm3("Rep_cedula", addvalue.target.value)
                   }
                   className="input-field"
                   placeholder=""
@@ -694,9 +760,9 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.nombreRep}
+                  value={datosForm3.Rep_Nombres}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("nombreRep", addvalue.target.value)
+                    handleInputChangeForm3("Rep_Nombres", addvalue.target.value)
                   }
                   name="usuario"
                   className="input-field"
@@ -707,9 +773,12 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.apellidoRep}
+                  value={datosForm3.Rep_Apellidos}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("apellidoRep", addvalue.target.value)
+                    handleInputChangeForm3(
+                      "Rep_Apellidos",
+                      addvalue.target.value
+                    )
                   }
                   name="usuario"
                   className="input-field"
@@ -754,9 +823,12 @@ const Fuec = () => {
               </div>
               <div className="input-container">
                 <input
-                  value={datosForm3.telefono}
+                  value={datosForm3.Rep_Telefono}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("telefono", addvalue.target.value)
+                    handleInputChangeForm3(
+                      "Rep_Telefono",
+                      addvalue.target.value
+                    )
                   }
                   name="usuario"
                   className="input-field"
@@ -773,9 +845,12 @@ const Fuec = () => {
             <div className="form__colum">
               <div className="input-container">
                 <input
-                  value={datosForm3.fuec}
+                  value={datosForm3.Consecutivo_FUEC}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("fuec", addvalue.target.value)
+                    handleInputChangeForm3(
+                      "Consecutivo_FUEC",
+                      addvalue.target.value
+                    )
                   }
                   name="usuario"
                   className="input-field"
@@ -788,9 +863,12 @@ const Fuec = () => {
             <div className="form__colum">
               <div className="input-container">
                 <textarea
-                  value={datosForm3.objeto}
+                  value={datosForm3.Objeto_Contrato}
                   onChange={(addvalue) =>
-                    handleInputChangeForm3("objeto", addvalue.target.value)
+                    handleInputChangeForm3(
+                      "Objeto_Contrato",
+                      addvalue.target.value
+                    )
                   }
                   name="usuario"
                   className="input-field"
@@ -800,10 +878,36 @@ const Fuec = () => {
                 <label className="input-label">Fuec</label>
               </div>
             </div>
-            <button className="submit-button" type="submit">
+            <button
+              onClick={() => enviarSubmitRpt2()}
+              className="submit-button"
+              type="submit"
+            >
               Enviar
             </button>
           </section>
+        </>
+      )}
+      {showPdf && (
+        <>
+          <div className="buttons__VE">
+            <button
+              onClick={() => volverAFormIni()}
+              className="submit-button volver"
+              type="submit"
+            >
+              <img className="volver_img" src="./src/img/volver.png"></img>
+              Volver
+            </button>
+            <button
+              onClick={() => volverAFormEdi()}
+              className="submit-button volver"
+              type="submit"
+            >
+              <img className="volver_img" src="./src/img/editar_rpt.png"></img>
+              Editar
+            </button>
+          </div>
           <section className="RptoFuec">
             <HTMLtoPDF datosForm3={datosForm3} />
           </section>

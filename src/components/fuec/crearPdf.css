@@ -1,8 +1,11 @@
 .content {
     width: 720px;
     /* Ancho de página carta en puntos (8.5 x 72) */
-    height: 960px;
-    margin: 20px auto 0;
+    height: 971px;
+    margin: 10px auto 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 h1 {
@@ -17,6 +20,10 @@ p {
 
 div {
     color: #000;
+}
+
+li {
+    list-style: none;
 }
 
 .title_doc {
@@ -87,8 +94,11 @@ div {
     align-items: center;
     margin-top: .1rem;
     padding: 0 .6rem;
-    font-weight: bold;
+    /* font-weight: bold; */
     font-size: 15px;
+}
+.bold {
+    font-weight: bold;
 }
 
 .item_name2 {
@@ -255,5 +265,6 @@ div {
     justify-content: space-between;
     position: relative;
     align-items: center;
-    top: 2.9rem;
+    /* top: 2.9rem; */
+    margin-bottom: -0.8rem;
 }

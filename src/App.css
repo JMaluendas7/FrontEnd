@@ -120,6 +120,7 @@ body {
   border-radius: 1rem;
   outline: none;
   border: none;
+  align-items: center;
   box-shadow: 1px 4px 5px -2px rgba(28,200,138,0.49);
   transition: background 5s ease-in-out, transform 0.3s ease;
 }
