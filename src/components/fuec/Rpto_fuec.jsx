@@ -93,9 +93,9 @@ const Fuec = () => {
       );
 
       if (response.status === 200) {
+        setDatosForm3(response.data.results);
         setShowData(false);
         setShowData(true);
-        setDatosForm3(response.data.results);
         // console.log(response.data.results.data);
         console.log(datosForm3);
         console.log(datosForm3.data);
@@ -130,20 +130,16 @@ const Fuec = () => {
       {showFormI && (
         <form method="post">
           <div className="form__init">
-            <div className="">
-              <div>
-                <Select
-                  value={datosForm1.searchV}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm1("searchV", addvalue.target.value)
-                  }
-                  options={arrColaboradores}
-                  isSearchable
-                  name="id_user"
-                  className="select"
-                  placeholder="Numero de Bus"
-                />
-              </div>
+            <div className="input-container">
+              <input
+                name="direccion"
+                className="input-field"
+                placeholder=""
+                type="text"
+                value={datosForm1.searchV}
+                onChange={(addvalue) => handleInputChangeForm1("searchV", addvalue.target.value)}
+              />
+              <label className="input-label">Nr de bus</label>
             </div>
             <div>
               <label className="label">Fecha</label>

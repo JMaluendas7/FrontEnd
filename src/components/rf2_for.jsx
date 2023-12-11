@@ -65,7 +65,7 @@ const UploadImage = ({ mostrarMensaje, onRecognition }) => {
         if (response.data.status == 200) {
           setReconocido(true); // Detiene la captura si se reconoce
           const userId = response.data.user_id;
-          onRecognition(true, userId); // Informa sobre el reconocimiento y pasa el userId
+          // onRecognition(true, userId); // Informa sobre el reconocimiento y pasa el userId
           mostrarMensaje(response.data.message, "success_notification");
         } else {
           mostrarMensaje(response.data.message, "error_notification");
