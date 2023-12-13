@@ -1,11 +1,17 @@
-FROM node:latest
+FROM node:alpine
 
-WORKDIR /app/frontend
+WORKDIR /app
 
-COPY . /app/frontend
+COPY package.json .
+
+COPY package-lock.json .
 
 RUN npm install
 
+COPY . .
+
+RUN npm run build
+
 EXPOSE 3000
 
-CMD ["npm", "run dev"]
+CMD ["npm", "run", "dev"]
