@@ -6,35 +6,39 @@ const Contenido = ({ mostrarMensaje }) => {
   // Trae los tipos de documentos de identificacion
   const [dni, setDni] = useState([]);
   const docsTi = async () => {
-    await axios.get("http://localhost:8000/api/docsti/").then((response) => {
-    // await axios.get("http://127.0.0.1:8000/api/docsti/").then((response) => {
-      setDni(response.data);
-    });
+    await axios
+      .get("http://wsdx.berlinasdelfonce.com:9000/api/docsti/")
+      .then((response) => {
+        setDni(response.data);
+      });
   };
   // Llamado a las empresas
   const [empresas, setEmpresas] = useState([]);
   const bussines = async () => {
-    await axios.get("http://localhost:8000/api/bussines/").then((response) => {
-    // await axios.get("http://127.0.0.1:8000/api/bussines/").then((response) => {
-      setEmpresas(response.data);
-    });
+    await axios
+      .get("http://wsdx.berlinasdelfonce.com:9000/api/bussines/")
+      .then((response) => {
+        setEmpresas(response.data);
+      });
   };
   // Llamado a los cargos
   const [cargos, setCargos] = useState([]);
   const getCargos = async () => {
-    await axios.get("http://localhost:8000/api/cargos/").then((response) => {
-    // await axios.get("http://127.0.0.1:8000/api/cargos/").then((response) => {
-      setCargos(response.data);
-    });
+    await axios
+      .get("http://wsdx.berlinasdelfonce.com:9000/api/cargos/")
+      .then((response) => {
+        setCargos(response.data);
+      });
   };
 
   // Llamado a los diferentes roles de la empresa
   const [roles, setRoles] = useState([]);
   const rol = async () => {
-    await axios.get("http://localhost:8000/api/rol/").then((response) => {
-    // await axios.get("http://127.0.0.1:8000/api/rol/").then((response) => {
-      setRoles(response.data);
-    });
+    await axios
+      .get("http://wsdx.berlinasdelfonce.com:9000/api/rol/")
+      .then((response) => {
+        setRoles(response.data);
+      });
   };
 
   // Estado para almacenar los colaboradores
@@ -43,8 +47,9 @@ const Contenido = ({ mostrarMensaje }) => {
   // Llamado a lista de los colaboradores
   const getColaboradores = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/colaboradores/");
-      // const response = await axios.get("http://127.0.0.1:8000/colaboradores/");
+      const response = await axios.get(
+        "http://wsdx.berlinasdelfonce.com:9000/colaboradores/"
+      );
       setColaboradores(response.data);
     } catch (error) {
       mostrarMensaje(
@@ -57,31 +62,44 @@ const Contenido = ({ mostrarMensaje }) => {
   // Al cargar la pagina se llaman las sgts funciones
   useEffect(() => {
     getColaboradores();
-    docsTi();
-    bussines();
-    rol();
     getCargos();
+    bussines();
+    docsTi();
+    rol();
   }, []);
 
-  // Funcion para envio de datos y registro de Colaboradores
-  const enviarSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    axios
-      // .post("http://127.0.0.1:8000/addColaboradores/", formData)
-      .post("http://localhost:8000/addColaboradores/", formData)
-      .then((response) => {
-        if (response.status === 200) {
-          mostrarMensaje(
-            "Colaborador Registrado Exitosamente",
-            "success_notification"
-          );
-          getColaboradores();
+  const generarExcel = async () => {
+    try {
+      const response = await axios.post(
+        "http://wsdx.berlinasdelfonce.com:9000/generar_excel/",
+        colaboradores,
+        {
+          responseType: "blob",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          withCredentials: true,
         }
-      })
-      .catch((error) => {
-        mostrarMensaje("Colaborador no Registrado", "error_notification");
-      });
+      );
+      // Crear un objeto URL para el blob
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      // Crear un enlace (link) para iniciar la descarga
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "colaboradores.xlsx"); // Nombre del archivo
+      document.body.appendChild(link);
+
+      // Hacer clic en el enlace para iniciar la descarga
+      link.click();
+
+      // Limpiar el objeto URL y el enlace después de la descarga
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error al generar el archivo Excel:", error);
+    }
   };
 
   // useState para contener el valor de busqueda
@@ -159,12 +177,101 @@ const Contenido = ({ mostrarMensaje }) => {
       return a[orderBy.field] < b[orderBy.field] ? 1 : -1;
     }
   });
-  const [editColaborador, setEditColaborador] = useState(null);
 
-  // Función para establecer el colaborador seleccionado para editar
-  const selectColaborador = (colaborador) => {
-    setEditColaborador(colaborador);
-    setShowForm(true); // Mostrar el formulario al seleccionar un colaborador para editar
+  // Estado para almacenar los detalles del colaborador seleccionado para editar
+  const [editColaborador, setEditColaborador] = useState(null);
+  const [editColaboradorData, setEditColaboradorData] = useState(null);
+
+  const selectColaborador = (
+    tipo_documento,
+    numDocumento,
+    nombres,
+    apellidos,
+    telefono,
+    email,
+    cargo_id,
+    direccion,
+    ciudad,
+    rol_id,
+    empresa_id
+  ) => {
+    setEditColaborador(numDocumento);
+    setShowForm(true); // Muestra el formulario al seleccionar un colaborador para editar
+    setEditColaboradorData({
+      tipo_documento,
+      numDocumento,
+      nombres,
+      apellidos,
+      telefono,
+      email,
+      cargo_id,
+      direccion,
+      ciudad,
+      rol_id,
+      empresa_id,
+    });
+    console.log(editColaboradorData.empresa_id); // Use optional chaining to avoid errors if editColaboradorData is null
+  };
+
+  // Función para envío de datos y registro de Colaboradores
+  const enviarSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const dataToUpdate = {
+      num_documento: editColaboradorData.num_documento,
+      nombres: editColaboradorData.nombres,
+      apellidos: editColaboradorData.apellidos,
+      telefono: editColaboradorData.telefono,
+      email: editColaboradorData.email,
+      direccion: editColaboradorData.direccion,
+      ciudad: editColaboradorData.ciudad,
+      cargo_id: editColaboradorData.cargo_id,
+      rol_id: editColaboradorData.rol_id,
+      empresa_id: editColaboradorData.empresa_id,
+    };
+
+    // Usa editColaborador para determinar si estás editando o agregando un nuevo colaborador
+    const apiUrl = editColaborador
+      ? `http://wsdx.berlinasdelfonce.com:9000/colaboradoresput/${editColaboradorData.numDocumento}/`
+      : `http://wsdx.berlinasdelfonce.com:9000/addColaboradores/6/1/`;
+
+    axios
+      .put(apiUrl, editColaborador ? dataToUpdate : formData)
+      .then((response) => {
+        if (response.status === 200) {
+          mostrarMensaje(
+            editColaborador
+              ? "Colaborador Actualizado Exitosamente"
+              : "Colaborador Registrado Exitosamente",
+            "success_notification"
+          );
+          setShowForm(false); // Oculta el formulario después de editar/agregar
+          setEditColaborador(null); // Reinicia el colaborador seleccionado
+          getColaboradores();
+        }
+      })
+      .catch(() => {
+        mostrarMensaje(
+          `Colaborador ${editColaborador ? "no Actualizado" : "no Registrado"}`,
+          "error_notification"
+        );
+      });
+  };
+
+  const handleInputChange = (colaboradorId, field, value) => {
+    // Realiza los cambios en el colaborador correspondiente
+    const updatedColaboradores = colaboradores.map((c) => {
+      if (c.num_documento === colaboradorId) {
+        return {
+          ...c,
+          [field]: value,
+        };
+      }
+      return c;
+    });
+
+    // Actualiza el estado de los colaboradores
+    setColaboradores(updatedColaboradores);
   };
 
   return (
@@ -261,16 +368,28 @@ const Contenido = ({ mostrarMensaje }) => {
       </section>
 
       {/* Seccion de Registro de colaboraadores */}
-      <button className="agregar" type="none" onClick={toggleForm}>
-        <img
-          className="img__options"
-          src="/src/img/agregar_user.png"
-          alt="Add User"
-        />
-        <p>Agregar colaborador</p>
-      </button>
+      <section className="container_buttons">
+        <button className="agregar" type="none" onClick={toggleForm}>
+          <img
+            className="img__options"
+            src="/src/img/agregar_user.png"
+            alt="Add User"
+          />
+          <p>Agregar colaborador</p>
+        </button>
+        <button className="agregar" type="none" onClick={generarExcel}>
+          <img
+            className="img__options"
+            src="/src/img/rpto_excel.png"
+            alt="Add User"
+          />
+          <p>Excel Colaboradores</p>
+        </button>
+      </section>
       <section className={`form ${showForm ? "show-form" : ""}`}>
-        <h1 className="title__form">Agregar Colaborador</h1>
+        <h1 className="title__form">
+          {editColaborador ? "Editar Colaborador" : "Agregar Colaborador"}
+        </h1>
         <button className="cerrar__agregar" onClick={toggleForm}>
           <img
             className="icon__cerrar"
@@ -306,10 +425,16 @@ const Contenido = ({ mostrarMensaje }) => {
                   className="input-field numId"
                   placeholder=""
                   type="number"
-                  value={editColaborador ? editColaborador.numDocumento : ""}
-                  onChange={(e) => handleInputChange(e.target.value)}
+                  value={
+                    editColaboradorData ? editColaboradorData.numDocumento : ""
+                  }
+                  onChange={(e) =>
+                    setEditColaboradorData({
+                      ...editColaboradorData,
+                      numDocumento: e.target.value,
+                    })
+                  }
                 />
-
                 <label className="input-label label__form">
                   Numero Identificacion
                 </label>
@@ -322,7 +447,13 @@ const Contenido = ({ mostrarMensaje }) => {
                 className="input-field"
                 placeholder=""
                 type="text"
-                value={editColaborador ? editColaborador.nombres : ""}
+                value={editColaboradorData ? editColaboradorData.nombres : ""}
+                onChange={(e) =>
+                  setEditColaboradorData({
+                    ...editColaboradorData,
+                    nombres: e.target.value,
+                  })
+                }
               />
               <label className="input-label label__form">Nombres</label>
             </div>
@@ -333,6 +464,13 @@ const Contenido = ({ mostrarMensaje }) => {
                 className="input-field"
                 placeholder=""
                 type="text"
+                value={editColaboradorData ? editColaboradorData.apellidos : ""}
+                onChange={(e) =>
+                  setEditColaboradorData({
+                    ...editColaboradorData,
+                    apellidos: e.target.value,
+                  })
+                }
               />
               <label className="input-label label__form">Apellidos</label>
             </div>
@@ -343,6 +481,13 @@ const Contenido = ({ mostrarMensaje }) => {
                 className="input-field"
                 placeholder=""
                 type="email"
+                value={editColaboradorData ? editColaboradorData.email : ""}
+                onChange={(e) =>
+                  setEditColaboradorData({
+                    ...editColaboradorData,
+                    email: e.target.value,
+                  })
+                }
               />
               <label className="input-label label__form">Email</label>
             </div>
@@ -353,6 +498,13 @@ const Contenido = ({ mostrarMensaje }) => {
                 className="input-field"
                 placeholder=""
                 type="text"
+                value={editColaboradorData ? editColaboradorData.direccion : ""}
+                onChange={(e) =>
+                  setEditColaboradorData({
+                    ...editColaboradorData,
+                    direccion: e.target.value,
+                  })
+                }
               />
               <label className="input-label label__form">Direccion</label>
             </div>
@@ -363,6 +515,13 @@ const Contenido = ({ mostrarMensaje }) => {
                 placeholder=""
                 type="text"
                 name="ciudad"
+                value={editColaboradorData ? editColaboradorData.ciudad : ""}
+                onChange={(e) =>
+                  setEditColaboradorData({
+                    ...editColaboradorData,
+                    ciudad: e.target.value,
+                  })
+                }
               />
               <label className="input-label label__form">Ciudad</label>
             </div>
@@ -373,6 +532,13 @@ const Contenido = ({ mostrarMensaje }) => {
                 placeholder="Telefono"
                 type="number"
                 name="telefono"
+                value={editColaboradorData ? editColaboradorData.telefono : ""}
+                onChange={(e) =>
+                  setEditColaboradorData({
+                    ...editColaboradorData,
+                    telefono: e.target.value,
+                  })
+                }
               />
               <label className="input-label label__form">Telefono</label>
             </div>
@@ -380,11 +546,16 @@ const Contenido = ({ mostrarMensaje }) => {
               <select
                 className="opciones"
                 name="empresa_id"
-                defaultValue={"empresa"}
+                defaultValue={
+                  editColaboradorData ? editColaboradorData.empresa_id : ""
+                }
+                onChange={(e) =>
+                  setEditColaboradorData({
+                    ...editColaboradorData,
+                    empresa_id: e.target.value,
+                  })
+                }
               >
-                <option value="empresa" disabled>
-                  Empresa
-                </option>
                 {empresas.map((empresa, index) => (
                   <option key={index} value={empresa.id_empresa}>
                     {empresa.nombre_empresa}
@@ -393,7 +564,19 @@ const Contenido = ({ mostrarMensaje }) => {
               </select>
             </div>
             <div className="input-container agg_colaborador">
-              <select className="opciones" name="cargo_id">
+              <select
+                className="opciones"
+                name="cargo_id"
+                defaultValue={
+                  editColaboradorData ? editColaboradorData.cargo_id : ""
+                }
+                onChange={(e) =>
+                  setEditColaboradorData({
+                    ...editColaboradorData,
+                    cargo_id: e.target.value,
+                  })
+                }
+              >
                 {cargos.map((cargo, index) => (
                   <option key={index} value={cargo.id_cargo}>
                     {cargo.detalle_cargo}
@@ -402,10 +585,19 @@ const Contenido = ({ mostrarMensaje }) => {
               </select>
             </div>
             <div className="input-container agg_colaborador">
-              <select className="opciones" name="rol_id" defaultValue={"rol"}>
-                <option value="rol" disabled>
-                  Rol
-                </option>
+              <select
+                className="opciones"
+                name="rol_id"
+                defaultValue={
+                  editColaboradorData ? editColaboradorData.rol_id : ""
+                }
+                onChange={(e) =>
+                  setEditColaboradorData({
+                    ...editColaboradorData,
+                    rol_id: e.target.value,
+                  })
+                }
+              >
                 {roles.map((rol, index) => (
                   <option key={index} value={rol.id_rol}>
                     {rol.detalle_rol}

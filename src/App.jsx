@@ -6,6 +6,16 @@ import LoginForm from "./Login";
 import Notificacion from "./Notificacion";
 import axios from "axios";
 import Cookies from "js-cookie";
+import "./App.css";
+import "../src/css/banner.css";
+import "../src/css/menu.css";
+import "../src/css/contenido.css";
+import "../src/css/Notificacion.css";
+import "../src/css/scroll.css";
+import "../src/css/responsive.css";
+import "../src/css/administracion/AddColaboradores.css";
+import "./components/Contenido";
+import "./components/administracion/AddColaboradores";
 
 function App() {
   const [uidb64, setUidb64] = useState("");
@@ -39,6 +49,67 @@ function App() {
       getMenu();
     }
   }, [isAuthenticated, menuData.length]);
+
+  const handleLogout = () => {
+    Cookies.remove("authToken"); // Borra la cookie que contiene el token JWT
+    setContainerComponent(false); // Limpia las variables de estado de autenticación
+    window.location.reload(); // Recarga la pagina ya sin acceso
+    const username = "";
+    const nombre = "";
+    const apellido = "";
+    const rol_id = "";
+  };
+
+  // const [sessionTimeout, setSessionTimeout] = useState(null);
+
+  // const resetSessionTimeout = () => {
+  //   if (sessionTimeout) {
+  //     clearTimeout(sessionTimeout);
+  //   }
+
+  //   const timeout = setTimeout(() => {
+  //     if (isAuthenticated) {
+  //       handleLogout();
+  //       console.log('Sesión cerrada por inactividad');
+  //     }
+  //     console.log("listo");
+  //   }, 3000); // 5 minutos de inactividad (en milisegundos)
+
+  //   setSessionTimeout(timeout);
+  // };
+
+  // useEffect(() => {
+  //   const events = ['mousedown', 'keydown', 'touchstart']; // Eventos que indican actividad
+
+  //   const resetTimeout = () => {
+  //     resetSessionTimeout();
+  //   };
+
+  //   events.forEach((event) => {
+  //     window.addEventListener(event, resetTimeout);
+  //   });
+
+  //   resetSessionTimeout(); // Iniciar el temporizador al cargar el componente
+
+  //   return () => {
+  //     events.forEach((event) => {
+  //       window.removeEventListener(event, resetTimeout);
+  //     });
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    const handleUnload = (event) => {
+      handleLogout();
+      event.preventDefault();
+      return (event.returnValue = "¿Estás seguro de abandonar la página?");
+    };
+
+    window.addEventListener("beforeunload", handleUnload);
+
+    return () => window.removeEventListener("beforeunload", handleUnload);
+  }, []);
+
   // Almacenamiento de Cookies en variables
   const username = localStorage.getItem("username");
   const nombre = localStorage.getItem("nombre");
@@ -48,7 +119,9 @@ function App() {
   // Trae los elementos para el menu
   const getMenu = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/menu/${rol_id}/`);
+      const response = await axios.get(
+        `http://wsdx.berlinasdelfonce.com:9000/menu/${rol_id}/`
+      );
       setMenuData(response.data);
       if (response.data.length == false) {
         setIsAuthenticated(false);
@@ -63,12 +136,31 @@ function App() {
     }
   };
 
-  const [containerComponent, setContainerComponent] = useState("Home");
+  const [containerComponent, setContainerComponent] = useState("Rpto_fuec");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // Funcion para abrir los ites del menu
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+  useEffect(() => {
+    function handleResize() {
+      const windowWidth = window.innerWidth;
+      const screenWidthThreshold = 750; // Umbral de ancho de pantalla
+
+      if (windowWidth < screenWidthThreshold) {
+        // if(windowWidth < 760) {
+        //   setIsMenuOpen(true)
+        // }
+        setIsMenuOpen(true);
+      } else {
+        setIsMenuOpen(false);
+      }
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const [notificaciones, setNotificaciones] = useState([]);
   // Cierra la notificacion y la elimina

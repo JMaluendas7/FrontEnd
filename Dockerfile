@@ -1,17 +1,23 @@
-FROM node:alpine
+# Utiliza la imagen base de Node.js
+FROM node:21.4.0
 
-WORKDIR /app
+# Establece el directorio de trabajo en /code
+WORKDIR /code
 
-COPY package.json .
+# Copia el package.json y package-lock.json a /code
+COPY package*.json ./
 
-COPY package-lock.json .
-
+# Instala las dependencias del proyecto
 RUN npm install
 
+# Copia todo el código fuente al directorio /code
 COPY . .
 
+# Ejecuta el comando de construcción (npm run build)
 RUN npm run build
 
-EXPOSE 3000
+# Instala el servidor de archivos estáticos 'serve'
+RUN npm install -g serve
 
-CMD ["npm", "run", "dev"]
+# Define el comando para servir los archivos estáticos después de la construcción
+CMD ["serve", "-s", "./dist", "-l", "3000"]

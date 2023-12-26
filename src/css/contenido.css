@@ -72,7 +72,7 @@
 .input-container {
   position: relative;
   margin: 0 auto;
-  width: fit-content;
+  margin-top: 1rem;
 }
 
 .input-label {
@@ -142,7 +142,7 @@
 
 .input-field2 {
   background-color: transparent;
-  width: 100%;
+  /* width: 100%; */
   border: none;
   border-bottom: 2px solid var(--color-accent-dark);
   padding: 5px 10px 3px;

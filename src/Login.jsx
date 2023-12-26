@@ -2,6 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import UploadImage from "./components/rf2_for";
+import "./css/Login.css";
+import LogoBerlinas from "../src/img/Berlinas Principal.png";
+import LogoTransC from "../src/img/logo_transcarga.png";
+import LogoBerli from "../src/img/logo_berlitur.png";
+import LogoTl from "../src/img/logo_tourline.png";
+import LogoColi from "../src/img/Colibertador.png";
+import LogoCit from "../src/img/CIT.png";
+import LogobT from "../src/img/berlinas-tur.png";
 
 function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
   const [username, setUsername] = useState("");
@@ -21,12 +29,16 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
   }, [uidb64, token]);
 
   const [isLoggedInByFace, setIsLoggedInByFace] = useState(false);
-  
+
   const LoginFaceId = async (documento_num) => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/loginface/", {
-        documento_num,
-      });
+      // const response = await axios.post("http://127.0.0.1:9000/loginface/", {
+      const response = await axios.post(
+        "http://wsdx.berlinasdelfonce.com:9000/loginface/",
+        {
+          documento_num,
+        }
+      );
       if (response.status === 200) {
         const token = response.data.token;
         Cookies.set("authToken", token);
@@ -39,11 +51,14 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
       }
     } catch (error) {
       console.log(documento_num);
-      mostrarMensaje("Error al iniciar sesión por reconocimiento facial", "error_notification");
+      mostrarMensaje(
+        "Error al iniciar sesión por reconocimiento facial",
+        "error_notification"
+      );
       console.error("Error en la solicitud de reconocimiento facial: ", error);
     }
   };
-  
+
   const [userId, setUserId] = useState(null);
   const handleRecognition = (isRecognized, user_id) => {
     setIsLoggedInByFace(isRecognized);
@@ -59,10 +74,14 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
     if (formType === "login") {
       // Inicio de sesión
       try {
-        const response = await axios.post("http://127.0.0.1:8000/login/", {
-          username,
-          password,
-        });
+        // const response = await axios.post("http://127.0.0.1:9000/login/", {
+        const response = await axios.post(
+          "http://wsdx.berlinasdelfonce.com:9000/login/",
+          {
+            username,
+            password,
+          }
+        );
 
         if (response.status === 200) {
           const token = response.data.token;
@@ -84,7 +103,8 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
       if (formType === "forgotPassword") {
         try {
           const response = await axios.post(
-            "http://127.0.0.1:8000/reset_password/",
+            // "http://127.0.0.1:9000/reset_password/",
+            "http://wsdx.berlinasdelfonce.com:9000/reset_password/",
             {
               email,
               dni,
@@ -109,7 +129,8 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
           if (password == password2) {
             try {
               const response = await axios.post(
-                "http://127.0.0.1:8000/reset_password/change/",
+                // "http://127.0.0.1:9000/reset_password/change/",
+                "http://wsdx.berlinasdelfonce.com:9000/reset_password/change/",
                 {
                   uidb64,
                   token,
@@ -176,7 +197,10 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
               />
               <label className="input-label2">Contraseña</label>
             </div>
-            <button className="submit-button submit_icon" type="submit">
+            <button
+              className="submit-button submit_icon login_bottom"
+              type="submit"
+            >
               <p className="text_button">Iniciar sesión</p>
               <figure className="icon_bus"></figure>
             </button>
@@ -226,7 +250,10 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
                 Documento de identificacion
               </label>
             </div>
-            <button className="submit-button submit_icon" type="submit">
+            <button
+              className="submit-button submit_icon login_bottom"
+              type="submit"
+            >
               <p className="text_button">Enviar solicitud</p>
               <figure className="icon_bus"></figure>
             </button>
@@ -313,7 +340,7 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
           <div className="container__content"></div>
           <section className="container__logos">
             <figure className="logos__figure">
-              <img
+              {/* <img
                 src="/src/img/Berlinas Principal.png"
                 className="logo_empresas"
               ></img>
@@ -337,7 +364,14 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
               <img
                 src="/src/img/berlinas-tur.png"
                 className="logo_empresas"
-              ></img>
+              ></img> */}
+              <img src={LogoBerlinas} className="logo_empresas"></img>
+              <img src={LogoTransC} className="logo_empresas"></img>
+              <img src={LogoBerli} className="logo_empresas"></img>
+              <img src={LogoTl} className="logo_empresas"></img>
+              <img src={LogoColi} className="logo_empresas logo_coli"></img>
+              <img src={LogoCit} classsName="logo_empresas"></img>
+              <img src={LogobT} className="logo_empresas"></img>
             </figure>
           </section>
         </section>

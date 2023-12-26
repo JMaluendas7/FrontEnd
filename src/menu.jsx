@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import reporte from '../src/img/reporte.png';
+import reportes from '../src/img/reportes.png';
 
 const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
   const [menuStates, setMenuStates] = useState(menuItems.map(() => false));
@@ -44,9 +46,8 @@ const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
             >
               <div className="menuItem-div">
                 <img
-                  src={`src/img/${item.url_img}.png`}
+                  src={reportes}
                   className="menuItem__icon"
-                  alt="Carpeta"
                 />
                 <div className="menuItem-label">{item.nom_modulo}</div>
                 <div
@@ -66,7 +67,8 @@ const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
                   >
                     <img
                       className="menuItem__icon"
-                      src={`src/img/${subItem.url_img}.png`}
+                      // src={subItem.url_img}
+                      src={reporte}
                     ></img>
                     <a className="subMenu-url">{subItem.nom_modulo}</a>
                   </li>

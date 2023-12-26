@@ -1,0 +1,276 @@
+.content {
+    width: 720px;
+    /* Ancho de página carta en puntos (8.5 x 72) */
+    height: 971px;
+    margin: 10px auto 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+h1 {
+    text-align: center;
+}
+
+p {
+    text-align: justify;
+    line-height: 1.6;
+    color: #000;
+}
+
+div {
+    color: #000;
+}
+
+li {
+    list-style: none;
+}
+
+.title_doc {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px solid black;
+    text-align: center;
+    font-size: 15px;
+}
+
+.title_con {
+    display: flex;
+    text-align: center;
+    margin: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.num_viaje {
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+}
+
+.fecha {
+    position: relative;
+    right: -14rem;
+    font-size: .6rem;
+    color: rgb(63, 61, 61);
+}
+
+.container_cont {
+    display: flex;
+    flex-direction: row;
+}
+
+.cont_a {
+    flex-basis: 75%;
+}
+
+.cont_b {
+    flex-basis: 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.items {
+    display: flex;
+    align-items: center;
+}
+
+.items_center {
+    text-align: center;
+}
+
+.item_name,
+.item_nit {
+    display: flex;
+    width: 9rem;
+    height: 1.2rem;
+    line-height: .8rem;
+    border: 1px solid black;
+    justify-content: center;
+    align-items: center;
+    margin-top: .1rem;
+    padding: 0 .6rem;
+    /* font-weight: bold; */
+    font-size: 15px;
+}
+.bold {
+    font-weight: bold;
+}
+
+.item_name2 {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.no_line {
+    border: none;
+}
+
+.line_rpt {
+    border: 1px solid black;
+}
+
+.item_nit {
+    width: 2.5rem;
+}
+
+.item_3rem {
+    width: 3rem;
+}
+
+.item_full {
+    width: -webkit-fill-available;
+}
+
+.item_desc {
+    margin-left: .5rem;
+    font-size: .8rem;
+}
+
+.center {
+    margin: 0 auto;
+    width: fit-content;
+}
+
+.containers {
+    margin-top: 1rem;
+}
+
+.item_100 {
+    width: auto;
+    height: 2rem;
+}
+
+.text_8 {
+    font-size: .8rem;
+}
+.text_6 {
+    font-size: .7rem;
+}
+
+.text_5 {
+    font-size: .5rem;
+}
+
+.text_4 {
+    font-size: 12px;
+}
+.text_11 {
+    font-size: 11px;
+}
+
+.item_55 {
+    width: 70%;
+}
+
+.height_2rem {
+    height: 2rem;
+}
+
+.height_100 {
+    height: 100%;
+}
+
+.height_5rem {
+    height: 5.5rem;
+}
+
+.lineh_2rem {
+    line-height: 2rem;
+}
+
+.item_table {
+    padding: 0;
+}
+
+.terms {
+    line-height: 10px;
+    font-style: italic;
+    color: #000;
+}
+
+.img_firmapj {
+    background-size: initial;
+    background-repeat: no-repeat;
+    height: 50px;
+    width: 90px;
+    margin: 0 auto;
+    /* filter: brightness(0); */
+}
+
+.banner__logos {
+    display: flex;
+    align-items: center;
+    width: 96%;
+    padding: 0 1.9%;
+    margin: 0 auto;
+    border: 1px solid black;
+}
+
+.logo_mint {
+    background-image: url("./src/img/rpt_pdf/logo_mint.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 3rem;
+    width: 15rem;
+    margin: 0 auto;
+}
+
+.logo_iso {
+    /* background-image: url("./src/img/rpt_pdf/logo_iso.png"); */
+    background-size: initial;
+    background-repeat: no-repeat;
+    height: 65px;
+    width: 119px;
+    margin: .6rem auto;
+}
+
+.logo_ber {
+    background-image: url("./src/img/rpt_pdf/logo_ber.jpeg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 50px;
+    width: 176px;
+    margin: 0 auto;
+}
+
+.logo_st {
+    background-image: url("./src/img/rpt_pdf/logo_st.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 50px;
+    width: 156px;
+    margin: 0 auto;
+    filter: brightness(1.3);
+}
+
+.hr_logos {
+    height: 4.5rem;
+    margin: 0 .5rem;
+}
+.hr_hor {
+    width: 12rem;
+    margin: 0;
+}
+.martop_02 {
+    margin-top: .2rem;
+}
+
+.botton_gp {
+    margin-top: 2rem;
+}
+
+.footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: relative;
+    align-items: center;
+    /* top: 2.9rem; */
+    margin-bottom: -0.8rem;
+}

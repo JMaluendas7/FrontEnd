@@ -1,7 +1,9 @@
 import React, { lazy, Suspense, useMemo } from "react";
+// import './components/Contenido';
+// import './components/administracion/AddColaboradores';
 
 const Container = ({ Component, mostrarMensaje }) => {
-  const Modulo = useMemo(() => lazy(() => import(`./components/${Component}`)), [Component]);
+  const Modulo = useMemo(() => lazy(() => import(`./components/${Component}.jsx`)), [Component]);
 
   return (
     <div className="container">

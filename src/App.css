@@ -43,7 +43,7 @@ body {
   background-color: var(--color-background-body);
   user-select: none;
   font-size: 10px;
-  font-family: 'Source Sans Pro', sans-serif;
+  /* font-family: 'Source Sans Pro', sans-serif; */
 }
 
 @keyframes logo-spin {
@@ -123,6 +123,12 @@ body {
   align-items: center;
   box-shadow: 1px 4px 5px -2px rgba(28,200,138,0.49);
   transition: background 5s ease-in-out, transform 0.3s ease;
+}
+
+.login_bottom {
+  padding: 0 .2rem;
+  display: flex;
+  margin: 1rem auto;
 }
 
 .submit-button:hover {

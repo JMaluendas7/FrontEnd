@@ -2,11 +2,25 @@ import React, { useEffect } from "react";
 import html2pdf from "html2pdf.js";
 import "./crearPdf.css";
 
+// Import images
+import logoMint from "/src/img/rpt_pdf/logo_mint.png";
+import logoIso from "/src/img/rpt_pdf/logo_iso.png";
+import logoBer from "/src/img/rpt_pdf/logo_ber.jpeg";
+import logoTourline from "/src/img/rpt_pdf/logo-tourline.png";
+import logoCit from "/src/img/rpt_pdf/logo_cit.png";
+import logoSt from "/src/img/rpt_pdf/logo_st.png";
+import firmaPjc from "/src/img/rpt_pdf/FIRMA_PJC.jpg";
+
 class HTMLtoPDF extends React.Component {
   constructor(props) {
     super(props); // Llamado a la Super para obtener parametros
-
     this.datosForm3 = props.datosForm3;
+    this.state = {
+      downloadPDF: true, // Opción predeterminada: descargar el PDF
+    };
+    // Bind the functions to access 'this'
+    this.handleDownloadPDF = this.handleDownloadPDF.bind(this);
+    this.handlePrintPDF = this.handlePrintPDF.bind(this);
   }
 
   convertToPDF = () => {
@@ -19,17 +33,60 @@ class HTMLtoPDF extends React.Component {
     const viaje = this.datosForm3.Viaje;
 
     const fileName = `${nameApp}_${viaje}_${formattedDate}.pdf`;
-    // console.log(this.datosForm3);
+
     const opt = {
       margin: 10,
       filename: fileName,
-      image: { type: "png", quality: 10, scale: 15 },
-      // image: { type: "jpeg", quality: 15, scale: 15 },
-      html2canvas: { scale: 7 },
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 4 },
       jsPDF: { format: "letter", orientation: "portrait" },
     };
 
-    html2pdf().from(element).set(opt).save();
+    const pdf = html2pdf().from(element).set(opt);
+
+    if (this.state.downloadPDF) {
+      pdf.save();
+    } else {
+      pdf.output("datauristring").then((pdfString) => {
+        const pdfWindow = window.open();
+        pdfWindow.document.write(
+          `<iframe width='100%' height='100%' src='${pdfString}'></iframe>`
+        );
+        pdfWindow.document.close();
+        pdfWindow.onload = () => {
+          setTimeout(() => {
+            pdfWindow.focus();
+            pdfWindow.print();
+            pdfWindow.close(); // Close the window after printing
+          }, 1000); // Adjust the delay as needed to allow PDF generation
+        };
+      });
+    }
+  };
+
+  // Cambiar el estado para alternar entre descargar o imprimir el PDF
+  // Toggle download/print state
+  toggleDownloadPDF = () => {
+    this.setState(
+      (prevState) => ({
+        downloadPDF: !prevState.downloadPDF,
+      }),
+      () => {
+        this.convertToPDF();
+      }
+    );
+  };
+
+  handleDownloadPDF = () => {
+    this.setState({ downloadPDF: true }, () => {
+      this.convertToPDF();
+    });
+  };
+
+  handlePrintPDF = () => {
+    this.setState({ downloadPDF: false }, () => {
+      this.convertToPDF();
+    });
   };
 
   render() {
@@ -62,26 +119,19 @@ class HTMLtoPDF extends React.Component {
           <div className="content">
             <div className="container_content">
               <section className="banner__logos">
-                <img src="./src/img/rpt_pdf/logo_mint.png" alt="f" />
-                <img
-                  src="./src/img/rpt_pdf/logo_iso.png"
-                  alt="f"
-                  className="logo_iso"
-                />
+                <img src={logoMint} />
+                <img src={logoIso} className="logo_iso" />
                 <hr className="hr_logos" />
-                {this.datosForm3.Nit_Emp == "860015624-1         " && (
-                  <img src="./src/img/rpt_pdf/logo_ber.jpeg" />
+                {this.datosForm3.Nit_Emp == "860015624-1" && (
+                  <img src={logoBer} />
                 )}
-                {this.datosForm3.Nit_Emp == "900622702-6         " && (
-                  <img src="./src/img/rpt_pdf/logo-tourline.png" />
+                {this.datosForm3.Nit_Emp === "900622702-6" && (
+                  <img src={logoTourline} />
                 )}
-                {this.datosForm3.Nit_Emp == "800204916-1         " && (
-                  <img
-                    src="./src/img/rpt_pdf/logo_cit.png"
-                    alt="Firma Gerente"
-                  />
+                {this.datosForm3.Nit_Emp === "800204916-1" && (
+                  <img src={logoCit} />
                 )}
-                <img src="./src/img/rpt_pdf/logo_st.png" alt="f" />
+                <img src={logoSt} alt="f" />
                 {/* <div className="logo_mint"></div>
               <div className="logo_iso"></div>
               <hr className="hr_logos" />
@@ -162,7 +212,7 @@ class HTMLtoPDF extends React.Component {
                   <div className="item_name item_full">{anioP}</div>
                 </nav>
                 <nav className="items">
-                  <div className="item_name item_full bold">
+                  <div className="item_name item_full bold text_6">
                     FECHA DE VENCIMIENTO
                   </div>
                   <div className="item_name item_full">{diaF}</div>
@@ -214,10 +264,10 @@ class HTMLtoPDF extends React.Component {
                   <div className="item_name item_full item_table text_6 item_table bold">
                     NOMBRES Y APELLIDOS
                   </div>
-                  <div className="item_name item_full item_table bold">
+                  <div className="item_name item_full item_table bold text_8">
                     NUMERO DE CEDULA
                   </div>
-                  <div className="item_name item_full item_table bold text_6">
+                  <div className="item_name item_full item_table bold text_7">
                     LICENCIA DE CONDUCCION
                   </div>
                   <div className="item_name item_full item_table bold text_6">
@@ -267,7 +317,7 @@ class HTMLtoPDF extends React.Component {
                   <div className="item_name item_full item_table text_6 item_table bold">
                     NOMBRES Y APELLIDOS
                   </div>
-                  <div className="item_name item_full item_table bold">
+                  <div className="item_name item_full item_table bold text_8">
                     NUMERO DE CEDULA
                   </div>
                   <div className="item_name item_full item_table bold">
@@ -278,7 +328,7 @@ class HTMLtoPDF extends React.Component {
                   </div>
                 </nav>
                 <nav className="items items_center no_line height_2rem">
-                  <div className="item_name item_full item_table text_4 height_100 item_55 bold">
+                  <div className="item_name item_full item_table text_7 height_100 item_55 bold">
                     RESPONSABLE DEL CONTRATANTE
                   </div>
                   <div className="item_name item_full item_table text_4 height_100 ">
@@ -336,31 +386,20 @@ class HTMLtoPDF extends React.Component {
                   </div>
                   <div className="item_name item_full item_table height_5rem">
                     <div className="title_con">
-                      {this.datosForm3.Nit_Emp == "860015624-1         " && (
-                        <>
-                          <img src="./src/img/rpt_pdf/FIRMA_PJC.png" />
-                          <hr className="hr_hor" />
-                          Pedro José Cobos
-                        </>
+                      {this.datosForm3.Nit_Emp === "860015624-1" && (
+                        <img src={firmaPjc} alt="FIRMA GERENTE" />
                       )}
-                      {this.datosForm3.Nit_Emp == "900622702-6         " && (
-                        <>
-                          <div>
-                            <img src="./src/img/rpt_pdf/FIRMA_PJC.png" />
-                            <img src="./src/img/rpt_pdf/logo-tourline.png" />
-                          </div>
-                          <hr className="hr_hor" />
-                          Pedro José Cobos
-                        </>
+                      {this.datosForm3.Nit_Emp === "900622702-6" && (
+                        <div>
+                          <img src={firmaPjc} alt="FIRMA GERENTE" />
+                          <img src={logoTourline} alt="Tourline" />
+                        </div>
                       )}
-                      {this.datosForm3.Nit_Emp == "800204916-1         " && (
-                        <>
-                          <img src="./src/img/rpt_pdf/FIRMA_PJC.png" />
-                          <hr className="hr_hor" />
-                          Pedro José Cobos
-                        </>
+                      {this.datosForm3.Nit_Emp === "800204916-1" && (
+                        <img src={firmaPjc} alt="FIRMA GERENTE" />
                       )}
-                      <br />
+                      <hr className="hr_hor" />
+                      Pedro José Cobos
                       <strong>FIRMA GERENTE</strong>
                     </div>
                   </div>
@@ -378,9 +417,19 @@ class HTMLtoPDF extends React.Component {
         </div>
 
         {/* Botón para iniciar la conversión y descarga del pdf */}
-        <button onClick={this.convertToPDF} className="submit-button botton_gp">
+
+        <button
+          onClick={this.handleDownloadPDF}
+          className="submit-button botton_gp"
+        >
           Descargar PDF
         </button>
+        {/* <button
+          onClick={this.handlePrintPDF}
+          className="submit-button botton_gp"
+        >
+          Imprimir PDF
+        </button> */}
       </div>
     );
   }
