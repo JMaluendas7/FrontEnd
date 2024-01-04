@@ -131,7 +131,16 @@
 .subMenu-item:hover {
   transform: translateX(1px);
   border-radius: .2rem;
-  background-color: #A9A9A9;
+  background-color: #a9a9a9;
+}
+
+.active {
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 0 .2rem .2rem 0;
+}
+
+.active:hover {
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .subMenu-img {
@@ -155,4 +164,36 @@
   margin: 0 .2rem;
   height: 24px;
   width: 24px;
+  background-repeat: no-repeat;
+}
+
+.administracion {
+  background-image: url(../img/administracion.png);
+}
+.administracion_col {
+  background-image: url(../img/administracion_col.png);
+}
+.admin_user {
+  background-image: url(../img/admin_user.png);
+}
+.pruebas {
+  background-image: url(../img/pruebas.png);
+}
+.pruebas2 {
+  background-image: url(../img/pruebas2.png);
+}
+.rf {
+  background-image: url(../img/rf.png);
+}
+.tabla {
+  background-image: url(../img/tabla.png);
+}
+.reportes {
+  background-image: url(../img/reportes.png);
+}
+.reporte {
+  background-image: url(../img/reporte.png);
+}
+.turismo {
+  background-image: url(../img/icons_menu/turismo.png);
 }

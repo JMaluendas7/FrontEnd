@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Select from "react-select";
-import TableUsers from "./TableUsers";
+import TableUsers from "./administracion/TableUsers";
 import "/src/css/administracion/AddUser.css";
 import "/src/css/administracion/Pruebas.css";
 import DatePicker from "react-datepicker";

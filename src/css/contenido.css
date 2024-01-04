@@ -19,7 +19,7 @@
   min-width: 95%;
   max-width: 95%;
   margin: 0 auto;
-  margin-bottom: 10rem; /* Solo temporal por pruebas*/
+  margin-bottom: 1rem; /* Solo temporal por pruebas*/
   transition: ease-in-out;
 }
 

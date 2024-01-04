@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TableRow from "./TableRow";
+import ordenar from "/src/img/ordenar.png";
+import agregar_user from "/src/img/agregar_user.png";
+import rpto_excel from "/src/img/rpto_excel.png";
+import cerrar from "/src/img/cerrar.png";
 
 const Contenido = ({ mostrarMensaje }) => {
   // Trae los tipos de documentos de identificacion
@@ -302,7 +306,7 @@ const Contenido = ({ mostrarMensaje }) => {
                   <div className="colum__title">
                     <p className="colum__name">Nombre</p>
                     <figure className="colum__icon-cont">
-                      <img className="colum__icon" src="/src/img/ordenar.png" />
+                      <img className="colum__icon" src={ordenar} />
                       <div className="overlay"></div>
                     </figure>
                   </div>
@@ -328,7 +332,7 @@ const Contenido = ({ mostrarMensaje }) => {
                   <div className="colum__title">
                     <p className="colum__name">Direccion</p>
                     <figure className="colum__icon-cont">
-                      <img className="colum__icon" src="/src/img/ordenar.png" />
+                      <img className="colum__icon" src={ordenar} />
                       <div className="overlay"></div>
                     </figure>
                   </div>
@@ -370,19 +374,11 @@ const Contenido = ({ mostrarMensaje }) => {
       {/* Seccion de Registro de colaboraadores */}
       <section className="container_buttons">
         <button className="agregar" type="none" onClick={toggleForm}>
-          <img
-            className="img__options"
-            src="/src/img/agregar_user.png"
-            alt="Add User"
-          />
+          <img className="img__options" src={agregar_user} alt="Add User" />
           <p>Agregar colaborador</p>
         </button>
         <button className="agregar" type="none" onClick={generarExcel}>
-          <img
-            className="img__options"
-            src="/src/img/rpto_excel.png"
-            alt="Add User"
-          />
+          <img className="img__options" src={rpto_excel} alt="Add User" />
           <p>Excel Colaboradores</p>
         </button>
       </section>
@@ -391,11 +387,7 @@ const Contenido = ({ mostrarMensaje }) => {
           {editColaborador ? "Editar Colaborador" : "Agregar Colaborador"}
         </h1>
         <button className="cerrar__agregar" onClick={toggleForm}>
-          <img
-            className="icon__cerrar"
-            src="/src/img/cerrar.png"
-            alt="Cerrar"
-          />
+          <img className="icon__cerrar" src={cerrar} alt="Cerrar" />
         </button>
 
         <form method="post" onSubmit={enviarSubmit}>

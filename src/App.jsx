@@ -98,17 +98,17 @@ function App() {
   //   };
   // }, []);
 
-  useEffect(() => {
-    const handleUnload = (event) => {
-      handleLogout();
-      event.preventDefault();
-      return (event.returnValue = "¿Estás seguro de abandonar la página?");
-    };
+  // useEffect(() => {
+  //   const handleUnload = (event) => {
+  //     handleLogout();
+  //     event.preventDefault();
+  //     return (event.returnValue = "¿Estás seguro de abandonar la página?");
+  //   };
 
-    window.addEventListener("beforeunload", handleUnload);
+  //   window.addEventListener("beforeunload", handleUnload);
 
-    return () => window.removeEventListener("beforeunload", handleUnload);
-  }, []);
+  //   return () => window.removeEventListener("beforeunload", handleUnload);
+  // }, []);
 
   // Almacenamiento de Cookies en variables
   const username = localStorage.getItem("username");
@@ -207,6 +207,7 @@ function App() {
           <Container
             Component={containerComponent}
             mostrarMensaje={mostrarMensaje}
+            username={username}
           />
           <Banner
             toggleMenu={toggleMenu}

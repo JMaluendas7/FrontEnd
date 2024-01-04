@@ -340,37 +340,12 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
           <div className="container__content"></div>
           <section className="container__logos">
             <figure className="logos__figure">
-              {/* <img
-                src="/src/img/Berlinas Principal.png"
-                className="logo_empresas"
-              ></img>
-              <img
-                src="/src/img/logo_transcarga.png"
-                className="logo_empresas"
-              ></img>
-              <img
-                src="/src/img/logo_berlitur.png"
-                className="logo_empresas"
-              ></img>
-              <img
-                src="/src/img/logo_tourline.png"
-                className="logo_empresas"
-              ></img>
-              <img
-                src="/src/img/Colibertador.png"
-                className="logo_empresas logo_coli"
-              ></img>
-              <img src="/src/img/Cit.png" className="logo_empresas"></img>
-              <img
-                src="/src/img/berlinas-tur.png"
-                className="logo_empresas"
-              ></img> */}
               <img src={LogoBerlinas} className="logo_empresas"></img>
               <img src={LogoTransC} className="logo_empresas"></img>
               <img src={LogoBerli} className="logo_empresas"></img>
               <img src={LogoTl} className="logo_empresas"></img>
               <img src={LogoColi} className="logo_empresas logo_coli"></img>
-              <img src={LogoCit} classsName="logo_empresas"></img>
+              <img src={LogoCit} className="logo_empresas"></img>
               <img src={LogobT} className="logo_empresas"></img>
             </figure>
           </section>

@@ -24,27 +24,33 @@ const UploadImage = ({ mostrarMensaje, onRecognition }) => {
     };
 
     if (!reconocido) {
-      intervalId = setInterval(captureAndSend, 3000); // Envía las imágenes cada 3 segundos
+      intervalId = setInterval(captureAndSend, 3000);
     }
 
     return () => {
-      clearInterval(intervalId); // Limpia el intervalo al desmontar el componente
+      clearInterval(intervalId);
       stopCamera();
     };
-  }, [reconocido]); // Se ejecuta cuando cambia el estado de reconocido
+  }, [reconocido]);
 
   useEffect(() => {
     const video = videoRef.current;
 
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then((stream) => {
-          video.srcObject = stream;
-          video.play();
-        })
-        .catch((err) => console.error("Error al acceder a la cámara:", err));
-    }
+    const enableCamera = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+        });
+
+        video.srcObject = stream;
+        video.play();
+      } catch (error) {
+        console.error("Error al acceder a la cámara:", error);
+        mostrarMensaje("No se pudo acceder a la cámara", "error_notification");
+      }
+    };
+
+    enableCamera();
   }, []);
 
   const sendImageToDjango = (file) => {
@@ -52,7 +58,7 @@ const UploadImage = ({ mostrarMensaje, onRecognition }) => {
     formData.append("imageData", file);
 
     axios
-      .post("http://127.0.0.1:8000/subir_fto/", formData, {
+      .post("http://wsdx.berlinasdelfonce.com:9000/subir_fto/", formData, {
         headers: {
           "content-type": "multipart/form-data",
         },
@@ -85,9 +91,29 @@ const UploadImage = ({ mostrarMensaje, onRecognition }) => {
     }
   };
 
+  const handleStartCapture = () => {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream) => {
+          videoRef.current.srcObject = stream;
+          videoRef.current.play();
+        })
+        .catch((err) =>
+          console.error("Error al acceder a la cámara:", err.message)
+        );
+    }
+  };
+
   return (
     <div>
-      <video ref={videoRef} style={{ width: "100%", maxWidth: "400px" }} />
+      <video
+        ref={videoRef}
+        style={{ width: "100%", maxWidth: "400px" }}
+        playsInline // Indica que se debe reproducir en línea y no en pantalla completa
+        autoPlay // Solicita la reproducción automática (puede ayudar en algunos casos)
+        muted // Silencia el video para dispositivos móviles (a veces necesario)
+      />
     </div>
   );
 };

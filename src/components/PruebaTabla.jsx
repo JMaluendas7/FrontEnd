@@ -199,7 +199,7 @@ const DynamicTable = ({
           {currentItems.map((item, index) => (
             <tr
               key={index}
-              onDoubleClick={() => enviarSubmitRpt(item.viaje)}
+              onDoubleClick={() => enviarSubmitRpt(item.viaje, item.fecha)}
               onKeyPress={(e) => handleKeyPress(e, index)}
               tabIndex={0}
               className="tr"

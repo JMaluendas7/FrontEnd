@@ -1,17 +1,31 @@
 import React, { useState } from "react";
-import reporte from '../src/img/reporte.png';
-import reportes from '../src/img/reportes.png';
 
 const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
   const [menuStates, setMenuStates] = useState(menuItems.map(() => false));
+  const [activeSubItemIndices, setActiveSubItemIndices] = useState(
+    menuItems.map(() => null)
+  );
 
-  const toggleSubMenu = (index, component) => {
+  const toggleSubMenu = (menuItemIndex, subItemIndex, component) => {
     if (component) {
       setContainerComponent(component);
+      setActiveSubItemIndices((prevIndices) => {
+        const newIndices = [...prevIndices];
+
+        // Desactivar cualquier subítem activo en otros menús
+        menuItems.forEach((_, index) => {
+          if (index !== menuItemIndex) {
+            newIndices[index] = null;
+          }
+        });
+
+        // Activar el nuevo subítem
+        newIndices[menuItemIndex] = subItemIndex;
+        return newIndices;
+      });
     }
   };
 
-  // Funcion de alternar clase para flecha(arriba-abajo)
   const toggleMenuMenu = (index) => {
     const updatedMenuStates = [...menuStates];
     updatedMenuStates[index] = !updatedMenuStates[index];
@@ -45,10 +59,7 @@ const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
               onClick={() => abrirMenuFlecha(index)}
             >
               <div className="menuItem-div">
-                <img
-                  src={reportes}
-                  className="menuItem__icon"
-                />
+                <div className={`menuItem__icon ${item.url_img}`} />
                 <div className="menuItem-label">{item.nom_modulo}</div>
                 <div
                   className={`menuItem-open ${
@@ -61,15 +72,15 @@ const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
               <ul className="subMenu">
                 {item.subItems.map((subItem, subIndex) => (
                   <li
-                    className="subMenu-item"
+                    className={`subMenu-item ${
+                      activeSubItemIndices[index] === subIndex ? "active" : ""
+                    }`}
                     key={subIndex}
-                    onClick={() => toggleSubMenu(index, String(subItem.link))}
+                    onClick={() =>
+                      toggleSubMenu(index, subIndex, String(subItem.link))
+                    }
                   >
-                    <img
-                      className="menuItem__icon"
-                      // src={subItem.url_img}
-                      src={reporte}
-                    ></img>
+                    <div className={`menuItem__icon ${subItem.url_img}`} />
                     <a className="subMenu-url">{subItem.nom_modulo}</a>
                   </li>
                 ))}

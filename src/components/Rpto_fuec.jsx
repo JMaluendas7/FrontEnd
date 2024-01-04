@@ -1,17 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import Select from "react-select";
 import "/src/css/fuec/Rpto_fuec.css";
 import HTMLtoPDF from "./crearPdf";
 import DynamicTable from "./PruebaTabla";
 
-import editar from "/src/img/editar_rpt.png";
 import volver from "/src/img/volver.png";
 
-const Fuec = () => {
+const Fuec = ({ mostrarMensaje, username }) => {
   const [showTable, setShowTable] = useState(false);
   const [showFormMo, setshowFormMo] = useState(false);
-  const [showData, setShowData] = useState(false);
   const [showPdf, setShowDataPdf] = useState(false);
   const [showFormI, setShowFormI] = useState(true);
   const [datosForm1, setDatosForm1] = useState({
@@ -74,21 +71,38 @@ const Fuec = () => {
       );
 
       if (response.status === 200) {
-        setTableData(response.data.results);
-        setShowTable(true);
-        // setshowFormMo(true);
+        const responseData = response.data;
+        if (
+          responseData &&
+          responseData.results &&
+          Array.isArray(responseData.results)
+        ) {
+          const results = responseData.results;
+          if (results.length > 0) {
+            setTableData(results);
+            setShowTable(true);
+            // setshowFormMo(true);
+          } else {
+            mostrarMensaje("No hay viajes", "warning_notification");
+            setShowTable(false);
+          }
+        } else {
+          mostrarMensaje("Respuesta inválida", "error_notification");
+        }
       }
     } catch (error) {
-      mostrarMensaje("No se ha", "error_notification");
+      mostrarMensaje("No se han encontrado viajes", "error_notification");
     }
   };
 
-  const enviarSubmitRpt = async (viaje) => {
+  const [fechaSalida, setFechaSalida] = useState("");
+  const enviarSubmitRpt = async (viaje, fecha) => {
     // Actualizar el estado con el nuevo valor de viaje
     setDatosViaje((prevDatosViaje) => ({
       ...prevDatosViaje,
       viaje: viaje,
     }));
+    setFechaSalida(fecha);
 
     // Usar el valor actualizado directamente en la llamada axios
     try {
@@ -109,19 +123,32 @@ const Fuec = () => {
       );
 
       if (response.status === 200) {
-        setDatosForm3(response.data.data);
-        setShowTable(false);
-        setShowFormI(false);
-        // setShowData(true); //
-        // setShowData(false);
-        setShowDataPdf(true);
+        if (response.data.data == null) {
+          mostrarMensaje(
+            "Datos de viaje no encontrados",
+            "warning_notification"
+          );
+        } else {
+          // mostrarMensaje(
+          //   "Ahora puedes editar cada uno de los campos en este mismo documento",
+          //   "warning_notification"
+          // );
+          // mostrarMensaje(
+          //   "Solo debes hacer click sobre el campo que deseas editar del documento",
+          //   "success_notification"
+          // );
+          setDatosForm3(response.data.data);
+          setShowTable(false);
+          setShowFormI(false);
+          setShowDataPdf(true);
+        }
       }
     } catch (error) {
       console.log("error: " + error);
     }
   };
+
   const enviarSubmitRpt2 = async () => {
-    setShowData(false);
     setShowDataPdf(false);
     setShowDataPdf(true);
   };
@@ -129,11 +156,6 @@ const Fuec = () => {
   const volverAFormIni = () => {
     setShowDataPdf(false);
     setShowFormI(true);
-  };
-
-  const volverAFormEdi = () => {
-    setShowDataPdf(false);
-    setShowData(true);
   };
 
   const [tableData, setTableData] = useState([]);
@@ -258,639 +280,6 @@ const Fuec = () => {
           </section>
         </>
       )}
-      {showData && (
-        <>
-          <section className="form__row">
-            <p>Vehiculo</p>
-            <div className="form__colum">
-              <div className="input-container">
-                <input
-                  name="usuario"
-                  className="input-field"
-                  value={datosForm3.Bus}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3("Bus", addvalue.target.value)
-                  }
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Bus</label>
-              </div>
-              <div className="input-container">
-                <input
-                  name="usuario"
-                  value={datosForm3.Num_Tarjeta_Operacion}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Num_Tarjeta_Operacion",
-                      addvalue.target.value
-                    )
-                  }
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Nº Tarjeta Operacion</label>
-              </div>
-              <div className="input-container">
-                <input
-                  name="usuario"
-                  value={datosForm3.Placa}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3("Placa", addvalue.target.value)
-                  }
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Placa</label>
-              </div>
-            </div>
-            <div className="form__colum">
-              <div className="input-container">
-                <input
-                  value={datosForm3.Modelo}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3("Modelo", addvalue.target.value)
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Modelo</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.Descripcion_Marca}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Descripcion_Marca",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Marca</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.Descripcion_Clase}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Descripcion_Clase",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Clase</label>
-              </div>
-            </div>
-          </section>
-          <hr className="hr" />
-          <section className="form__row">
-            <p>Empresa</p>
-            <div className="form__colum">
-              <div className="input-container">
-                <input
-                  name="usuario"
-                  value={datosForm3.Empresa_Registrado}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Empresa_Registrado",
-                      addvalue.target.value
-                    )
-                  }
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Empresa registrada</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.Nit_Emp}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3("Nit_Emp", addvalue.target.value)
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Nit empresa</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.Origen}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3("Origen", addvalue.target.value)
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Origen</label>
-              </div>
-            </div>
-            <div className="form__colum">
-              <div className="input-container">
-                <input
-                  name="usuario"
-                  value={datosForm3.Destino}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3("Destino", addvalue.target.value)
-                  }
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Destino</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.Ciudad_Empresa}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Ciudad_Empresa",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Ciudad</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.tel_emp}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3("tel_emp", addvalue.target.value)
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Telefono</label>
-              </div>
-            </div>
-            <div className="form__colum">
-              <div className="input-container">
-                <input
-                  value={datosForm3.tel_emp1}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3("tel_emp1", addvalue.target.value)
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Telefono 1</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.ema_emp}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3("ema_emp", addvalue.target.value)
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">E-Mail</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.dir_Emp}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3("dir_Emp", addvalue.target.value)
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Direccion</label>
-              </div>
-            </div>
-          </section>
-          <hr className="hr" />
-          <section className="form__row">
-            <p>Conductores</p>
-            <p>Primer conductor</p>
-            <div className="form__colum">
-              <div className="input-container">
-                <input
-                  value={datosForm3.Cedula_Conductor1}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Cedula_Conductor1",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Documento conductor</label>
-              </div>
-              <div className="input-container">
-                <input
-                  name="usuario"
-                  value={datosForm3.Nombre_Conductor1}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Nombre_Conductor1",
-                      addvalue.target.value
-                    )
-                  }
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Nombres</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.Apellido_Conductor1}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Apellido_Conductor1",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Apellidos</label>
-              </div>
-            </div>
-            <div className="form__colum">
-              <div className="input-container">
-                <input
-                  value={datosForm3.Pase1_Conductor1}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Pase1_Conductor1",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Pase</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.fechavencimiento1_Conductor1}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "fechavencimiento1_Conductor1",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Fecha de vencimiento</label>
-              </div>
-            </div>
-            <p>Segundo conductor</p>
-            <div className="form__colum">
-              <div className="input-container">
-                <input
-                  value={datosForm3.Cedula_Conductor2}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Cedula_Conductor2",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Documento conductor</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.Nombre_Conductor2}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Nombre_Conductor2",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Nombres</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.Apellido_Conductor2}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Apellido_Conductor2",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Apellidos</label>
-              </div>
-            </div>
-            <div className="form__colum">
-              <div className="input-container">
-                <input
-                  value={datosForm3.Pase1_Conductor2}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Pase1_Conductor2",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Pase</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.fechavencimiento1_Conductor2}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "fechavencimiento1_Conductor2",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Fecha de vencimiento</label>
-              </div>
-            </div>
-          </section>
-          <hr className="hr" />
-          <section className="form__row">
-            <p>Cliente</p>
-            <p>Cliente</p>
-            <div className="form__colum">
-              <div className="input-container">
-                <input
-                  value={datosForm3.NIT_Cliente}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3("NIT_Cliente", addvalue.target.value)
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Nit cliente</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.Nombre_Cliente}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Nombre_Cliente",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Nombre cliente</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.Direccion_Cliente}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Direccion_Cliente",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Direccion</label>
-              </div>
-            </div>
-            <div className="form__colum">
-              <div className="input-container">
-                <input
-                  value={datosForm3.Ciudad_Cliente}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Ciudad_Cliente",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Ciudad</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.Telefono_Cliente}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Telefono_Cliente",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Telefono</label>
-              </div>
-            </div>
-            <p>Representante</p>
-            <div className="form__colum">
-              <div className="input-container">
-                <input
-                  name="usuario"
-                  value={datosForm3.Rep_cedula}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3("Rep_cedula", addvalue.target.value)
-                  }
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Cedula</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.Rep_Nombres}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3("Rep_Nombres", addvalue.target.value)
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Nombres</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.Rep_Apellidos}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Rep_Apellidos",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Apellidos</label>
-              </div>
-            </div>
-            <div className="form__colum">
-              <div className="input-container">
-                <input
-                  value={datosForm3.direccionRep}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "direccionRep",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Direccion</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.direccionRep}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "direccionRep",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Ciudad</label>
-              </div>
-              <div className="input-container">
-                <input
-                  value={datosForm3.Rep_Telefono}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Rep_Telefono",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Telefono</label>
-              </div>
-            </div>
-          </section>
-          <hr className="hr" />
-          <section className="form__row">
-            <p>Fuec</p>
-            <div className="form__colum">
-              <div className="input-container">
-                <input
-                  value={datosForm3.Consecutivo_FUEC}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Consecutivo_FUEC",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Fuec</label>
-              </div>
-            </div>
-            <div className="form__colum">
-              <div className="input-container">
-                <textarea
-                  value={datosForm3.Objeto_Contrato}
-                  onChange={(addvalue) =>
-                    handleInputChangeForm3(
-                      "Objeto_Contrato",
-                      addvalue.target.value
-                    )
-                  }
-                  name="usuario"
-                  className="input-field"
-                  placeholder=""
-                  type="text"
-                />
-                <label className="input-label">Fuec</label>
-              </div>
-            </div>
-            <button
-              onClick={() => enviarSubmitRpt2()}
-              className="submit-button"
-              type="submit"
-            >
-              Enviar
-            </button>
-          </section>
-        </>
-      )}
       {showPdf && (
         <>
           <div className="buttons__VE">
@@ -902,17 +291,14 @@ const Fuec = () => {
               <img className="volver_img" src={volver}></img>
               Volver
             </button>
-            <button
-              onClick={() => volverAFormEdi()}
-              className="submit-button volver"
-              type="submit"
-            >
-              <img className="volver_img" src={editar}></img>
-              Editar
-            </button>
           </div>
           <section className="RptoFuec">
-            <HTMLtoPDF datosForm3={datosForm3} />
+            <HTMLtoPDF
+              datosForm3={datosForm3}
+              mostrarMensaje={mostrarMensaje}
+              fechaSalida={fechaSalida}
+              username={username}
+            />
           </section>
         </>
       )}

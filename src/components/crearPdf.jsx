@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import html2pdf from "html2pdf.js";
 import "./crearPdf.css";
+import axios from "axios";
 
 // Import images
 import logoMint from "/src/img/rpt_pdf/logo_mint.png";
@@ -15,24 +16,79 @@ class HTMLtoPDF extends React.Component {
   constructor(props) {
     super(props); // Llamado a la Super para obtener parametros
     this.datosForm3 = props.datosForm3;
+    this.mostrarMensaje = props.mostrarMensaje;
+    this.fechaSalida = props.fechaSalida;
+    this.username = props.username;
     this.state = {
       downloadPDF: true, // Opción predeterminada: descargar el PDF
+      editedFields: {}, // Para llevar la lista de campos editados
     };
     // Bind the functions to access 'this'
     this.handleDownloadPDF = this.handleDownloadPDF.bind(this);
     this.handlePrintPDF = this.handlePrintPDF.bind(this);
+
+    if (!(this.fechaSalida instanceof Date)) {
+      this.fechaSalida = new Date(this.fechaSalida);
+    }
+
+    this.editableStartDate = new Date(
+      `${this.fechaSalida.getFullYear()}-${
+        this.fechaSalida.getMonth() + 1
+      }-${this.fechaSalida.getDate()} 00:00:00`
+    ); // Fecha de inicio editable
+    this.editableEndDate = new Date(
+      `${this.fechaSalida.getFullYear()}-${
+        this.fechaSalida.getMonth() + 1
+      }-${this.fechaSalida.getDate()} ${this.fechaSalida.getHours()}:${this.fechaSalida.getMinutes()}:${this.fechaSalida.getSeconds()}`
+    ); // Fecha de fin editable
   }
 
-  convertToPDF = () => {
+  sendPdf = async (pdfBlob, fileName) => {
+    const pdfFile = new File([pdfBlob], fileName, { type: "application/pdf" });
+
+    const formData = new FormData();
+    const modifiedFields = this.getModifiedFieldsString();
+    const bus = this.datosForm3.Bus;
+    const viaje = this.datosForm3.Viaje;
+    const username = this.username;
+
+    formData.append("pdf_file", pdfFile);
+    formData.append("modifiedFields", modifiedFields);
+    formData.append("bus", bus);
+    formData.append("viaje", viaje);
+    formData.append("username", username);
+
+    try {
+      const response = await axios.post(
+        "http://wsdx.berlinasdelfonce.com:9000/saveRpto/",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+          crossDomain: true,
+          xsrfCookieName: "csrftoken",
+          xsrfHeaderName: "X-CSRFToken",
+        }
+      );
+      // this.mostrarMensaje(response.data.message, "success_notification");
+    } catch (error) {
+      // this.mostrarMensaje(response.data.message, "success_notification");
+    }
+  };
+
+  convertToPDF = async () => {
     const element = document.getElementById("pdfContent");
     const currentDate = new Date();
     const formattedDate = `${currentDate.getDate()}_${
       currentDate.getMonth() + 1
-    }_${currentDate.getFullYear()}`;
+    }_${currentDate.getFullYear()}-${currentDate.getHours()}-${currentDate.getMinutes()}-${currentDate.getSeconds()}`;
     const nameApp = "5apps";
     const viaje = this.datosForm3.Viaje;
+    const bus = this.datosForm3.Bus;
 
-    const fileName = `${nameApp}_${viaje}_${formattedDate}.pdf`;
+    const fileName = `${nameApp}_${bus}_${viaje}_${formattedDate}.pdf`;
 
     const opt = {
       margin: 10,
@@ -44,24 +100,58 @@ class HTMLtoPDF extends React.Component {
 
     const pdf = html2pdf().from(element).set(opt);
 
-    if (this.state.downloadPDF) {
-      pdf.save();
-    } else {
-      pdf.output("datauristring").then((pdfString) => {
-        const pdfWindow = window.open();
-        pdfWindow.document.write(
-          `<iframe width='100%' height='100%' src='${pdfString}'></iframe>`
-        );
-        pdfWindow.document.close();
-        pdfWindow.onload = () => {
-          setTimeout(() => {
-            pdfWindow.focus();
-            pdfWindow.print();
-            pdfWindow.close(); // Close the window after printing
-          }, 1000); // Adjust the delay as needed to allow PDF generation
-        };
+    pdf
+      .toPdf()
+      .output("datauristring")
+      .then((pdfString) => {
+        const pdfBlob = this.dataURItoBlob(pdfString);
+
+        try {
+          if (this.state.downloadPDF) {
+            pdf.save();
+          } else {
+            // Abrir una nueva ventana para imprimir el PDF
+            const newWindow = window.open();
+            if (newWindow !== null) {
+              newWindow.document.open();
+              newWindow.document.write(
+                '<iframe id="pdfFrame" width="100%" height="100%" src="' +
+                  URL.createObjectURL(pdfBlob) +
+                  '"></iframe>'
+              );
+              newWindow.document.close();
+              newWindow.onload = function () {
+                const pdfFrame = newWindow.document.getElementById("pdfFrame");
+                if (pdfFrame !== null) {
+                  pdfFrame.contentWindow.print(); // Iniciar la impresión del documento dentro del iframe
+                } else {
+                  console.error("No se pudo encontrar el iframe");
+                }
+              };
+            } else {
+              console.error("No se pudo abrir una nueva ventana");
+            }
+          }
+          // Envía el Blob
+          this.sendPdf(pdfBlob, fileName);
+        } catch (error) {
+          console.error("Error al generar el PDF:", error);
+        }
       });
+  };
+
+  // Transformacion de Pdf a Blob para guardar el Pdf en el BackEnd
+  dataURItoBlob = (dataURI) => {
+    const byteString = atob(dataURI.split(",")[1]);
+    const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
     }
+
+    return new Blob([ab], { type: mimeString });
   };
 
   // Cambiar el estado para alternar entre descargar o imprimir el PDF
@@ -89,9 +179,37 @@ class HTMLtoPDF extends React.Component {
     });
   };
 
+  // Define updateEditedFields como un método de la clase
+  updateEditedFields = (fieldName) => {
+    this.setState((prevState) => ({
+      editedFields: {
+        ...prevState.editedFields,
+        [fieldName]: true, // Marca el campo como editado
+      },
+    }));
+  };
+
+  // Define handleFieldChange como un método de la clase
+  handleFieldChange = (fieldName) => {
+    // Actualiza el estado para registrar el campo editado
+    if (!this.state.editedFields[fieldName]) {
+      this.updateEditedFields(fieldName);
+    }
+  };
+
+  getModifiedFieldsString = () => {
+    const { editedFields } = this.state;
+    const modifiedFields = Object.keys(editedFields).join(", ");
+    return modifiedFields;
+  };
+
   render() {
     // Obtener la fecha actual
     const currentDate = new Date();
+    const isEditable =
+      currentDate >= this.editableStartDate &&
+      currentDate <= this.editableEndDate;
+
     // Pasar a formato DD/MM/YYYY)
     const formattedDate = `${currentDate.getDate()}/${
       currentDate.getMonth() + 1
@@ -132,11 +250,6 @@ class HTMLtoPDF extends React.Component {
                   <img src={logoCit} />
                 )}
                 <img src={logoSt} alt="f" />
-                {/* <div className="logo_mint"></div>
-              <div className="logo_iso"></div>
-              <hr className="hr_logos" />
-              <div className="logo_ber"></div>
-              <div className="logo_st"></div> */}
               </section>
               <section className="title_doc">
                 <p className="title_con">
@@ -144,32 +257,58 @@ class HTMLtoPDF extends React.Component {
                   <br />
                   TRANSPORTE TERRESTRE AUTOMOTOR ESPECIAL
                 </p>
-                <p className="num_viaje">
+                <p
+                  className="num_viaje"
+                  onInput={() => this.handleFieldChange("Consecutivo_FUEC")}
+                  contentEditable={isEditable}
+                >
                   N° <b>{this.datosForm3.Consecutivo_FUEC}</b>{" "}
-                  <span className="fecha">{formattedDate}</span>
+                  <span className="fecha" contentEditable="false">
+                    {formattedDate}
+                  </span>
                 </p>
               </section>
               <section className="container_cont">
                 <div className="cont_a">
                   <div className="items">
                     <div className="item_name bold">RAZON SOCIAL</div>
-                    <div className="item_desc">
+                    <div
+                      className="item_desc"
+                      onInput={() =>
+                        this.handleFieldChange("Empresa_Registrado")
+                      }
+                      contentEditable={isEditable}
+                    >
                       {this.datosForm3.Empresa_Registrado}
                     </div>
                   </div>
                   <div className="items">
                     <div className="item_name bold">CONTRATO N°</div>
-                    <div className="item_desc">{tercerNumero}</div>
+                    <div
+                      className="item_desc"
+                      contentEditable={isEditable}
+                      onInput={() => this.handleFieldChange("tercerNumero")}
+                    >
+                      {tercerNumero}
+                    </div>
                   </div>
                   <nav className="items">
                     <div className="item_name bold">CONTRATANTE</div>
-                    <div className="item_desc">
+                    <div
+                      className="item_desc"
+                      contentEditable={isEditable}
+                      onInput={() => this.handleFieldChange("Nombre_Cliente")}
+                    >
                       {this.datosForm3.Nombre_Cliente}
                     </div>
                   </nav>
                   <nav className="items">
                     <div className="item_name bold">OBJETO CONTRATO</div>
-                    <div className="item_desc">
+                    <div
+                      className="item_desc"
+                      contentEditable={isEditable}
+                      onInput={() => this.handleFieldChange("Objeto_Contrato")}
+                    >
                       {this.datosForm3.Objeto_Contrato}
                     </div>
                   </nav>
@@ -177,11 +316,21 @@ class HTMLtoPDF extends React.Component {
                 <div className="cont_b">
                   <nav className="items">
                     <div className="item_nit bold">NIT</div>
-                    <div className="item_desc">{this.datosForm3.Nit_Emp}</div>
+                    <div
+                      className="item_desc"
+                      contentEditable={isEditable}
+                      onInput={() => this.handleFieldChange("Nit_Emp")}
+                    >
+                      {this.datosForm3.Nit_Emp}
+                    </div>
                   </nav>
                   <nav className="items">
                     <div className="item_nit bold">NIT</div>
-                    <div className="item_desc">
+                    <div
+                      className="item_desc"
+                      contentEditable={isEditable}
+                      onInput={() => this.handleFieldChange("NIT_Cliente")}
+                    >
                       {this.datosForm3.NIT_Cliente}
                     </div>
                   </nav>
@@ -191,11 +340,23 @@ class HTMLtoPDF extends React.Component {
                 <div className="item_name center bold">RECORRIDO</div>
                 <nav className="items">
                   <div className="item_name item_3rem bold">ORIGEN</div>
-                  <div className="item_desc">{this.datosForm3.Origen}</div>
+                  <div
+                    className="item_desc"
+                    contentEditable={isEditable}
+                    onInput={() => this.handleFieldChange("Origen")}
+                  >
+                    {this.datosForm3.Origen}
+                  </div>
                 </nav>
                 <nav className="items">
                   <div className="item_name item_3rem bold">DESTINO</div>
-                  <div className="item_desc">{this.datosForm3.Destino}</div>
+                  <div
+                    className="item_desc"
+                    contentEditable={isEditable}
+                    onInput={() => this.handleFieldChange("Destino")}
+                  >
+                    {this.datosForm3.Destino}
+                  </div>
                 </nav>
                 <div className="item_name item_name2 item_100 bold">
                   CONVENIO DE COLABORACION:
@@ -231,16 +392,32 @@ class HTMLtoPDF extends React.Component {
                   <div className="item_name item_full no_line bold">CLASE</div>
                 </nav>
                 <nav className="items items_center line_rpt">
-                  <div className="item_name item_full no_line">
+                  <div
+                    className="item_name item_full no_line"
+                    contentEditable={isEditable}
+                    onInput={() => this.handleFieldChange("Placa")}
+                  >
                     {this.datosForm3.Placa}
                   </div>
-                  <div className="item_name item_full no_line">
+                  <div
+                    className="item_name item_full no_line"
+                    contentEditable={isEditable}
+                    onInput={() => this.handleFieldChange("Modelo")}
+                  >
                     {this.datosForm3.Modelo}
                   </div>
-                  <div className="item_name item_full no_line">
+                  <div
+                    className="item_name item_full no_line"
+                    contentEditable={isEditable}
+                    onInput={() => this.handleFieldChange("Descripcion_Marca")}
+                  >
                     {this.datosForm3.Descripcion_Marca}
                   </div>
-                  <div className="item_name item_full no_line">
+                  <div
+                    className="item_name item_full no_line"
+                    contentEditable={isEditable}
+                    onInput={() => this.handleFieldChange("Descripcion_Clase")}
+                  >
                     {this.datosForm3.Descripcion_Clase}
                   </div>
                 </nav>
@@ -248,13 +425,25 @@ class HTMLtoPDF extends React.Component {
                   <div className="item_name item_full">
                     <div>
                       <strong>NUMERO INTERNO:</strong>{" "}
-                      <span>{this.datosForm3.Bus}</span>
+                      <span
+                        contentEditable={isEditable}
+                        onInput={() => this.handleFieldChange("Bus")}
+                      >
+                        {this.datosForm3.Bus}
+                      </span>
                     </div>
                   </div>
                   <div className="item_name item_full">
                     <div>
                       <strong>NUMERO TARJETA OPERACION:</strong>{" "}
-                      <span>{this.datosForm3.Num_Tarjeta_Operacion}</span>
+                      <span
+                        contentEditable={isEditable}
+                        onInput={() =>
+                          this.handleFieldChange("Num_Tarjeta_Operacion")
+                        }
+                      >
+                        {this.datosForm3.Num_Tarjeta_Operacion}
+                      </span>
                     </div>
                   </div>
                 </nav>
@@ -278,17 +467,39 @@ class HTMLtoPDF extends React.Component {
                   <div className="item_name item_full item_table text_6 height_100 item_55 bold">
                     DATOS DEL CONDUCTOR
                   </div>
-                  <div className="item_name item_full item_table text_4 height_100 ">
+                  <div
+                    className="item_name item_full item_table text_4 height_100 "
+                    contentEditable={isEditable}
+                    onInput={() =>
+                      this.handleFieldChange(
+                        "Apellido_Conductor1-Nombre_Conductor1"
+                      )
+                    }
+                  >
                     {this.datosForm3.Apellido_Conductor1}{" "}
                     {this.datosForm3.Nombre_Conductor1}
                   </div>
-                  <div className="item_name item_full item_table height_100 ">
+                  <div
+                    className="item_name item_full item_table height_100 "
+                    contentEditable={isEditable}
+                    onInput={() => this.handleFieldChange("Cedula_Conductor1")}
+                  >
                     {this.datosForm3.Cedula_Conductor1}
                   </div>
-                  <div className="item_name item_full item_table height_100 ">
+                  <div
+                    className="item_name item_full item_table height_100 "
+                    onInput={() => this.handleFieldChange("Pase1_Conductor1")}
+                    contentEditable={isEditable}
+                  >
                     {this.datosForm3.Pase1_Conductor1}
                   </div>
-                  <div className="item_name item_full item_table text_6 height_100 ">
+                  <div
+                    className="item_name item_full item_table text_6 height_100 "
+                    onInput={() =>
+                      this.handleFieldChange("fechavencimiento1_Conductor1")
+                    }
+                    contentEditable={isEditable}
+                  >
                     {this.datosForm3.fechavencimiento1_Conductor1}
                   </div>
                 </nav>
@@ -296,17 +507,39 @@ class HTMLtoPDF extends React.Component {
                   <div className="item_name item_full item_table height_100 text_6 item_55 bold">
                     DATOS DEL CONDUCTOR
                   </div>
-                  <div className="item_name item_full item_table height_100 text_4 ">
+                  <div
+                    className="item_name item_full item_table height_100 text_4 "
+                    onInput={() =>
+                      this.handleFieldChange(
+                        "Nombre_Conductor2-Apellido_Conductor2"
+                      )
+                    }
+                    contentEditable={isEditable}
+                  >
                     {this.datosForm3.Nombre_Conductor2}{" "}
                     {this.datosForm3.Apellido_Conductor2}
                   </div>
-                  <div className="item_name item_full item_table height_100 ">
+                  <div
+                    className="item_name item_full item_table height_100 "
+                    onInput={() => this.handleFieldChange("Cedula_Conductor2")}
+                    contentEditable={isEditable}
+                  >
                     {this.datosForm3.Cedula_Conductor2}
                   </div>
-                  <div className="item_name item_full item_table height_100 ">
+                  <div
+                    className="item_name item_full item_table height_100 "
+                    onInput={() => this.handleFieldChange("Pase1_Conductor2")}
+                    contentEditable={isEditable}
+                  >
                     {this.datosForm3.Pase1_Conductor2}
                   </div>
-                  <div className="item_name item_full item_table text_6 height_100 ">
+                  <div
+                    className="item_name item_full item_table text_6 height_100 "
+                    onInput={() =>
+                      this.handleFieldChange("fechavencimiento1_Conductor2")
+                    }
+                    contentEditable={isEditable}
+                  >
                     {this.datosForm3.fechavencimiento1_Conductor2}
                   </div>
                 </nav>
@@ -331,17 +564,35 @@ class HTMLtoPDF extends React.Component {
                   <div className="item_name item_full item_table text_7 height_100 item_55 bold">
                     RESPONSABLE DEL CONTRATANTE
                   </div>
-                  <div className="item_name item_full item_table text_4 height_100 ">
+                  <div
+                    className="item_name item_full item_table text_4 height_100 "
+                    onInput={() =>
+                      this.handleFieldChange("Rep_Nombres-Rep_Apellidos")
+                    }
+                    contentEditable={isEditable}
+                  >
                     {this.datosForm3.Rep_Nombres}{" "}
                     {this.datosForm3.Rep_Apellidos}
                   </div>
-                  <div className="item_name item_full item_table height_100 ">
+                  <div
+                    className="item_name item_full item_table height_100 "
+                    onInput={() => this.handleFieldChange("Rep_cedula")}
+                    contentEditable={isEditable}
+                  >
                     {this.datosForm3.Rep_cedula}
                   </div>
-                  <div className="item_name item_full item_table text_6 height_100 ">
+                  <div
+                    className="item_name item_full item_table text_6 height_100 "
+                    onInput={() => this.handleFieldChange("Telefono_Cliente")}
+                    contentEditable={isEditable}
+                  >
                     {this.datosForm3.Telefono_Cliente}
                   </div>
-                  <div className="item_name item_full item_table text_6 height_100 ">
+                  <div
+                    className="item_name item_full item_table text_6 height_100 "
+                    onInput={() => this.handleFieldChange("Direccion_Cliente")}
+                    contentEditable={isEditable}
+                  >
                     {this.datosForm3.Direccion_Cliente}
                   </div>
                 </nav>
@@ -417,19 +668,18 @@ class HTMLtoPDF extends React.Component {
         </div>
 
         {/* Botón para iniciar la conversión y descarga del pdf */}
-
         <button
           onClick={this.handleDownloadPDF}
           className="submit-button botton_gp"
         >
           Descargar PDF
         </button>
-        {/* <button
+        <button
           onClick={this.handlePrintPDF}
           className="submit-button botton_gp"
         >
           Imprimir PDF
-        </button> */}
+        </button>
       </div>
     );
   }

@@ -52,7 +52,7 @@ const UploadImage = ({ mostrarMensaje }) => {
     formData.append("imageData", file);
 
     axios
-      .post("http://127.0.0.1:8000/subir_ft/", formData, {
+      .post("http://wsdx.berlinasdelfonce.com:9000/subir_ft/", formData, {
         headers: {
           "content-type": "multipart/form-data",
         },
@@ -64,7 +64,7 @@ const UploadImage = ({ mostrarMensaje }) => {
       .then((response) => {
         if (response.data.status == 200) {
           clearInterval(intervalId); // Detiene el intervalo después del reconocimiento
-          console.log('aqui pase')
+          console.log("aqui pase");
         } else {
           setReconocido(false); // Vuelve a capturar si no se reconoce
         }
@@ -78,7 +78,6 @@ const UploadImage = ({ mostrarMensaje }) => {
       });
   };
 
-
   const stopCamera = () => {
     const video = videoRef.current;
     if (video && video.srcObject) {
@@ -87,7 +86,6 @@ const UploadImage = ({ mostrarMensaje }) => {
       video.srcObject = null;
     }
   };
-
 
   return (
     <div>

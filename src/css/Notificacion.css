@@ -92,6 +92,8 @@ h2 {
     background-image: url(../img/error.png);
     background-repeat: no-repeat;
     background-size: contain;
+    min-height: 24px;
+    min-width: 24px;
     height: 24px;
     width: 24px;
     margin-right: .9rem;
@@ -106,6 +108,8 @@ h2 {
     background-image: url(../img/warning.png);
     background-repeat: no-repeat;
     background-size: contain;
+    min-height: 24px;
+    min-width: 24px;
     height: 24px;
     width: 24px;
     margin-right: .9rem;
@@ -120,6 +124,8 @@ h2 {
     background-image: url(../img/ok.png);
     background-repeat: no-repeat;
     background-size: contain;
+    min-height: 24px;
+    min-width: 24px;
     height: 24px;
     width: 24px;
     margin-right: .9rem;
