@@ -12,6 +12,7 @@ import "../src/css/menu.css";
 import "../src/css/contenido.css";
 import "../src/css/Notificacion.css";
 import "../src/css/scroll.css";
+// import "../src/css/ContabilidadInicio.css";
 import "../src/css/responsive.css";
 import "../src/css/administracion/AddColaboradores.css";
 import "./components/Contenido";

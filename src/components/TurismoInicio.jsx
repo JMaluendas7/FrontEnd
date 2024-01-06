@@ -6,20 +6,32 @@ const Pruebas = () => {
   // Llamado a lista de los usuarios
   const [users, setUsers] = useState([]);
 
-  const getUsers = () => {
-    axios
-      .get("http://127.0.0.1:8000/api/login/")
-      .then((response) => {
-        setUsers(response.data);
-      })
-      .catch((error) => {
-        console.error("Error al llamar a la API: ", error);
-      });
-  };
+  rptoCuotaAdmin = async () => {
+    formData.append("pdf_file", pdfFile);
+    formData.append("modifiedFields", modifiedFields);
+    formData.append("bus", bus);
+    formData.append("viaje", viaje);
+    formData.append("username", username);
 
-  useEffect(() => {
-    getUsers();
-  }, []);
+    try {
+      const response = await axios.post(
+        "http://wsdx.berlinasdelfonce.com:9000/rptoCuotaAdmin/",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+          crossDomain: true,
+          xsrfCookieName: "csrftoken",
+          xsrfHeaderName: "X-CSRFToken",
+        }
+      );
+      // this.mostrarMensaje(response.data.message, "success_notification");
+    } catch (error) {
+      // this.mostrarMensaje(response.data.message, "success_notification");
+    }
+  };
 
   // useState para contener el valor de busqueda
   const [searchValue, setSearchValue] = useState("");
