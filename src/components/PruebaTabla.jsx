@@ -219,13 +219,20 @@ const DynamicTable = ({
           ))}
         </tbody>
       </table>
-      <ul>
-        {Array.from({ length: totalPages }).map((_, index) => (
-          <li key={index}>
-            <button onClick={() => paginate(index + 1)}>{index + 1}</button>
-          </li>
-        ))}
-      </ul>
+      {totalPages > 1 && (
+        <ul className="paginacion_table">
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <li key={index}>
+              <button
+                className="button_paginacion"
+                onClick={() => paginate(index + 1)}
+              >
+                {index + 1}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
       {editableRow !== null && (
         <div>
           <button onClick={handleSaveEdit}>Guardar</button>

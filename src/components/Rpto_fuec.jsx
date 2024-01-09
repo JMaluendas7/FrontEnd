@@ -129,14 +129,6 @@ const Fuec = ({ mostrarMensaje, username }) => {
             "warning_notification"
           );
         } else {
-          // mostrarMensaje(
-          //   "Ahora puedes editar cada uno de los campos en este mismo documento",
-          //   "warning_notification"
-          // );
-          // mostrarMensaje(
-          //   "Solo debes hacer click sobre el campo que deseas editar del documento",
-          //   "success_notification"
-          // );
           setDatosForm3(response.data.data);
           setShowTable(false);
           setShowFormI(false);

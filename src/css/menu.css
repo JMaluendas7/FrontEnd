@@ -21,9 +21,9 @@
   width: 0%;
 }
 
-.menu-open .container {
+/* .menu-open .container {
   width: 100%;
-}
+} */
 
 .menu-hamburgesa {
   background-image: url(/src/img/menu.png);
@@ -196,4 +196,31 @@
 }
 .turismo {
   background-image: url(../img/icons_menu/turismo.png);
+}
+.contabilidad {
+  background-image: url(../img/icons_menu/contabilidad.png);
+}
+.rptocontabilidad {
+  background-image: url(../img/icons_menu/rptocontabilidad.png);
+}
+.alcoholimetria {
+  background-image: url(../img/icons_menu/alcoholimetria.png);
+}
+.operaciones {
+  background-image: url(../img/icons_menu/operaciones.png);
+}
+.viajes {
+  background-image: url(../img/icons_menu/viajes.png);
+}
+.busquedafecha {
+  background-image: url(../img/icons_menu/busquedafecha.png);
+}
+.pasajeros {
+  background-image: url(../img/icons_menu/pasajeros.png);
+}
+.combustible {
+  background-image: url(../img/icons_menu/combustible.png);
+}
+.estadisticas {
+  background-image: url(../img/icons_menu/estadisticas.png);
 }

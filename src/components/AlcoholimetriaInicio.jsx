@@ -6,15 +6,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 
 const Inicio = ({ mostrarMensaje }) => {
-  const [codigo, setCodigo] = useState("");
-  const [tipoInforme, setTipoInforme] = useState("");
   const [concepto, setConcepto] = useState("");
   const [empresa, setEmpresa] = useState("");
 
   const [isLoading, setIsLoading] = useState(false); // Estado de carga
 
   const [results, setResults] = useState([]);
-  const rptoCuotaAdmin = async () => {
+  const rptoAlcoholimetria = async () => {
     setIsLoading(true);
     const formData = new FormData(); // Creacion del FormData
 
@@ -29,14 +27,12 @@ const Inicio = ({ mostrarMensaje }) => {
     formData.append("endDate", formattedEndDate);
 
     // Obtiene los valores de los campos
-    formData.append("codigo", codigo);
-    formData.append("tipoInforme", tipoInforme);
     formData.append("concepto", concepto);
     formData.append("empresa", empresa);
 
     try {
       const response = await axios.post(
-        "http://wsdx.berlinasdelfonce.com:9000/rptoCuotaAdmin/",
+        "http://wsdx.berlinasdelfonce.com:9000/rptoAlcoholimetria/",
         formData,
         {
           headers: {
@@ -65,8 +61,8 @@ const Inicio = ({ mostrarMensaje }) => {
   const generarExcel = async () => {
     try {
       const response = await axios.post(
-        "http://wsdx.berlinasdelfonce.com:9000/generarRptoAdmin/",
-        { results: results, tipoInforme: tipoInforme },
+        "http://wsdx.berlinasdelfonce.com:9000/generarRptoAlcoholimetria/",
+        { results: results, tipoInforme: concepto },
         {
           responseType: "blob",
           headers: {
@@ -86,15 +82,15 @@ const Inicio = ({ mostrarMensaje }) => {
       const now = new Date();
       const timestamp = now.toISOString().slice(0, 19).replace(/:/g, "-"); // Formato: YYYY-MM-DDTHH-mm-ss
 
-      if (tipoInforme == 1) {
-        fileName = `5apps_ReporteAgenciaDeViajes_${timestamp}.xlsx`;
-      } else if (tipoInforme == 2) {
+      if (concepto == 0) {
+        fileName = `5apps_ReporteAlcoholimetriaDetallado_${timestamp}.xlsx`;
+      } else if (concepto == 2) {
         fileName = `5apps_ReporteCiudades_${timestamp}.xlsx`;
-      } else if (tipoInforme == 3) {
+      } else if (concepto == 3) {
         fileName = `5apps_ReportePropietarios_${timestamp}.xlsx`;
-      } else if (tipoInforme == 4) {
+      } else if (concepto == 4) {
         fileName = `5apps_ReporteCiudadesColibertador_${timestamp}.xlsx`;
-      } else if (tipoInforme == 5) {
+      } else if (concepto == 5) {
         fileName = `5apps_ReporteAgenciasBerlitur_${timestamp}.xlsx`;
       }
 
@@ -156,7 +152,7 @@ const Inicio = ({ mostrarMensaje }) => {
 
   return (
     <div className="Efect">
-      <h1 className="titulo_login">Reporte cuota de administración</h1>
+      <h1 className="titulo_login">Reporte cuota de alcoholimetria</h1>
       <hr />
       <section className="contabilidad__table">
         <section className="contabilidad_section">
@@ -171,41 +167,6 @@ const Inicio = ({ mostrarMensaje }) => {
             />
             <label className="input-label">Codigo</label>
           </div> */}
-          <div className="input-container agg_colaborador">
-            <label className="label">Tipo Informe:</label>
-            <select
-              className="opciones"
-              value={tipoInforme}
-              onChange={(e) => setTipoInforme(e.target.value)}
-            >
-              <option value="" disabled selected>
-                Seleccionar
-              </option>
-              <option disabled value={1}>
-                Agencias De Viajes
-              </option>
-              <option value={2}>Ciudades</option>
-              <option value={3}>Propietarios</option>
-              <option value={4}>Ciudades - Colibertador</option>
-              <option value={5}>Agencias - Berlitur</option>
-            </select>
-          </div>
-          <div className="input-container agg_colaborador">
-            <label className="label">Concepto:</label>
-            <select
-              className="opciones"
-              value={concepto}
-              onChange={(e) => setConcepto(e.target.value)}
-            >
-              <option value="" disabled selected>
-                Seleccionar
-              </option>
-              <option value={"080101"}>Cuota Admon</option>
-              <option value={"080103"}>Cuota Admon Agencias</option>
-            </select>
-          </div>
-        </section>
-        <section className="contabilidad_section">
           <div className="input-container agg_colaborador">
             <label className="label">Empresa:</label>
             <select
@@ -222,12 +183,30 @@ const Inicio = ({ mostrarMensaje }) => {
               <option value={310}>
                 CARTAGENA INTERNATIONAL TRAVELS S.A.S. "CIT"
               </option>
-              <option value={320}>TOURLINE EXPRESS S.A.S.</option>
               <option value={2771}>TRANSCARGA BERLINAS S.A.</option>
-              <option value={9000}>DATA TEST TIC</option>
               <option value={9001}>SERVICIO ESPECIAL</option>
+              {/* <option value={320}>TOURLINE EXPRESS S.A.S.</option> */}
+              {/* <option value={9000}>DATA TEST TIC</option> */}
             </select>
           </div>
+
+          <div className="input-container agg_colaborador">
+            <label className="label">Concepto:</label>
+            <select
+              className="opciones"
+              value={concepto}
+              onChange={(e) => setConcepto(e.target.value)}
+            >
+              <option value="" disabled selected>
+                Seleccionar
+              </option>
+              <option value={0}>Detallada</option>
+              <option value={1}>Viaje por dias</option>
+              <option value={2}>Consolidado mensual</option>
+            </select>
+          </div>
+        </section>
+        <section className="contabilidad_section">
           <div className="content__dateDH">
             <label className="label">Rango de fecha:</label>
             <DatePicker
@@ -249,7 +228,7 @@ const Inicio = ({ mostrarMensaje }) => {
       <button
         className="submit-button botton_gp"
         // onClick={generarExcel}
-        onClick={rptoCuotaAdmin}
+        onClick={rptoAlcoholimetria}
         disabled={isLoading}
       >
         {isLoading ? "Generando..." : "Generar reporte"}

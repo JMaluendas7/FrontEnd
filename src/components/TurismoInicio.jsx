@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -6,7 +6,7 @@ const Pruebas = () => {
   // Llamado a lista de los usuarios
   const [users, setUsers] = useState([]);
 
-  rptoCuotaAdmin = async () => {
+  const rptoCuotaAdmin = async () => {
     formData.append("pdf_file", pdfFile);
     formData.append("modifiedFields", modifiedFields);
     formData.append("bus", bus);

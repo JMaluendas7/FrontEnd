@@ -129,12 +129,13 @@
         box-shadow: 3px 3px 3px 0px rgba(0,0,0,0.5);
         z-index: 2;
     }
-    .menu-container:hover {
+    /* .menu-container:hover {
         transform: scale(1.01);
-    }
+    } */
     .banner {
         width: 73%;
     }
+    /* .container { OJOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO */
     .container {
         width: 100%;
     }

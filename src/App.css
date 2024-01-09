@@ -90,6 +90,10 @@ h1, h2, h3, h4, h5 {
   font-weight: normal;
 }
 
+hr {
+  margin-bottom: 2rem;
+}
+
 .menu-open .menu {
   display: none;
 }
@@ -339,6 +343,23 @@ th, td {
   font-size: .9rem;
 }
 
+/* Estilos para paginacion de la tabla */
+.paginacion_table {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: .2rem;
+}
+
+.button_paginacion {
+  background-color: var(--color-background-table-header);
+  transition: all 300ms ease-in-out;
+}
+.button_paginacion:hover {
+  transform: scale(1.05);
+}
 
 /* Estilos para el input de busqueda */
 .search {

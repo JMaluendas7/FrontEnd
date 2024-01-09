@@ -4,11 +4,27 @@
     align-items: center;
     justify-content: center;
     gap: 2rem;
-    margin-top: 2rem;
 }
 
 .contabilidad_section {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.row_section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.colum_table {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     gap: 2rem;
 }
