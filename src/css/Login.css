@@ -1,4 +1,9 @@
-
+.container_login--father {
+    display: flex;
+    height: 21rem;
+    flex-direction: column;
+    justify-content: flex-end;
+}
 
 .panel__login {
     position: absolute;
@@ -10,6 +15,13 @@
     height: 100%;
     background-color: var(--color-scrollbar);
     transition: all 300ms ease-in-out;
+}
+
+.form_login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.2rem;
 }
 
 .container__login--colums {

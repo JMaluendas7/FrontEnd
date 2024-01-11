@@ -1,11 +1,14 @@
 .contabilidad__table {
     display: flex;
-    flex-direction: row;
-    align-items: center;
     justify-content: center;
+    flex-direction: column;
     gap: 2rem;
 }
-
+.contabilidad_fr {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
 .contabilidad_section {
     display: flex;
     flex-direction: column;

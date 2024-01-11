@@ -17,10 +17,6 @@
     width: 10rem;
 }
 
-.submit-button {
-    margin: 0;
-}
-
 .form__colum {
     display: flex;
     flex-direction: row;

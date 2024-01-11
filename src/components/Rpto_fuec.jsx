@@ -3,23 +3,22 @@ import axios from "axios";
 import "/src/css/fuec/Rpto_fuec.css";
 import HTMLtoPDF from "./crearPdf";
 import DynamicTable from "./PruebaTabla";
-
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
+import es from "date-fns/locale/es";
 import volver from "/src/img/volver.png";
 
 const Fuec = ({ mostrarMensaje, username }) => {
+  const [bus, setbus] = useState();
   const [showTable, setShowTable] = useState(false);
   const [showFormMo, setshowFormMo] = useState(false);
   const [showPdf, setShowDataPdf] = useState(false);
   const [showFormI, setShowFormI] = useState(true);
-  const [datosForm1, setDatosForm1] = useState({
-    fecha: "",
-    searchV: "",
-  });
+
   const [datosViaje, setDatosViaje] = useState({
     viaje: 0,
     searchV: "",
   });
-  const [datosTable, setDatosTable] = useState([]);
   const [datosForm2, setDatosForm2] = useState({
     viaje: "620291",
     motivo: "04/12/2023 12:15:00 p. m.",
@@ -27,12 +26,6 @@ const Fuec = ({ mostrarMensaje, username }) => {
   });
   const [datosForm3, setDatosForm3] = useState([]);
 
-  const handleInputChangeForm1 = (fieldName, value) => {
-    setDatosForm1({
-      ...datosForm1,
-      [fieldName]: value,
-    });
-  };
   const handleInputChangeForm2 = (fieldName, value) => {
     setDatosForm2({
       ...datosForm2,
@@ -46,52 +39,63 @@ const Fuec = ({ mostrarMensaje, username }) => {
     });
   };
 
-  // useState para contener el valor de busqueda
-  const [searchValue, setSearchValue] = useState("");
-
-  // Funcion para actualizar el useState de busqueda
-  const handleSearchChange = (event) => {
-    setSearchValue(event.target.value);
-  };
-
   const enviarSubmit = async (event) => {
     event.preventDefault();
-    try {
-      const response = await axios.post(
-        "http://wsdx.berlinasdelfonce.com:9000/callViajes/",
-        datosForm1,
-        {
-          responseType: "json",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-
-      if (response.status === 200) {
-        const responseData = response.data;
-        if (
-          responseData &&
-          responseData.results &&
-          Array.isArray(responseData.results)
-        ) {
-          const results = responseData.results;
-          if (results.length > 0) {
-            setTableData(results);
-            setShowTable(true);
-            // setshowFormMo(true);
-          } else {
-            mostrarMensaje("No hay viajes", "warning_notification");
-            setShowTable(false);
+    const formData = new FormData();
+    if (bus) {
+      try {
+        formData.append("bus", bus);
+        formData.append("fecha", Date);
+        const response = await axios.post(
+          "http://wsdx.berlinasdelfonce.com:9000/callViajes/",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            withCredentials: true,
+            crossDomain: true,
+            xsrfCookieName: "csrftoken",
+            xsrfHeaderName: "X-CSRFToken",
           }
-        } else {
-          mostrarMensaje("Respuesta inválida", "error_notification");
+        );
+
+        if (response.status === 200) {
+          const responseData = response.data;
+          if (
+            responseData &&
+            responseData.results &&
+            Array.isArray(responseData.results)
+          ) {
+            const results = responseData.results;
+            if (results.length > 0) {
+              setTableData(results);
+              setShowTable(true);
+              // setshowFormMo(true);
+            } else {
+              mostrarMensaje("No hay viajes", "warning_notification");
+              setShowTable(false);
+            }
+          } else {
+            mostrarMensaje("Respuesta inválida", "error_notification");
+          }
         }
+      } catch (error) {
+        // mostrarMensaje(
+        //   "En Mantenimiento, por favor, usa el WsDx que antes han usado",
+        //   "warning_notification"
+        // );
+        // mostrarMensaje(
+        //   "A la 1:00 Pm volvera a estar disponible",
+        //   "warning_notification"
+        // );
+        mostrarMensaje(
+          "Reporta la falla al DTI, por favor.",
+          "warning_notification"
+        );
       }
-    } catch (error) {
-      mostrarMensaje("No se han encontrado viajes", "error_notification");
+    } else {
+      mostrarMensaje("Debes dar el numero de bus", "warning_notification");
     }
   };
 
@@ -165,6 +169,26 @@ const Fuec = ({ mostrarMensaje, username }) => {
     setTableData(updatedData);
   };
 
+  // Manejo de campo date inicioFin
+  const [Date, setDate] = useState("");
+  const [dateRangeText, setDateRangeText] = useState("");
+  const [show, setShow] = useState(false);
+
+  const handleDateChange = (date) => {
+    setDate(date);
+
+    if (date) {
+      const formattedDate = date.toLocaleDateString("es-ES", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+      });
+      setDateRangeText(`${formattedDate}`);
+    } else {
+      setDateRangeText("");
+    }
+  };
+
   return (
     <div className="Efect">
       <h1 className="titulo_login title_fuec">Reporte FUEC</h1>
@@ -178,22 +202,24 @@ const Fuec = ({ mostrarMensaje, username }) => {
                 className="input-field"
                 placeholder=""
                 type="text"
-                value={datosForm1.searchV}
-                onChange={(addvalue) =>
-                  handleInputChangeForm1("searchV", addvalue.target.value)
-                }
+                value={bus}
+                onChange={(e) => setbus(e.target.value)}
               />
               <label className="input-label">Nr de bus</label>
             </div>
-            <div>
+            <div className="content__dateDH">
               <label className="label">Fecha</label>
-              <input
-                type="date"
-                className="input-field"
-                value={datosForm1.fecha}
-                onChange={(addvalue) =>
-                  handleInputChangeForm1("fecha", addvalue.target.value)
-                }
+              <DatePicker
+                className="input-field datepicker"
+                selected={Date}
+                onChange={handleDateChange}
+                inputMode="none"
+                onBlur={() => setShow(false)}
+                onSelect={() => setShow(false)}
+                onInputClick={() => setShow(true)}
+                onClickOutside={() => setShow(false)}
+                open={show}
+                locale={es}
               />
             </div>
             <button

@@ -4,6 +4,7 @@ import "/src/css/ContabilidadInicio.css";
 import "react-datepicker/dist/react-datepicker.css";
 import DynamicTable from "./PruebaTabla";
 import DatePicker from "react-datepicker";
+import es from "date-fns/locale/es";
 
 const Inicio = ({ mostrarMensaje }) => {
   const [empresa, setEmpresa] = useState("");
@@ -15,45 +16,77 @@ const Inicio = ({ mostrarMensaje }) => {
     setShowTable(false);
     const formData = new FormData();
     // Conversion de fecha y agregar hora
-    const formattedStartDate =
-      startDate.toISOString().split("T")[0] + "T00:00:00.00Z";
-    const formattedEndDate =
-      endDate.toISOString().split("T")[0] + "T23:59:59.00Z";
+    if (empresa && startDate && endDate) {
+      const formattedStartDate =
+        startDate.toISOString().split("T")[0] + "T00:00:00.00Z";
+      const formattedEndDate =
+        endDate.toISOString().split("T")[0] + "T23:59:59.00Z";
 
-    formData.append("startDate", formattedStartDate);
-    formData.append("endDate", formattedEndDate);
-    formData.append("Opcion", 1);
-    formData.append("SubOpcion", 2);
-    formData.append("empresa", empresa);
-
-    try {
-      const response = await axios.post(
-        "http://wsdx.berlinasdelfonce.com:9000/rptoOperaciones/",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-          crossDomain: true,
-          xsrfCookieName: "csrftoken",
-          xsrfHeaderName: "X-CSRFToken",
+      formData.append("startDate", formattedStartDate);
+      formData.append("endDate", formattedEndDate);
+      formData.append("Opcion", 1);
+      formData.append("SubOpcion", 2);
+      formData.append("empresa", empresa);
+      try {
+        const response = await axios.post(
+          "http://wsdx.berlinasdelfonce.com:9000/rptoOperaciones/",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            withCredentials: true,
+            crossDomain: true,
+            xsrfCookieName: "csrftoken",
+            xsrfHeaderName: "X-CSRFToken",
+          }
+        );
+        if (response.status === 200) {
+          if (response.data.results && response.data.results.length > 0) {
+            setResults(response.data.results);
+            setShowTable(true);
+            setIsLoading(false);
+          } else {
+            mostrarMensaje("Respuesta vacía", "warning_notification");
+            setIsLoading(false);
+          }
         }
-      );
-      if (response.status === 200) {
-        if (response.data.results && response.data.results.length > 0) {
-          setResults(response.data.results);
-          setShowTable(true);
-          setIsLoading(false);
-        } else {
-          mostrarMensaje("Respuesta vacía", "warning_notification");
-          setIsLoading(false);
-        }
+      } catch (error) {
+        mostrarMensaje("Respuesta no Exitosa", "error_notification");
+        setIsLoading(false);
       }
-    } catch (error) {
-      mostrarMensaje("Respuesta no Exitosa", "error_notification");
+    } else {
       setIsLoading(false);
+      mostrarMensaje(
+        "Debe seleccionar todos los campos",
+        "warning_notification"
+      );
     }
+  };
+
+  // useEffect para ejecutar calcularPorcentajes cuando results se actualice
+  useEffect(() => {
+    const calcularPorcentajesYAgregar = () => {
+      const nuevosResultados = JSON.parse(JSON.stringify(results));
+
+      nuevosResultados.forEach((fila) => {
+        const porcentajeCalculado = ((100 * fila.cont) / fila.BUTACAS).toFixed(
+          2
+        );
+        fila.porcentajeCalculado = porcentajeCalculado;
+      });
+
+      // Verificar si los nuevos resultados son diferentes de los actuales antes de actualizar el estado
+      if (!sonIguales(results, nuevosResultados)) {
+        setResults(nuevosResultados);
+      }
+    };
+    calcularPorcentajesYAgregar();
+  }, [results]);
+
+  // Función para verificar si dos arrays son iguales
+  const sonIguales = (array1, array2) => {
+    return JSON.stringify(array1) === JSON.stringify(array2);
   };
 
   const generarExcel = async () => {
@@ -114,18 +147,9 @@ const Inicio = ({ mostrarMensaje }) => {
     }
   };
 
-  // Utiliza useEffect para ejecutar generarExcel cuando results se actualice
-  // useEffect(() => {
-  //   if (results.length > 0) {
-  //     generarExcel();
-  //     mostrarMensaje("Respuesta Exitosa", "success_notification");
-  //     setIsLoading(false);
-  //   }
-  // }, [results]);
-
   // Manejo de campo date inicioFin
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState(false);
+  const [endDate, setEndDate] = useState(false);
   const [dateRangeText, setDateRangeText] = useState("");
 
   const handleDateChange = (dates) => {
@@ -173,11 +197,12 @@ const Inicio = ({ mostrarMensaje }) => {
       { key: "NVIAJES", label: "NVIAJE", type: "text" },
       { key: "BUTACAS", label: "SILLAS", type: "number" },
       { key: "cont", label: "PASAJEROS", type: "number" },
+      { key: "porcentajeCalculado", label: "% OCUPACION", type: "text" },
       { key: "VALOR", label: "VALOR", type: "number" },
     ];
   }
 
-  const itemsPerPage = 12;
+  const itemsPerPage = 15;
 
   const updateTableData = (updatedData) => {
     setTableData(updatedData);
@@ -189,58 +214,64 @@ const Inicio = ({ mostrarMensaje }) => {
         Informe Por Fechas De Pasajeros Movilizados
       </h1>
       <hr />
-      <section className="contabilidad__table">
-        <section className="contabilidad_section">
-          <div className="input-container agg_colaborador">
-            <label className="label">Empresa:</label>
-            <select
-              className="opciones"
-              value={empresa}
-              onChange={(e) => setEmpresa(e.target.value)}
-            >
-              <option value="" disabled selected>
-                Seleccionar
-              </option>
-              <option value={277}>BERLINAS DEL FONCE S.A.</option>
-              <option value={278}>BERLITUR S.A.S.</option>
-              {/* <option value={300}>COMPAÑIA LIBERTADOR S.A.</option> */}
-              <option value={310}>
-                CARTAGENA INTERNATIONAL TRAVELS S.A.S. "CIT"
-              </option>
-              {/* <option value={2771}>TRANSCARGA BERLINAS S.A.</option> */}
-              <option value={9001}>SERVICIO ESPECIAL</option>
-              <option value={320}>TOURLINE EXPRESS S.A.S.</option>
-              {/* <option value={9000}>DATA TEST TIC</option> */}
-            </select>
-          </div>
-        </section>
-        <section className="contabilidad_section">
-          <div className="content__dateDH">
-            <label className="label">Rango de fecha:</label>
-            <DatePicker
-              className="input-field"
-              selected={startDate}
-              onChange={handleDateChange}
-              startDate={startDate}
-              endDate={endDate}
-              selectsRange
-              placeholderText="Selecciona un rango"
-              placeholder="Prueba texto"
-            />
-            {/* <p>{dateRangeText}</p> */}
-            {/* <p>{startDate}</p>
+      <section className="contabilidad_section">
+        <div className="input-container agg_colaborador">
+          <label className="label">Empresa:</label>
+          <select
+            className="opciones"
+            value={empresa}
+            onChange={(e) => {
+              setEmpresa(e.target.value);
+              setShowTable(false);
+            }}
+            required
+          >
+            <option value="" disabled selected>
+              Seleccionar
+            </option>
+            <option value={277}>BERLINAS DEL FONCE S.A.</option>
+            <option value={278}>BERLITUR S.A.S.</option>
+            {/* <option value={300}>COMPAÑIA LIBERTADOR S.A.</option> */}
+            <option value={310}>
+              CARTAGENA INTERNATIONAL TRAVELS S.A.S. "CIT"
+            </option>
+            {/* <option value={2771}>TRANSCARGA BERLINAS S.A.</option> */}
+            <option value={9001}>SERVICIO ESPECIAL</option>
+            <option value={320}>TOURLINE EXPRESS S.A.S.</option>
+            {/* <option value={9000}>DATA TEST TIC</option> */}
+          </select>
+        </div>
+        <div className="content__dateDH">
+          <label className="label">Rango de fecha:</label>
+          <DatePicker
+            className="input-field datepicker"
+            selected={startDate}
+            onChange={handleDateChange}
+            startDate={startDate}
+            endDate={endDate}
+            selectsRange
+            showMonthDropdown
+            showYearDropdown
+            dropdownMode="select"
+            inputMode="none"
+            onFocus={(e) => e.target.blur()}
+            onBlur={(e) => e.target.blur()}
+            disabledInput
+            locale={es}
+          />
+          {/* <p>{dateRangeText}</p> */}
+          {/* <p>{startDate}</p>
             <p>{endDateDate}</p> */}
-          </div>
-        </section>
+        </div>
+        <button
+          className="submit-button botton_gp"
+          // onClick={generarExcel}
+          onClick={rptoInfoXFechasPM}
+          disabled={isLoading}
+        >
+          {isLoading ? "Generando..." : "Generar reporte"}
+        </button>
       </section>
-      <button
-        className="submit-button botton_gp"
-        // onClick={generarExcel}
-        onClick={rptoInfoXFechasPM}
-        disabled={isLoading}
-      >
-        {isLoading ? "Generando..." : "Generar reporte"}
-      </button>
       {/* Handle animacion (Loading) */}
       {isLoading && <div class="loader"></div>}
       {showTable && (

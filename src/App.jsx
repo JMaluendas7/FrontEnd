@@ -137,7 +137,17 @@ function App() {
     }
   };
 
-  const [containerComponent, setContainerComponent] = useState("Rpto_fuec");
+  const [containerComponent, setContainerComponent] = useState();
+  useEffect(() => {
+    if (rol_id == 3) {
+      setContainerComponent("Rpto_fuec");
+    } else if (rol_id == 2) {
+      setContainerComponent("Home");
+    } else {
+      setContainerComponent("Home");
+    }
+  }, [rol_id]);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // Funcion para abrir los ites del menu
   const toggleMenu = () => {

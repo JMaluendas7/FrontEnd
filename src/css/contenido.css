@@ -73,7 +73,6 @@
 .input-container {
   position: relative;
   margin: 0 auto;
-  margin-top: 1rem;
 }
 
 .input-label {
@@ -98,6 +97,10 @@
   border-radius: .5rem;
   transition: all 300ms ease;
 }
+
+/* .datepicker {
+  pointer-events: ;
+} */
 
 .input-field__search {
   max-width: 100%;
@@ -318,4 +321,19 @@
     width: 100%;
     position: fixed;
     bottom: 1rem;
+}
+
+.buttons_rptos {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.bottom_bolivariano {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
 }

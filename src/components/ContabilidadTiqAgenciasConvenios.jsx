@@ -2,32 +2,31 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "/src/css/ContabilidadInicio.css";
 import "react-datepicker/dist/react-datepicker.css";
-import DatePicker from "react-datepicker";
 import DynamicTable from "./PruebaTabla";
+import DatePicker from "react-datepicker";
 import es from "date-fns/locale/es";
 
 const Inicio = ({ mostrarMensaje }) => {
-  const [tipoInforme, setTipoInforme] = useState("");
   const [empresa, setEmpresa] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState([]); // Contiene los resultados del procedimiento almacenado
 
-  const rptoConsolidadoPM = async () => {
-    setShowTable(false);
+  const rptoInfoXFechasPM = async () => {
     setIsLoading(true);
+    setShowTable(false);
     const formData = new FormData();
-    if (tipoInforme && empresa && startDate && endDate) {
+    // Conversion de fecha y agregar hora
+    if (empresa && startDate && endDate) {
       const formattedStartDate =
         startDate.toISOString().split("T")[0] + "T00:00:00.00Z";
       const formattedEndDate =
         endDate.toISOString().split("T")[0] + "T23:59:59.00Z";
 
-      formData.append("empresa", empresa);
       formData.append("startDate", formattedStartDate);
       formData.append("endDate", formattedEndDate);
       formData.append("Opcion", 1);
-      formData.append("SubOpcion", tipoInforme);
-
+      formData.append("SubOpcion", 2);
+      formData.append("empresa", empresa);
       try {
         const response = await axios.post(
           "http://wsdx.berlinasdelfonce.com:9000/rptoOperaciones/",
@@ -84,19 +83,23 @@ const Inicio = ({ mostrarMensaje }) => {
     };
     calcularPorcentajesYAgregar();
   }, [results]);
+
   // Función para verificar si dos arrays son iguales
   const sonIguales = (array1, array2) => {
     return JSON.stringify(array1) === JSON.stringify(array2);
   };
 
   const generarExcel = async () => {
+    const Opcion = 1;
+    const SubOpcion = 2;
+    console.log(results);
     try {
       const response = await axios.post(
         "http://wsdx.berlinasdelfonce.com:9000/generarRptoOViajes/",
         {
           results: results,
-          Opcion: 1,
-          SubOpcion: tipoInforme,
+          Opcion: Opcion,
+          SubOpcion: SubOpcion,
           empresa: empresa,
           startDate: startDate,
         },
@@ -119,10 +122,9 @@ const Inicio = ({ mostrarMensaje }) => {
       const now = new Date();
       const timestamp = now.toISOString().slice(0, 19).replace(/:/g, "-"); // Formato: YYYY-MM-DDTHH-mm-ss
 
-      if (tipoInforme == 0) {
-        fileName = `5apps_InformePasajerosMovilizadosCTotal_${timestamp}.xlsx`;
-      } else if (tipoInforme == 1) {
-        fileName = `5apps_InformePasajerosMovilizadosCLinea_${timestamp}.xlsx`;
+      if (Opcion == 1) {
+        if (SubOpcion == 2)
+          fileName = `5apps_InformeXFechasPM_${timestamp}.xlsx`;
       }
 
       if (fileNameMatch && fileNameMatch.length > 1) {
@@ -146,8 +148,8 @@ const Inicio = ({ mostrarMensaje }) => {
   };
 
   // Manejo de campo date inicioFin
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState(false);
+  const [endDate, setEndDate] = useState(false);
   const [dateRangeText, setDateRangeText] = useState("");
 
   const handleDateChange = (dates) => {
@@ -176,23 +178,24 @@ const Inicio = ({ mostrarMensaje }) => {
   const [showTable, setShowTable] = useState(false);
   let columns = [];
 
-  if (tipoInforme == 0) {
+  if (empresa != 277) {
     columns = [
-      { key: "EMPRESA", label: "EMPRESA", type: "number" },
+      { key: "EMPRESA", label: "EMPRESA", type: "text" },
       { key: "mes", label: "MES", type: "number" },
-      { key: "NVIAJES", label: "VIAJES", type: "number" },
-      { key: "BUTACAS", label: "SILLAS DISP", type: "number" },
+      { key: "LINEA", label: "LINEA", type: "text" },
+      { key: "NVIAJES", label: "NVIAJE", type: "text" },
+      { key: "BUTACAS", label: "SILLAS", type: "number" },
       { key: "cont", label: "PASAJEROS", type: "number" },
-      { key: "porcentajeCalculado", label: "% OCUPACION", type: "text" },
       { key: "VALOR", label: "VALOR", type: "number" },
     ];
   } else {
     columns = [
-      { key: "EMPRESA", label: "EMPRESA", type: "number" },
+      { key: "EMPRESA", label: "EMPRESA", type: "text" },
       { key: "mes", label: "MES", type: "number" },
+      { key: "fechabusqueda", label: "FECHA BUSQUEDA", type: "text" },
       { key: "LINEA", label: "LINEA", type: "text" },
-      { key: "NVIAJES", label: "VIAJES", type: "number" },
-      { key: "BUTACAS", label: "SILLAS DISP", type: "number" },
+      { key: "NVIAJES", label: "NVIAJE", type: "text" },
+      { key: "BUTACAS", label: "SILLAS", type: "number" },
       { key: "cont", label: "PASAJEROS", type: "number" },
       { key: "porcentajeCalculado", label: "% OCUPACION", type: "text" },
       { key: "VALOR", label: "VALOR", type: "number" },
@@ -207,82 +210,100 @@ const Inicio = ({ mostrarMensaje }) => {
 
   return (
     <div className="Efect">
-      <h1 className="titulo_login">
-        Informe Consolidado de Pasajeros Movilizados
-      </h1>
+      <h1 className="titulo_login">Informes de Tiquetes y Agencias</h1>
       <hr />
-      <section className="colum_table">
-        <section className="row_section">
-          <div className="input-container agg_colaborador">
-            <label className="label">Tipo Informe:</label>
-            <select
-              className="opciones"
-              value={tipoInforme}
-              onChange={(e) => {
-                setTipoInforme(e.target.value);
-                setShowTable(false);
-              }}
+      <section className="contabilidad_section">
+        <div className="content__dateDH">
+          <label className="label">Rango de fecha:</label>
+          <DatePicker
+            className="input-field datepicker"
+            selected={startDate}
+            onChange={handleDateChange}
+            startDate={startDate}
+            endDate={endDate}
+            selectsRange
+            showMonthDropdown
+            showYearDropdown
+            dropdownMode="select"
+            inputMode="none"
+            onFocus={(e) => e.target.blur()}
+            onBlur={(e) => e.target.blur()}
+            disabledInput
+            locale={es}
+          />
+          {/* <p>{dateRangeText}</p> */}
+          {/* <p>{startDate}</p>
+            <p>{endDateDate}</p> */}
+        </div>
+
+        <div className="buttons_rptos">
+          <button
+            className="submit-button botton_gp"
+            // onClick={generarExcel}
+            onClick={rptoInfoXFechasPM}
+            disabled={isLoading}
+          >
+            {isLoading ? "Generando..." : "Tiquetes Bello Sol SE"}
+          </button>
+          <div className="bottom_bolivariano">
+            <div className="input-container agg_colaborador">
+              <label className="label">Empresa:</label>
+              <select
+                className="opciones"
+                value={empresa}
+                onChange={(e) => {
+                  setEmpresa(e.target.value);
+                  setShowTable(false);
+                }}
+                required
+              >
+                <option value="" disabled selected>
+                  Seleccionar
+                </option>
+                <option value={277}>BERLINAS DEL FONCE S.A.</option>
+                <option value={278}>BERLITUR S.A.S.</option>
+                <option value={9001}>SERVICIO ESPECIAL</option>
+              </select>
+            </div>
+            <button
+              className="submit-button botton_gp"
+              // onClick={generarExcel}
+              onClick={rptoInfoXFechasPM}
+              disabled={isLoading}
             >
-              <option value="" disabled selected>
-                Seleccionar
-              </option>
-              <option value={0}>Informe Consolidado Total</option>
-              <option value={1}>Informe Consolidado por Linea</option>
-            </select>
+              {isLoading ? "Generando..." : "Convenio Bolivariano"}
+            </button>
           </div>
-          <div className="input-container agg_colaborador">
-            <label className="label">Empresa:</label>
-            <select
-              className="opciones"
-              value={empresa}
-              onChange={(e) => setEmpresa(e.target.value)}
-            >
-              <option value="" disabled selected>
-                Seleccionar
-              </option>
-              <option value={277}>BERLINAS DEL FONCE S.A.</option>
-              <option value={278}>BERLITUR S.A.S.</option>
-              <option value={310}>
-                CARTAGENA INTERNATIONAL TRAVELS S.A.S. "CIT"
-              </option>
-              <option value={320}>TOURLINE EXPRESS S.A.S.</option>
-              <option value={9001}>SERVICIO ESPECIAL</option>
-            </select>
-          </div>
-        </section>
-        <section className="contabilidad_section">
-          <div className="content__dateDH">
-            <label className="label">Rango de fecha:</label>
-            <DatePicker
-              className="input-field datepicker"
-              selected={startDate}
-              onChange={handleDateChange}
-              startDate={startDate}
-              endDate={endDate}
-              selectsRange
-              showMonthDropdown
-              showYearDropdown
-              dropdownMode="select"
-              inputMode="none"
-              onFocus={(e) => e.target.blur()}
-              onBlur={(e) => e.target.blur()}
-              disabledInput
-              locale={es}
-            />
-          </div>
-        </section>
-        <button
-          className="submit-button botton_gp"
-          // onClick={generarExcel}
-          onClick={rptoConsolidadoPM}
-          disabled={isLoading}
-        >
-          {isLoading ? "Generando..." : "Generar reporte"}
-        </button>
+          <button
+            className="submit-button botton_gp"
+            // onClick={generarExcel}
+            onClick={rptoInfoXFechasPM}
+            disabled={isLoading}
+          >
+            {isLoading ? "Generando..." : "Venta Online Berlitur"}
+          </button>
+          <button
+            className="submit-button botton_gp"
+            // onClick={generarExcel}
+            onClick={rptoInfoXFechasPM}
+            disabled={isLoading}
+          >
+            {isLoading ? "Generando..." : "Transacciones Tarjetas CR y DB"}
+          </button>
+          <button
+            className="submit-button botton_gp"
+            // onClick={generarExcel}
+            onClick={rptoInfoXFechasPM}
+            disabled={isLoading}
+          >
+            {isLoading
+              ? "Generando..."
+              : "Estadisticas de Link de Pago y Venta Online MP"}
+          </button>
+        </div>
       </section>
       {/* Handle animacion (Loading) */}
       {isLoading && <div class="loader"></div>}
-
       {showTable && (
         <div className="tablaFuecOD">
           <hr className="hr" />

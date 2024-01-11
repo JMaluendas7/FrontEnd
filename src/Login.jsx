@@ -174,9 +174,9 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
   const renderForm = () => {
     if (formType === "login") {
       return (
-        <>
+        <div className="container_login--father">
           <h1 className="title__form">Iniciar sesión</h1>
-          <form onSubmit={handleSubmit}>
+          <form className="form_login" onSubmit={handleSubmit}>
             <div className="input-container login">
               <input
                 className="input-field2 campos_reg"
@@ -217,17 +217,17 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
           >
             Olvidé mi contraseña
           </button>
-        </>
+        </div>
       );
     } else if (formType === "forgotPassword") {
       return (
-        <>
-          <form onSubmit={handleSubmit}>
-            <h1 className="title__form">Recuperacion de contraseña</h1>
-            <p className="desc__form">
-              Diligencie los campos para la validacion y restablecimiento de la
-              contraseña
-            </p>
+        <div className="container_login--father">
+          <h1 className="title__form">Recuperacion de contraseña</h1>
+          <p className="desc__form">
+            Diligencie los campos para la validacion y restablecimiento de la
+            contraseña
+          </p>
+          <form className="form_login" onSubmit={handleSubmit}>
             <div className="input-container login">
               <input
                 className="input-field2 campos_reg"
@@ -270,11 +270,11 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
           >
             FaceId
           </button>
-        </>
+        </div>
       );
     } else if (formType === "facePassword") {
       return (
-        <>
+        <div className="container_login--father">
           <h1 className="title__form">Reconocimiento Facial</h1>
           <UploadImage
             mostrarMensaje={mostrarMensaje}
@@ -286,12 +286,12 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
           >
             Volver al inicio de sesión
           </button>
-        </>
+        </div>
       );
     } else if (formType === "changePass") {
       return (
-        <>
-          <form onSubmit={handleSubmit}>
+        <div className="container_login--father">
+          <form className="form_login" onSubmit={handleSubmit}>
             <h1 className="title__form">Creacion de nueva contraseña</h1>
             <p className="desc__form">Diguite su nueva contraseña</p>
             <div className="input-container login">
@@ -325,7 +325,7 @@ function LoginForm({ setIsAuthenticated, mostrarMensaje, uidb64, token }) {
           >
             Tengo mi contraseña
           </button>
-        </>
+        </div>
       );
     }
   };

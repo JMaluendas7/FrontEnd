@@ -222,7 +222,7 @@ const DynamicTable = ({
       {totalPages > 1 && (
         <ul className="paginacion_table">
           {Array.from({ length: totalPages }).map((_, index) => (
-            <li key={index}>
+            <li key={index} className="li_paginacion">
               <button
                 className="button_paginacion"
                 onClick={() => paginate(index + 1)}

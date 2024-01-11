@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import "/src/css/ContabilidadInicio.css";
 import "/src/css/fuec/Rpto_fuec.css";
 import "react-datepicker/dist/react-datepicker.css";
 import DynamicTable from "./PruebaTabla";
 import DatePicker from "react-datepicker";
+import es from "date-fns/locale/es";
 
 const Inicio = ({ mostrarMensaje }) => {
   const [empresa, setEmpresa] = useState("");
@@ -15,46 +16,52 @@ const Inicio = ({ mostrarMensaje }) => {
     setShowTable(false);
     setIsLoading(true);
     const formData = new FormData();
+    if (empresa && startDate && endDate) {
+      const formattedStartDate =
+        startDate.toISOString().split("T")[0] + "T00:00:00.00Z";
+      const formattedEndDate =
+        endDate.toISOString().split("T")[0] + "T23:59:59.00Z";
 
-    // Conversion de fecha y agregar hora
-    const formattedStartDate =
-      startDate.toISOString().split("T")[0] + "T00:00:00.00Z";
-    const formattedEndDate =
-      endDate.toISOString().split("T")[0] + "T23:59:59.00Z";
+      formData.append("startDate", formattedStartDate);
+      formData.append("endDate", formattedEndDate);
+      formData.append("Opcion", 0);
+      formData.append("SubOpcion", 0);
+      formData.append("empresa", empresa);
 
-    formData.append("startDate", formattedStartDate);
-    formData.append("endDate", formattedEndDate);
-    formData.append("Opcion", 0);
-    formData.append("SubOpcion", 0);
-    formData.append("empresa", empresa);
-
-    try {
-      const response = await axios.post(
-        "http://wsdx.berlinasdelfonce.com:9000/rptoOperaciones/",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-          crossDomain: true,
-          xsrfCookieName: "csrftoken",
-          xsrfHeaderName: "X-CSRFToken",
+      try {
+        const response = await axios.post(
+          "http://wsdx.berlinasdelfonce.com:9000/rptoOperaciones/",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            withCredentials: true,
+            crossDomain: true,
+            xsrfCookieName: "csrftoken",
+            xsrfHeaderName: "X-CSRFToken",
+          }
+        );
+        if (response.status === 200) {
+          if (response.data.results && response.data.results.length > 0) {
+            setResults(response.data.results);
+            setShowTable(true);
+            setIsLoading(false);
+          } else {
+            mostrarMensaje("Respuesta vacía", "warning_notification");
+            setIsLoading(false);
+          }
         }
-      );
-      if (response.status === 200) {
-        if (response.data.results && response.data.results.length > 0) {
-          setResults(response.data.results);
-          setShowTable(true);
-          setIsLoading(false);
-        } else {
-          mostrarMensaje("Respuesta vacía", "warning_notification");
-          setIsLoading(false);
-        }
+      } catch (error) {
+        mostrarMensaje("Respuesta no Exitosa", "error_notification");
+        setIsLoading(false);
       }
-    } catch (error) {
-      mostrarMensaje("Respuesta no Exitosa", "error_notification");
+    } else {
       setIsLoading(false);
+      mostrarMensaje(
+        "Debe seleccionar todos los campos",
+        "warning_notification"
+      );
     }
   };
 
@@ -198,31 +205,35 @@ const Inicio = ({ mostrarMensaje }) => {
               {/* <option value={9000}>DATA TEST TIC</option> */}
             </select>
           </div>
-        </section>
-        <section className="contabilidad_section">
           <div className="content__dateDH">
             <label className="label">Rango de fecha:</label>
             <DatePicker
-              className="input-field"
+              className="input-field datepicker"
               selected={startDate}
               onChange={handleDateChange}
               startDate={startDate}
               endDate={endDate}
               selectsRange
-              placeholderText="Selecciona un rango"
-              placeholder="Prueba texto"
+              showMonthDropdown
+              showYearDropdown
+              dropdownMode="select"
+              inputMode="none"
+              onFocus={(e) => e.target.blur()}
+              onBlur={(e) => e.target.blur()}
+              disabledInput
+              locale={es}
             />
           </div>
+          <button
+            className="submit-button"
+            // onClick={generarExcel}
+            onClick={rptoOperacionesViajes}
+            disabled={isLoading}
+          >
+            {isLoading ? "Consultando..." : "Consultar Reporte"}
+          </button>
         </section>
       </section>
-      <button
-        className="submit-button botton_gp"
-        // onClick={generarExcel}
-        onClick={rptoOperacionesViajes}
-        disabled={isLoading}
-      >
-        {isLoading ? "Consultando..." : "Consultar Reporte"}
-      </button>
       {/* Handle animacion (Loading) */}
       {isLoading && <div class="loader"></div>}
 
