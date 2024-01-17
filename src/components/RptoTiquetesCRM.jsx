@@ -1,34 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "/src/css/ContabilidadInicio.css";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
-import DynamicTable from "./PruebaTabla";
 import es from "date-fns/locale/es";
 
 const Inicio = ({ mostrarMensaje }) => {
+  const [tipoInforme, setTipoInforme] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState([]);
 
-  const rptoCombustible = async () => {
-    setShowTable(false);
+  const rptoConsolidadoPM = async () => {
     setIsLoading(true);
     const formData = new FormData();
-    if (startDate && endDate) {
+    if (tipoInforme && startDate && endDate) {
       const formattedStartDate =
-        startDate.toISOString().split("T")[0] + "T00:00:00.00Z";
+        startDate.toISOString().split("T")[0] + "T00:00:00.00";
       const formattedEndDate =
-        endDate.toISOString().split("T")[0] + "T23:59:59.00Z";
+        endDate.toISOString().split("T")[0] + "T23:59:59.00";
+      const formattedDate = Date2.toISOString().split("T")[0] + "T00:00:00.00";
 
-      formData.append("empresa", 277);
       formData.append("startDate", formattedStartDate);
       formData.append("endDate", formattedEndDate);
-      formData.append("Opcion", 29);
-      formData.append("SubOpcion", 1);
+      formData.append("Date", formattedDate);
+      formData.append("Opcion", tipoInforme);
 
       try {
         const response = await axios.post(
-          "http://wsdx.berlinasdelfonce.com:9000/rptoOperaciones/",
+          "http://wsdx.berlinasdelfonce.com:9000/TiquetesCRM/",
           formData,
           {
             headers: {
@@ -43,7 +42,6 @@ const Inicio = ({ mostrarMensaje }) => {
         if (response.status === 200) {
           if (response.data.results && response.data.results.length > 0) {
             setResults(response.data.results);
-            setShowTable(true);
             setIsLoading(false);
           } else {
             mostrarMensaje("Respuesta vacía", "warning_notification");
@@ -64,16 +62,11 @@ const Inicio = ({ mostrarMensaje }) => {
   };
 
   const generarExcel = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.post(
-        "http://wsdx.berlinasdelfonce.com:9000/generarRptoOViajes/",
-        {
-          results: results,
-          Opcion: 29,
-          SubOpcion: 1,
-          empresa: 277,
-          startDate: startDate,
-        },
+        "http://wsdx.berlinasdelfonce.com:9000/generar_excel/",
+        results,
         {
           responseType: "blob",
           headers: {
@@ -83,37 +76,43 @@ const Inicio = ({ mostrarMensaje }) => {
           withCredentials: true,
         }
       );
+      // Crear un objeto URL para el blob
+      const url = window.URL.createObjectURL(new Blob([response.data]));
 
-      // Obtener el nombre del archivo del header 'Content-Disposition' de la respuesta
-      const contentDisposition = response.headers["content-disposition"];
-      const fileNameMatch =
-        contentDisposition && contentDisposition.match(/filename="(.+)"/);
-
+      // Crear un enlace (link) para iniciar la descarga
+      const link = document.createElement("a");
+      link.href = url;
       let fileName = "";
       const now = new Date();
       const timestamp = now.toISOString().slice(0, 19).replace(/:/g, "-"); // Formato: YYYY-MM-DDTHH-mm-ss
 
-      fileName = `5apps_DetalladoCombustible_${timestamp}.xlsx`;
-
-      if (fileNameMatch && fileNameMatch.length > 1) {
-        fileName = fileNameMatch[1]; // Usar el nombre del archivo recibido del backend
+      if (tipoInforme == 0) {
+        fileName = `ReporteTiquetesCRM_Personas_${timestamp}.xlsx`;
+      } else if (tipoInforme == 1) {
+        fileName = `ReporteTiquetesCRM_ViajeroFrecuente_${timestamp}.xlsx`;
+      } else if (tipoInforme == 2) {
+        fileName = `ReporteTiquetesCRM_VentaOnline_${timestamp}.xlsx`;
       }
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", fileName); // Establecer el nombre del archivo
+      link.setAttribute("download", fileName); // Nombre del archivo
       document.body.appendChild(link);
 
+      // Hacer clic en el enlace para iniciar la descarga
       link.click();
 
+      // Limpiar el objeto URL y el enlace después de la descarga
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error al generar el archivo Excel:", error);
     }
   };
+  // Utiliza useEffect para ejecutar generarExcel cuando results se actualice
+  useEffect(() => {
+    if (results.length > 0) {
+      generarExcel();
+    }
+  }, [results]);
 
   // Manejo de campo date inicioFin
   const [startDate, setStartDate] = useState("");
@@ -144,31 +143,48 @@ const Inicio = ({ mostrarMensaje }) => {
     }
   };
 
-  // Handle of table dynamic
-  const [showTable, setShowTable] = useState(false);
+  // Manejo de campo date inicioFin
+  const [Date2, setDate2] = useState("");
+  const [show, setShow] = useState(false);
 
-  const columns = [
-    { key: "pvh_year", label: "AÑO", type: "number" },
-    { key: "pvh_mes", label: "MES", type: "number" },
-    { key: "Egreso", label: "EGRESO", type: "number" },
-    { key: "pvh_empid", label: "ID EMPRESA", type: "text" },
-    { key: "emp_nomempresa", label: "NOMBRE EMPRESA", type: "text" },
-    { key: "pvh_placa", label: "PLACA", type: "text" },
-    { key: "pvh_bus", label: "BUS", type: "number" },
-    { key: "pvh_nomcto", label: "PRODUCTO", type: "text" },
-  ];
-
-  const itemsPerPage = 20;
-
-  const updateTableData = (updatedData) => {
-    setTableData(updatedData);
+  const handleDateChange2 = (date) => {
+    setDate2(date);
+    if (date) {
+      const formattedDate = date.toLocaleDateString("es-ES", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+      });
+      setDateRangeText(`${formattedDate}`);
+    } else {
+      setDateRangeText("");
+    }
   };
 
   return (
     <div className="Efect">
-      <h1 className="titulo_login">Informe Detallado de Combustible</h1>
+      <h1 className="titulo_login">Reporte de Tiquetes CRM</h1>
       <hr />
       <section className="colum_table forms__box">
+        <section className="row_section">
+          <div className="input-container agg_colaborador">
+            <select
+              className="opciones"
+              value={tipoInforme}
+              onChange={(e) => {
+                setTipoInforme(e.target.value);
+              }}
+            >
+              <option value="" disabled selected>
+                Seleccionar
+              </option>
+              <option value={0}>Personas</option>
+              <option value={1}>Viajero Frecuente</option>
+              <option value={2}>Venta Online</option>
+            </select>
+            <label className="input-label-options label">Tipo Informe</label>
+          </div>
+        </section>
         <section className="contabilidad_section">
           <div className="content__dateDH">
             <div className="input-container">
@@ -197,11 +213,33 @@ const Inicio = ({ mostrarMensaje }) => {
               </label>
             </div>
           </div>
+          <div className="content__dateDH">
+            <div className="input-container">
+              <DatePicker
+                className="input-field-datepicker datepicker icon_calendar"
+                selected={Date2}
+                onChange={handleDateChange2}
+                inputMode="none"
+                onBlur={() => setShow(false)}
+                onSelect={() => setShow(false)}
+                onInputClick={() => setShow(true)}
+                onClickOutside={() => setShow(false)}
+                open={show}
+                locale={es}
+              />
+              <label
+                className={`input-label-datepicker ${
+                  selectedDate ? "label" : ""
+                }`}
+              >
+                Fecha de Transacción
+              </label>
+            </div>
+          </div>
         </section>
         <button
           className="submit-button"
-          // onClick={generarExcel}
-          onClick={rptoCombustible}
+          onClick={rptoConsolidadoPM}
           disabled={isLoading}
         >
           {isLoading ? "Generando..." : "Generar reporte"}
@@ -209,26 +247,6 @@ const Inicio = ({ mostrarMensaje }) => {
       </section>
       {/* Handle animacion (Loading) */}
       {isLoading && <div class="loader"></div>}
-
-      {showTable && (
-        <div className="tablaFuecOD results__box">
-          <div className="table_95p">
-            <DynamicTable
-              data={results}
-              columns={columns}
-              itemsPerPage={itemsPerPage}
-              updatedData={updateTableData}
-            />
-          </div>
-          <div className="buttons_left">
-            <div className="container__buttons_left" onClick={generarExcel}>
-              <div className="descargar-xlsx">
-                <div className="buttons_left-label">Exportar a XLSX</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

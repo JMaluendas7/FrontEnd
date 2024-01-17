@@ -67,17 +67,10 @@ const Inicio = ({ mostrarMensaje }) => {
 
   const generarExcel = async () => {
     console.log(results);
-    const Opcion = 9;
     try {
       const response = await axios.post(
-        "http://wsdx.berlinasdelfonce.com:9000/generarRptoPL/",
-        {
-          results: results,
-          Opcion: Opcion,
-          SubOpcion: tipoInforme,
-          empresa: empresa,
-          startDate: startDate,
-        },
+        "http://wsdx.berlinasdelfonce.com:9000/generar_excel/",
+        results,
         {
           responseType: "blob",
           headers: {
@@ -86,40 +79,67 @@ const Inicio = ({ mostrarMensaje }) => {
           },
           withCredentials: true,
         }
+        // {
+        //   results: results,
+        //   Opcion: 9,
+        //   SubOpcion: tipoInforme,
+        //   empresa: empresa,
+        //   startDate: startDate,
+        // },
+        // {
+        //   responseType: "blob",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //     Accept: "application/json",
+        //   },
+        //   withCredentials: true,
+        // }
       );
-
-      // Obtener el nombre del archivo del header 'Content-Disposition' de la respuesta
-      const contentDisposition = response.headers["content-disposition"];
-      const fileNameMatch =
-        contentDisposition && contentDisposition.match(/filename="(.+)"/);
-
-      let fileName = "";
-      const now = new Date();
-      const timestamp = now.toISOString().slice(0, 19).replace(/:/g, "-"); // Formato: YYYY-MM-DDTHH-mm-ss
-
-      if (Opcion == 9) {
-        if (tipoInforme == 0) {
-          fileName = `5apps_InformeConsolidadoPlaneacionOcupacionXLineas_${timestamp}.xlsx`;
-        } else if (tipoInforme == 1) {
-          fileName = `5apps_InformeDetalladoPlaneacionOcupacionXLineas_${timestamp}.xlsx`;
-        }
-      }
-
-      if (fileNameMatch && fileNameMatch.length > 1) {
-        fileName = fileNameMatch[1]; // Usar el nombre del archivo recibido del backend
-      }
-
+      // Crear un objeto URL para el blob
       const url = window.URL.createObjectURL(new Blob([response.data]));
 
+      // Crear un enlace (link) para iniciar la descarga
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", fileName); // Establecer el nombre del archivo
+      link.setAttribute("download", "colaboradores.xlsx"); // Nombre del archivo
       document.body.appendChild(link);
 
+      // Hacer clic en el enlace para iniciar la descarga
       link.click();
 
+      // Limpiar el objeto URL y el enlace después de la descarga
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
+
+      // // Obtener el nombre del archivo del header 'Content-Disposition' de la respuesta
+      // const contentDisposition = response.headers["content-disposition"];
+      // const fileNameMatch =
+      //   contentDisposition && contentDisposition.match(/filename="(.+)"/);
+
+      // let fileName = "";
+      // const now = new Date();
+      // const timestamp = now.toISOString().slice(0, 19).replace(/:/g, "-"); // Formato: YYYY-MM-DDTHH-mm-ss
+
+      // if (Opcion == 1) {
+      //   if (SubOpcion == 2)
+      //     fileName = `5apps_InformeXFechasPM_${timestamp}.xlsx`;
+      // }
+
+      // if (fileNameMatch && fileNameMatch.length > 1) {
+      //   fileName = fileNameMatch[1]; // Usar el nombre del archivo recibido del backend
+      // }
+
+      // const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      // const link = document.createElement("a");
+      // link.href = url;
+      // link.setAttribute("download", fileName); // Establecer el nombre del archivo
+      // document.body.appendChild(link);
+
+      // link.click();
+
+      // link.parentNode.removeChild(link);
+      // window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error al generar el archivo Excel:", error);
     }
@@ -129,10 +149,8 @@ const Inicio = ({ mostrarMensaje }) => {
   const [startDate, setStartDate] = useState(false);
   const [endDate, setEndDate] = useState(false);
   const [dateRangeText, setDateRangeText] = useState("");
-  const [selectedDate, setSelectedDate] = useState(null);
 
   const handleDateChange = (dates) => {
-    setSelectedDate(dates);
     const [start, end] = dates;
     setStartDate(start);
     setEndDate(end);
@@ -221,9 +239,10 @@ const Inicio = ({ mostrarMensaje }) => {
     <div className="Efect">
       <h1 className="titulo_login">Informe de Ocupacion por Lineas</h1>
       <hr />
-      <section className="colum_table forms__box">
+      <section className="colum_table">
         <section className="row_section">
           <div className="input-container agg_colaborador">
+            <label className="label">Tipo Informe:</label>
             <select
               className="opciones"
               value={tipoInforme}
@@ -238,9 +257,9 @@ const Inicio = ({ mostrarMensaje }) => {
               <option value={0}>Informe Consolidado</option>
               <option value={1}>Informe Detallado</option>
             </select>
-            <label className="input-label-options label">Tipo Informe</label>
           </div>
           <div className="input-container agg_colaborador">
+            <label className="label">Empresa:</label>
             <select
               className="opciones"
               value={empresa}
@@ -257,36 +276,30 @@ const Inicio = ({ mostrarMensaje }) => {
               <option value={320}>TOURLINE EXPRESS S.A.S.</option>
               <option value={9001}>SERVICIO ESPECIAL</option>
             </select>
-            <label className="input-label-options label">Empresa</label>
           </div>
         </section>
         <section className="contabilidad_section">
           <div className="content__dateDH">
-            <div className="input-container">
-              <DatePicker
-                className="input-field-datepicker datepicker icon_calendar"
-                selected={startDate}
-                onChange={handleDateChange}
-                startDate={startDate}
-                endDate={endDate}
-                selectsRange
-                showMonthDropdown
-                showYearDropdown
-                dropdownMode="select"
-                inputMode="none"
-                onFocus={(e) => e.target.blur()}
-                onBlur={(e) => e.target.blur()}
-                disabledInput
-                locale={es}
-              />
-              <label
-                className={`input-label-datepicker ${
-                  selectedDate ? "label" : ""
-                }`}
-              >
-                Rango de Fecha
-              </label>
-            </div>
+            <label className="label">Rango de fecha:</label>
+            <DatePicker
+              className="input-field datepicker"
+              selected={startDate}
+              onChange={handleDateChange}
+              startDate={startDate}
+              endDate={endDate}
+              selectsRange
+              showMonthDropdown
+              showYearDropdown
+              dropdownMode="select"
+              inputMode="none"
+              onFocus={(e) => e.target.blur()}
+              onBlur={(e) => e.target.blur()}
+              disabledInput
+              locale={es}
+            />
+            {/* <p>{dateRangeText}</p> */}
+            {/* <p>{startDate}</p>
+            <p>{endDateDate}</p> */}
           </div>
         </section>
         <button
@@ -311,13 +324,14 @@ const Inicio = ({ mostrarMensaje }) => {
               updatedData={updateTableData}
             />
           </div>
-          <div className="buttons_left">
-            <div className="container__buttons_left" onClick={generarExcel}>
-              <div className="descargar-xlsx">
-                <div className="buttons_left-label">Exportar a XLSX</div>
-              </div>
-            </div>
-          </div>
+          <button
+            className="submit-button"
+            // onClick={generarExcel}
+            onClick={generarExcel}
+            disabled={isLoading}
+          >
+            {isLoading ? "Descargando..." : "Descargar Reporte"}
+          </button>
         </div>
       )}
     </div>

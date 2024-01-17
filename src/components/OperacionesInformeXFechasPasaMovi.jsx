@@ -151,8 +151,10 @@ const Inicio = ({ mostrarMensaje }) => {
   const [startDate, setStartDate] = useState(false);
   const [endDate, setEndDate] = useState(false);
   const [dateRangeText, setDateRangeText] = useState("");
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const handleDateChange = (dates) => {
+    setSelectedDate(dates);
     const [start, end] = dates;
     setStartDate(start);
     setEndDate(end);
@@ -214,11 +216,10 @@ const Inicio = ({ mostrarMensaje }) => {
         Informe Por Fechas De Pasajeros Movilizados
       </h1>
       <hr />
-      <section className="contabilidad_section">
+      <section className="contabilidad_section forms__box">
         <div className="input-container agg_colaborador">
-          <label className="label">Empresa:</label>
           <select
-            className="opciones"
+            className="opciones icon_bussines"
             value={empresa}
             onChange={(e) => {
               setEmpresa(e.target.value);
@@ -240,32 +241,37 @@ const Inicio = ({ mostrarMensaje }) => {
             <option value={320}>TOURLINE EXPRESS S.A.S.</option>
             {/* <option value={9000}>DATA TEST TIC</option> */}
           </select>
+          <label className="input-label-options label">Empresa</label>
         </div>
         <div className="content__dateDH">
-          <label className="label">Rango de fecha:</label>
-          <DatePicker
-            className="input-field datepicker"
-            selected={startDate}
-            onChange={handleDateChange}
-            startDate={startDate}
-            endDate={endDate}
-            selectsRange
-            showMonthDropdown
-            showYearDropdown
-            dropdownMode="select"
-            inputMode="none"
-            onFocus={(e) => e.target.blur()}
-            onBlur={(e) => e.target.blur()}
-            disabledInput
-            locale={es}
-          />
-          {/* <p>{dateRangeText}</p> */}
-          {/* <p>{startDate}</p>
-            <p>{endDateDate}</p> */}
+          <div className="input-container">
+            <DatePicker
+              className="input-field-datepicker datepicker icon_calendar"
+              selected={startDate}
+              onChange={handleDateChange}
+              startDate={startDate}
+              endDate={endDate}
+              selectsRange
+              showMonthDropdown
+              showYearDropdown
+              dropdownMode="select"
+              inputMode="none"
+              onFocus={(e) => e.target.blur()}
+              onBlur={(e) => e.target.blur()}
+              disabledInput
+              locale={es}
+            />
+            <label
+              className={`input-label-datepicker ${
+                selectedDate ? "label" : ""
+              }`}
+            >
+              Rango de Fecha
+            </label>
+          </div>
         </div>
         <button
-          className="submit-button botton_gp"
-          // onClick={generarExcel}
+          className="submit-button"
           onClick={rptoInfoXFechasPM}
           disabled={isLoading}
         >
@@ -275,8 +281,8 @@ const Inicio = ({ mostrarMensaje }) => {
       {/* Handle animacion (Loading) */}
       {isLoading && <div class="loader"></div>}
       {showTable && (
-        <div className="tablaFuecOD">
-          <hr className="hr" />
+        <div className="tablaFuecOD results__box">
+          {/* <hr className="hr" /> */}
           <div className="table_95p">
             <DynamicTable
               data={results}
@@ -285,14 +291,13 @@ const Inicio = ({ mostrarMensaje }) => {
               updatedData={updateTableData}
             />
           </div>
-          <button
-            className="submit-button botton_gp"
-            // onClick={generarExcel}
-            onClick={generarExcel}
-            disabled={isLoading}
-          >
-            {isLoading ? "Descargando..." : "Descargar Reporte"}
-          </button>
+          <div className="buttons_left">
+            <div className="container__buttons_left" onClick={generarExcel}>
+              <div className="descargar-xlsx">
+                <div className="buttons_left-label">Exportar a XLSX</div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

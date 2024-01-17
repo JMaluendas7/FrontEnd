@@ -120,21 +120,14 @@ const Inicio = ({ mostrarMensaje }) => {
     }
   };
 
-  // Utiliza useEffect para ejecutar generarExcel cuando results se actualice
-  // useEffect(() => {
-  //   if (results.length > 0) {
-  //     generarExcel();
-  //     mostrarMensaje("Respuesta Exitosa", "success_notification");
-  //     setIsLoading(false);
-  //   }
-  // }, [results]);
-
   // Manejo de campo date inicioFin
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [dateRangeText, setDateRangeText] = useState("");
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const handleDateChange = (dates) => {
+    setSelectedDate(dates);
     const [start, end] = dates;
     setStartDate(start);
     setEndDate(end);
@@ -181,10 +174,9 @@ const Inicio = ({ mostrarMensaje }) => {
     <div className="Efect">
       <h1 className="titulo_login">Reporte de Viajes</h1>
       <hr />
-      <section className="contabilidad__table">
+      <section className="contabilidad__table forms__box">
         <section className="contabilidad_section">
           <div className="input-container agg_colaborador">
-            <label className="label">Empresa:</label>
             <select
               className="opciones"
               value={empresa}
@@ -197,32 +189,41 @@ const Inicio = ({ mostrarMensaje }) => {
               <option value={278}>BERLITUR S.A.S.</option>
               {/* <option value={300}>COMPAÑIA LIBERTADOR S.A.</option>
               <option value={310}>
-                CARTAGENA INTERNATIONAL TRAVELS S.A.S. "CIT"
+              CARTAGENA INTERNATIONAL TRAVELS S.A.S. "CIT"
               </option>
-              <option value={2771}>TRANSCARGA BERLINAS S.A.</option> */}
+            <option value={2771}>TRANSCARGA BERLINAS S.A.</option> */}
               <option value={9001}>SERVICIO ESPECIAL</option>
               {/* <option value={320}>TOURLINE EXPRESS S.A.S.</option> */}
               {/* <option value={9000}>DATA TEST TIC</option> */}
             </select>
+            <label className="input-label-options label">Empresa</label>
           </div>
           <div className="content__dateDH">
-            <label className="label">Rango de fecha:</label>
-            <DatePicker
-              className="input-field datepicker"
-              selected={startDate}
-              onChange={handleDateChange}
-              startDate={startDate}
-              endDate={endDate}
-              selectsRange
-              showMonthDropdown
-              showYearDropdown
-              dropdownMode="select"
-              inputMode="none"
-              onFocus={(e) => e.target.blur()}
-              onBlur={(e) => e.target.blur()}
-              disabledInput
-              locale={es}
-            />
+            <div className="input-container">
+              <DatePicker
+                className="input-field-datepicker datepicker icon_calendar"
+                selected={startDate}
+                onChange={handleDateChange}
+                startDate={startDate}
+                endDate={endDate}
+                selectsRange
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select"
+                inputMode="none"
+                onFocus={(e) => e.target.blur()}
+                onBlur={(e) => e.target.blur()}
+                disabledInput
+                locale={es}
+              />
+              <label
+                className={`input-label-datepicker ${
+                  selectedDate ? "label" : ""
+                }`}
+              >
+                Rango de Fecha
+              </label>
+            </div>
           </div>
           <button
             className="submit-button"
@@ -238,8 +239,7 @@ const Inicio = ({ mostrarMensaje }) => {
       {isLoading && <div class="loader"></div>}
 
       {showTable && (
-        <div className="tablaFuecOD">
-          <hr className="hr" />
+        <div className="tablaFuecOD results__box">
           <div className="table_95p">
             <DynamicTable
               data={results}
@@ -248,14 +248,13 @@ const Inicio = ({ mostrarMensaje }) => {
               updatedData={updateTableData}
             />
           </div>
-          <button
-            className="submit-button botton_gp"
-            // onClick={generarExcel}
-            onClick={generarExcel}
-            disabled={isLoading}
-          >
-            {isLoading ? "Descargando..." : "Descargar Reporte"}
-          </button>
+          <div className="buttons_left">
+            <div className="container__buttons_left" onClick={generarExcel}>
+              <div className="descargar-xlsx">
+                <div className="buttons_left-label">Exportar a XLSX</div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

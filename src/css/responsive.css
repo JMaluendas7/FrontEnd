@@ -212,7 +212,7 @@
     }
     .input-field,
     .opciones {
-        max-width: 8rem;
+        max-width: 12rem;
     }
     .input-field__search {
         max-width: 12rem;
@@ -224,12 +224,15 @@
     .colum {
         max-width: 7rem;
     }
+    .table_60p {
+        width: 100%;
+    }
 }
 @media (max-width: 570px) {
     /* Responsive para formularios */
     .input-field,
     .opciones {
-        max-width: 7rem;
+        max-width: 8rem;
     }
     .input-label {
         font-size: .65rem;
@@ -271,8 +274,4 @@
     .title_fuec {
         font-size: 1.5rem;
     }
-    .buttons__VE {
-        top: .4rem !important;
-    }
-
 }

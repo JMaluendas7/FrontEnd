@@ -13,10 +13,11 @@ import "../src/css/contenido.css";
 import "../src/css/Notificacion.css";
 import "../src/css/scroll.css";
 // import "../src/css/ContabilidadInicio.css";
-import "../src/css/responsive.css";
 import "../src/css/administracion/AddColaboradores.css";
 import "./components/Contenido";
 import "./components/administracion/AddColaboradores";
+import "/src/css/fuec/Rpto_fuec.css";
+import "../src/css/responsive.css";
 
 function App() {
   const [uidb64, setUidb64] = useState("");

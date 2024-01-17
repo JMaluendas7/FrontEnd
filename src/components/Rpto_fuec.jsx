@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
-import "/src/css/fuec/Rpto_fuec.css";
+// import "/src/css/fuec/Rpto_fuec.css";
 import HTMLtoPDF from "./crearPdf";
 import DynamicTable from "./PruebaTabla";
 import "react-datepicker/dist/react-datepicker.css";
@@ -81,14 +81,6 @@ const Fuec = ({ mostrarMensaje, username }) => {
           }
         }
       } catch (error) {
-        // mostrarMensaje(
-        //   "En Mantenimiento, por favor, usa el WsDx que antes han usado",
-        //   "warning_notification"
-        // );
-        // mostrarMensaje(
-        //   "A la 1:00 Pm volvera a estar disponible",
-        //   "warning_notification"
-        // );
         mostrarMensaje(
           "Reporta la falla al DTI, por favor.",
           "warning_notification"
@@ -175,6 +167,8 @@ const Fuec = ({ mostrarMensaje, username }) => {
   const [show, setShow] = useState(false);
 
   const handleDateChange = (date) => {
+    setSelectedDate(date);
+    setShowDatePicker(false);
     setDate(date);
 
     if (date) {
@@ -189,38 +183,78 @@ const Fuec = ({ mostrarMensaje, username }) => {
     }
   };
 
+  const HTMLtoPDFRef = useRef(null);
+
+  // Función para llamar la funcion de HTMLtoPDF
+  const callhandlePrintPDF = () => {
+    if (HTMLtoPDFRef.current) {
+      HTMLtoPDFRef.current.handlePrintPDF();
+    } else {
+      console.error("Ref del hijo no definida");
+    }
+  };
+  const callhandleDownloadPDF = () => {
+    if (HTMLtoPDFRef.current) {
+      HTMLtoPDFRef.current.handleDownloadPDF();
+    } else {
+      console.error("Ref del hijo no definida");
+    }
+  };
+
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
   return (
     <div className="Efect">
+      {showPdf && (
+        <div className="buttons__VE">
+          <button
+            onClick={() => volverAFormIni()}
+            className="submit-button volver"
+            type="submit"
+          >
+            <img className="volver_img" src={volver}></img>
+            Volver
+          </button>
+        </div>
+      )}
       <h1 className="titulo_login title_fuec">Reporte FUEC</h1>
       <hr />
       {showFormI && (
-        <form method="post">
+        <form className="forms__box" method="post">
           <div className="form__init">
             <div className="input-container">
               <input
-                name="direccion"
-                className="input-field"
+                className="input-field icon_input_bus"
                 placeholder=""
                 type="text"
                 value={bus}
                 onChange={(e) => setbus(e.target.value)}
               />
-              <label className="input-label">Nr de bus</label>
+              <label className="input-label">N° de Bus</label>
             </div>
             <div className="content__dateDH">
-              <label className="label">Fecha</label>
-              <DatePicker
-                className="input-field datepicker"
-                selected={Date}
-                onChange={handleDateChange}
-                inputMode="none"
-                onBlur={() => setShow(false)}
-                onSelect={() => setShow(false)}
-                onInputClick={() => setShow(true)}
-                onClickOutside={() => setShow(false)}
-                open={show}
-                locale={es}
-              />
+              <div className="input-container">
+                <DatePicker
+                  className="input-field-datepicker datepicker icon_calendar"
+                  selected={Date}
+                  onChange={handleDateChange}
+                  inputMode="none"
+                  onBlur={() => setShow(false)}
+                  onSelect={() => setShow(false)}
+                  onInputClick={() => setShow(true)}
+                  onClickOutside={() => setShow(false)}
+                  open={show}
+                  locale={es}
+                />
+                <label
+                  className={`input-label-datepicker ${
+                    selectedDate ? "label" : ""
+                  }`}
+                >
+                  Fecha
+                </label>
+              </div>
             </div>
             <button
               className="submit-button"
@@ -233,7 +267,7 @@ const Fuec = ({ mostrarMensaje, username }) => {
         </form>
       )}
       {showTable && (
-        <div className="tablaFuecOD">
+        <div className="results__box">
           <div className="table_60p">
             <DynamicTable
               data={tableData}
@@ -243,7 +277,6 @@ const Fuec = ({ mostrarMensaje, username }) => {
               enviarSubmitRpt={enviarSubmitRpt}
             />
           </div>
-          <hr className="hr" />
         </div>
       )}
       {showFormMo && (
@@ -300,24 +333,34 @@ const Fuec = ({ mostrarMensaje, username }) => {
       )}
       {showPdf && (
         <>
-          <div className="buttons__VE">
-            <button
-              onClick={() => volverAFormIni()}
-              className="submit-button volver"
-              type="submit"
-            >
-              <img className="volver_img" src={volver}></img>
-              Volver
-            </button>
-          </div>
-          <section className="RptoFuec">
+          <section className="RptoFuec forms__box box__sheet">
             <HTMLtoPDF
               datosForm3={datosForm3}
               mostrarMensaje={mostrarMensaje}
               fechaSalida={fechaSalida}
               username={username}
+              ref={HTMLtoPDFRef}
             />
           </section>
+          {/* Botón para iniciar la conversión y descarga del pdf */}
+          <div className="buttons_left">
+            <div
+              className="container__buttons_left"
+              onClick={callhandleDownloadPDF}
+            >
+              <div className="descargar-pdf">
+                <div className="buttons_left-label">Descargar PDF</div>
+              </div>
+            </div>
+            <div
+              className="container__buttons_left"
+              onClick={callhandlePrintPDF}
+            >
+              <div className="imprimir">
+                <div className="buttons_left-label">Imprimir PDF</div>
+              </div>
+            </div>
+          </div>
         </>
       )}
     </div>

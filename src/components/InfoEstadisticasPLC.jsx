@@ -124,8 +124,10 @@ const Inicio = ({ mostrarMensaje }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [dateRangeText, setDateRangeText] = useState("");
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const handleDateChange = (dates) => {
+    setSelectedDate(dates);
     const [start, end] = dates;
     setStartDate(start);
     setEndDate(end);
@@ -184,10 +186,9 @@ const Inicio = ({ mostrarMensaje }) => {
         Informe de Estadisticas de Primeras Lineas de Colibertador
       </h1>
       <hr />
-      <section className="colum_table">
+      <section className="colum_table forms__box">
         <section className="row_section">
           <div className="input-container agg_colaborador">
-            <label className="label">Tipo Informe:</label>
             <select
               className="opciones"
               value={tipoInforme}
@@ -202,53 +203,40 @@ const Inicio = ({ mostrarMensaje }) => {
               <option value={0}>Informe Consolidado</option>
               <option value={1}>Informe Detallado</option>
             </select>
+            <label className="input-label-options label">Tipo Informe</label>
           </div>
-          {/* <div className="input-container agg_colaborador">
-            <label className="label">Empresa:</label>
-            <select
-              className="opciones"
-              value={empresa}
-              onChange={(e) => setEmpresa(e.target.value)}
-            >
-              <option value="" disabled selected>
-                Seleccionar
-              </option>
-              <option value={277}>BERLINAS DEL FONCE S.A.</option>
-              <option value={278}>BERLITUR S.A.S.</option>
-              <option value={310}>
-                CARTAGENA INTERNATIONAL TRAVELS S.A.S. "CIT"
-              </option>
-              <option value={320}>TOURLINE EXPRESS S.A.S.</option>
-              <option value={9001}>SERVICIO ESPECIAL</option>
-            </select>
-          </div> */}
         </section>
         <section className="contabilidad_section">
           <div className="content__dateDH">
-            <label className="label">Rango de fecha:</label>
-            <DatePicker
-              className="input-field datepicker"
-              selected={startDate}
-              onChange={handleDateChange}
-              startDate={startDate}
-              endDate={endDate}
-              selectsRange
-              showMonthDropdown
-              showYearDropdown
-              dropdownMode="select"
-              inputMode="none"
-              onFocus={(e) => e.target.blur()}
-              onBlur={(e) => e.target.blur()}
-              disabledInput
-              locale={es}
-            />
-            {/* <p>{dateRangeText}</p> */}
-            {/* <p>{startDate}</p>
-            <p>{endDateDate}</p> */}
+            <div className="input-container">
+              <DatePicker
+                className="input-field-datepicker datepicker icon_calendar"
+                selected={startDate}
+                onChange={handleDateChange}
+                startDate={startDate}
+                endDate={endDate}
+                selectsRange
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select"
+                inputMode="none"
+                onFocus={(e) => e.target.blur()}
+                onBlur={(e) => e.target.blur()}
+                disabledInput
+                locale={es}
+              />
+              <label
+                className={`input-label-datepicker ${
+                  selectedDate ? "label" : ""
+                }`}
+              >
+                Rango de Fecha
+              </label>
+            </div>
           </div>
         </section>
         <button
-          className="submit-button botton_gp"
+          className="submit-button"
           // onClick={generarExcel}
           onClick={rptoConsolidadoPM}
           disabled={isLoading}
@@ -260,8 +248,7 @@ const Inicio = ({ mostrarMensaje }) => {
       {isLoading && <div class="loader"></div>}
 
       {showTable && (
-        <div className="tablaFuecOD">
-          <hr className="hr" />
+        <div className="tablaFuecOD results__box">
           <div className="table_95p">
             <DynamicTable
               data={results}
@@ -270,14 +257,13 @@ const Inicio = ({ mostrarMensaje }) => {
               updatedData={updateTableData}
             />
           </div>
-          <button
-            className="submit-button botton_gp"
-            // onClick={generarExcel}
-            onClick={generarExcel}
-            disabled={isLoading}
-          >
-            {isLoading ? "Descargando..." : "Descargar Reporte"}
-          </button>
+          <div className="buttons_left">
+            <div className="container__buttons_left" onClick={generarExcel}>
+              <div className="descargar-xlsx">
+                <div className="buttons_left-label">Exportar a XLSX</div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

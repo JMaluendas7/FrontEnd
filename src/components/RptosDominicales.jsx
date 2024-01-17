@@ -25,12 +25,11 @@ const Inicio = ({ mostrarMensaje }) => {
 
       formData.append("startDate", formattedStartDate);
       formData.append("endDate", formattedEndDate);
-      formData.append("Opcion", 9);
-      formData.append("SubOpcion", tipoInforme);
+      formData.append("Opcion", tipoInforme);
       formData.append("empresa", empresa);
       try {
         const response = await axios.post(
-          "http://wsdx.berlinasdelfonce.com:9000/rptoPlaneacion/",
+          "http://wsdx.berlinasdelfonce.com:9000/RptosDominicales/",
           formData,
           {
             headers: {
@@ -66,18 +65,11 @@ const Inicio = ({ mostrarMensaje }) => {
   };
 
   const generarExcel = async () => {
-    console.log(results);
-    const Opcion = 9;
+    setIsLoading(true);
     try {
       const response = await axios.post(
-        "http://wsdx.berlinasdelfonce.com:9000/generarRptoPL/",
-        {
-          results: results,
-          Opcion: Opcion,
-          SubOpcion: tipoInforme,
-          empresa: empresa,
-          startDate: startDate,
-        },
+        "http://wsdx.berlinasdelfonce.com:9000/generar_excel/",
+        results,
         {
           responseType: "blob",
           headers: {
@@ -87,43 +79,49 @@ const Inicio = ({ mostrarMensaje }) => {
           withCredentials: true,
         }
       );
+      // Crear un objeto URL para el blob
+      const url = window.URL.createObjectURL(new Blob([response.data]));
 
-      // Obtener el nombre del archivo del header 'Content-Disposition' de la respuesta
-      const contentDisposition = response.headers["content-disposition"];
-      const fileNameMatch =
-        contentDisposition && contentDisposition.match(/filename="(.+)"/);
-
+      // Crear un enlace (link) para iniciar la descarga
+      const link = document.createElement("a");
+      link.href = url;
       let fileName = "";
       const now = new Date();
       const timestamp = now.toISOString().slice(0, 19).replace(/:/g, "-"); // Formato: YYYY-MM-DDTHH-mm-ss
 
-      if (Opcion == 9) {
-        if (tipoInforme == 0) {
-          fileName = `5apps_InformeConsolidadoPlaneacionOcupacionXLineas_${timestamp}.xlsx`;
-        } else if (tipoInforme == 1) {
-          fileName = `5apps_InformeDetalladoPlaneacionOcupacionXLineas_${timestamp}.xlsx`;
-        }
+      if (tipoInforme == 0) {
+        fileName = `Dominicales_DetalladoDeViajesXConductor_${timestamp}.xlsx`;
+      } else if (tipoInforme == 1) {
+        fileName = `Dominicales_Consolidado-Empleado-Dominical-Bus_${timestamp}.xlsx`;
+      } else if (tipoInforme == 2) {
+        fileName = `Dominicales_TotalConductorXBus_${timestamp}.xlsx`;
+      } else if (tipoInforme == 3) {
+        fileName = `Dominicales_TotalXConductor_${timestamp}.xlsx`;
+      } else if (tipoInforme == 4) {
+        fileName = `Dominicales_TotalXBus_${timestamp}.xlsx`;
+      } else if (tipoInforme == 5) {
+        fileName = `Dominicales_DetalladoXBus_${timestamp}.xlsx`;
       }
-
-      if (fileNameMatch && fileNameMatch.length > 1) {
-        fileName = fileNameMatch[1]; // Usar el nombre del archivo recibido del backend
-      }
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", fileName); // Establecer el nombre del archivo
+      link.setAttribute("download", fileName); // Nombre del archivo
       document.body.appendChild(link);
 
+      // Hacer clic en el enlace para iniciar la descarga
       link.click();
 
+      // Limpiar el objeto URL y el enlace después de la descarga
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error al generar el archivo Excel:", error);
     }
   };
+  // Utiliza useEffect para ejecutar generarExcel cuando results se actualice
+  // useEffect(() => {
+  //   if (results.length > 0) {
+  //     generarExcel();
+  //   }
+  // }, [results]);
 
   // Manejo de campo date inicioFin
   const [startDate, setStartDate] = useState(false);
@@ -162,56 +160,39 @@ const Inicio = ({ mostrarMensaje }) => {
 
   if (tipoInforme == 0) {
     columns = [
-      { key: "year", label: "AÑO", type: "number" },
-      { key: "mes", label: "MES", type: "number" },
-      { key: "nbuses", label: "N° BUSES", type: "number" },
-      { key: "viajes", label: "VIAJES", type: "viajes" },
-      { key: "disponibles", label: "DISPONIBLES", type: "number" },
-      { key: "pasajeros", label: "PASAJEROS", type: "number" },
-      { key: "valorbruto", label: "V BRUTO", type: "number" },
-      { key: "seguro", label: "SEGURO", type: "number" },
-      { key: "valorneto", label: "V NETO", type: "number" },
-      { key: "ocupacion", label: "OCUPACION", type: "number" },
-      { key: "promPaxxviaje", label: "PROM PAX VIAJE", type: "number" },
-      {
-        key: "promValxviaje_Bruto",
-        label: "PROM PAX VJE BRUTO",
-        type: "number",
-      },
-      { key: "promValxviaje_Neto", label: "PROM PAX VJE NETO", type: "number" },
-      { key: "promTarifa_bruto", label: "PROM TAR BRUTO", type: "number" },
-      {
-        key: "promViajesMensualxbus",
-        label: "PROM VJE MENS X BUS",
-        type: "number",
-      },
-      {
-        key: "promProdxbus_bruto",
-        label: "PROM PROD X BUS BRUTO",
-        type: "number",
-      },
-      {
-        key: "PromProdxbus_Neto",
-        label: "PROM PROD X BUS NETO",
-        type: "number",
-      },
+      { key: "fecha", label: "FECHA", type: "text" },
+      { key: "documento", label: "DOCUMENTO", type: "number" },
+      { key: "apellido", label: "APELLIDO", type: "text" },
+      { key: "nombre", label: "VIAJES", type: "text" },
+      { key: "bus", label: "DISPONIBLES", type: "number" },
     ];
   } else if (tipoInforme == 1) {
     columns = [
-      { key: "YEAR", label: "AÑO", type: "number" },
-      { key: "mes", label: "MES", type: "number" },
-      { key: "Origen", label: "ORIGEN", type: "text" },
-      { key: "Destino", label: "DESTINO", type: "text" },
-      { key: "Recorrido", label: "RECORRIDO", type: "text" },
-      { key: "viajes", label: "VIAJES", type: "number" },
-      { key: "disponibles", label: "DISPONIBLES", type: "number" },
-      { key: "pasajeros", label: "PASAJEROS", type: "number" },
-      { key: "valor", label: "VALOR", type: "number" },
-      { key: "Seguro", label: "SEGURO", type: "number" },
+      { key: "fecha", label: "FECHA", type: "text" },
+      { key: "documento", label: "DOCUMENTO", type: "number" },
+      { key: "apellido", label: "APELLIDO", type: "text" },
+      { key: "nombre", label: "VIAJES", type: "text" },
+      { key: "bus", label: "DISPONIBLES", type: "number" },
+    ];
+  } else if (tipoInforme == 2) {
+    columns = [
+      { key: "fecha", label: "FECHA", type: "number" },
+      { key: "documento", label: "DOCUMENTO", type: "number" },
+      { key: "apellido", label: "APELLIDO", type: "text" },
+      { key: "nombre", label: "VIAJES", type: "text" },
+      { key: "bus", label: "DISPONIBLES", type: "number" },
+    ];
+  } else if (tipoInforme == 3) {
+    columns = [
+      { key: "documento", label: "DOCUMENTO", type: "number" },
+      { key: "apellido", label: "APELLIDO", type: "text" },
+      { key: "nombre", label: "NOMBRE", type: "text" },
+      { key: "bus", label: "BUS", type: "text" },
+      { key: "Total_dominicales", label: "TOTAL DOMINICALES", type: "text" },
     ];
   }
 
-  const itemsPerPage = 15;
+  const itemsPerPage = 20;
 
   const updateTableData = (updatedData) => {
     setTableData(updatedData);
@@ -219,7 +200,7 @@ const Inicio = ({ mostrarMensaje }) => {
 
   return (
     <div className="Efect">
-      <h1 className="titulo_login">Informe de Ocupacion por Lineas</h1>
+      <h1 className="titulo_login">Reportes de Dominicales</h1>
       <hr />
       <section className="colum_table forms__box">
         <section className="row_section">
@@ -235,8 +216,14 @@ const Inicio = ({ mostrarMensaje }) => {
               <option value="" disabled selected>
                 Seleccionar
               </option>
-              <option value={0}>Informe Consolidado</option>
-              <option value={1}>Informe Detallado</option>
+              <option disabled value={0}>
+                Detallado de Viajes por Conductor
+              </option>
+              <option value={1}>Consolidado Empleado-Dominical-Bus</option>
+              <option value={2}>Total Coductor por Bus</option>
+              <option value={3}>Total por Conductor</option>
+              <option value={4}>Total por Bus</option>
+              <option value={5}>Detallado por Bus</option>
             </select>
             <label className="input-label-options label">Tipo Informe</label>
           </div>
@@ -251,10 +238,13 @@ const Inicio = ({ mostrarMensaje }) => {
               </option>
               <option value={277}>BERLINAS DEL FONCE S.A.</option>
               <option value={278}>BERLITUR S.A.S.</option>
+              <option value={300}>COMPAÑIA LIBERTADOR S.A.</option>
               <option value={310}>
                 CARTAGENA INTERNATIONAL TRAVELS S.A.S. "CIT"
               </option>
               <option value={320}>TOURLINE EXPRESS S.A.S.</option>
+              <option value={2771}>TRANSCARGA BERLINAS S.A.</option>
+              <option value={9000}>DATA TEST TIC</option>
               <option value={9001}>SERVICIO ESPECIAL</option>
             </select>
             <label className="input-label-options label">Empresa</label>
@@ -291,7 +281,6 @@ const Inicio = ({ mostrarMensaje }) => {
         </section>
         <button
           className="submit-button"
-          // onClick={generarExcel}
           onClick={rptoPOL}
           disabled={isLoading}
         >
@@ -301,8 +290,7 @@ const Inicio = ({ mostrarMensaje }) => {
       {/* Handle animacion (Loading) */}
       {isLoading && <div class="loader"></div>}
       {showTable && (
-        <div className="tablaFuecOD">
-          <hr className="hr" />
+        <div className="tablaFuecOD results__box">
           <div className="table_95p">
             <DynamicTable
               data={results}

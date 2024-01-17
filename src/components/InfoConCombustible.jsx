@@ -119,9 +119,11 @@ const Inicio = ({ mostrarMensaje }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [dateRangeText, setDateRangeText] = useState("");
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const handleDateChange = (dates) => {
     const [start, end] = dates;
+    setSelectedDate(dates);
     setStartDate(start);
     setEndDate(end);
 
@@ -164,33 +166,38 @@ const Inicio = ({ mostrarMensaje }) => {
     <div className="Efect">
       <h1 className="titulo_login">Informe Consolidado de Combustible</h1>
       <hr />
-      <section className="colum_table">
+      <section className="colum_table forms__box">
         <section className="contabilidad_section">
           <div className="content__dateDH">
-            <label className="label">Rango de fecha:</label>
-            <DatePicker
-              className="input-field datepicker"
-              selected={startDate}
-              onChange={handleDateChange}
-              startDate={startDate}
-              endDate={endDate}
-              selectsRange
-              showMonthDropdown
-              showYearDropdown
-              dropdownMode="select"
-              inputMode="none"
-              onFocus={(e) => e.target.blur()}
-              onBlur={(e) => e.target.blur()}
-              disabledInput
-              locale={es}
-            />
-            {/* <p>{dateRangeText}</p> */}
-            {/* <p>{startDate}</p>
-            <p>{endDateDate}</p> */}
+            <div className="input-container">
+              <DatePicker
+                className="input-field-datepicker datepicker icon_calendar"
+                selected={startDate}
+                onChange={handleDateChange}
+                startDate={startDate}
+                endDate={endDate}
+                selectsRange
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select"
+                inputMode="none"
+                onFocus={(e) => e.target.blur()}
+                onBlur={(e) => e.target.blur()}
+                disabledInput
+                locale={es}
+              />
+              <label
+                className={`input-label-datepicker ${
+                  selectedDate ? "label" : ""
+                }`}
+              >
+                Rango de Fecha
+              </label>
+            </div>
           </div>
         </section>
         <button
-          className="submit-button botton_gp"
+          className="submit-button"
           // onClick={generarExcel}
           onClick={rptoCombustible}
           disabled={isLoading}
@@ -202,8 +209,7 @@ const Inicio = ({ mostrarMensaje }) => {
       {isLoading && <div class="loader"></div>}
 
       {showTable && (
-        <div className="tablaFuecOD">
-          <hr className="hr" />
+        <div className="tablaFuecOD results__box">
           <div className="table_95p">
             <DynamicTable
               data={results}
@@ -211,14 +217,13 @@ const Inicio = ({ mostrarMensaje }) => {
               itemsPerPage={itemsPerPage}
               updatedData={updateTableData}
             />
-            <button
-              className="submit-button botton_gp"
-              // onClick={generarExcel}
-              onClick={generarExcel}
-              disabled={isLoading}
-            >
-              {isLoading ? "Descargando..." : "Descargar Reporte"}
-            </button>
+            <div className="buttons_left">
+              <div className="container__buttons_left" onClick={generarExcel}>
+                <div className="descargar-xlsx">
+                  <div className="buttons_left-label">Exportar a XLSX</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

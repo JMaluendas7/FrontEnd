@@ -10,7 +10,7 @@ const Container = ({ Component, mostrarMensaje, username }) => {
 
   return (
     <div className="container">
-      <Suspense fallback={<div>Cargando...</div>}>
+      <Suspense fallback={<div class="loader"></div>}>
         <Modulo mostrarMensaje={mostrarMensaje} username={username} />
       </Suspense>
     </div>

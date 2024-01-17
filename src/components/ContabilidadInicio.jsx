@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import "/src/css/ContabilidadInicio.css";
+import React, { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
+import "/src/css/ContabilidadInicio.css";
+import DynamicTable from "./PruebaTabla";
 import es from "date-fns/locale/es";
+import axios from "axios";
 
 import DatePicker from "react-datepicker";
 
@@ -52,6 +53,8 @@ const Inicio = ({ mostrarMensaje }) => {
         if (response.status === 200) {
           if (response.data.results && response.data.results.length > 0) {
             setResults(response.data.results);
+            setShowTable(true);
+            setIsLoading(false);
           } else {
             mostrarMensaje("Respuesta vacía", "warning_notification");
             setIsLoading(false);
@@ -126,21 +129,14 @@ const Inicio = ({ mostrarMensaje }) => {
     }
   };
 
-  // Utiliza useEffect para ejecutar generarExcel cuando results se actualice
-  useEffect(() => {
-    if (results.length > 0) {
-      generarExcel();
-      mostrarMensaje("Respuesta Exitosa", "success_notification");
-      setIsLoading(false);
-    }
-  }, [results]);
-
   // Manejo de campo date inicioFin
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [dateRangeText, setDateRangeText] = useState("");
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const handleDateChange = (dates) => {
+    setSelectedDate(dates);
     const [start, end] = dates;
     setStartDate(start);
     setEndDate(end);
@@ -162,19 +158,65 @@ const Inicio = ({ mostrarMensaje }) => {
     }
   };
 
+  // Handle of table dynamic
+  const [showTable, setShowTable] = useState(false);
+  let columns = [];
+
+  if (tipoInforme == 2) {
+    columns = [
+      { key: "year", label: "AÑO", type: "number" },
+      { key: "mes", label: "MES", type: "number" },
+      { key: "ciudad", label: "CIUDAD", type: "text" },
+      { key: "Base", label: "BASE", type: "number" },
+      { key: "CuotaAdmon", label: "CUOTA ADMON", type: "number" },
+    ];
+  } else if (tipoInforme == 3) {
+    columns = [
+      { key: "Detalle", label: "DETALLE", type: "text" },
+      { key: "Identifica", label: "IDENTIFICACION", type: "text" },
+      { key: "NombreTercero", label: "NOMBRE DEL TERCERO", type: "text" },
+      { key: "base", label: "BASE", type: "number" },
+      { key: "VrEgresos", label: "CUOTA ADMON", type: "number" },
+    ];
+  } else if (tipoInforme == 4) {
+    columns = [
+      { key: "Concepto", label: "CONCEPTO", type: "text" },
+      { key: "CptoDet", label: "DETALLE", type: "text" },
+      { key: "Ciudadorigen", label: "CIUDAD ID", type: "text" },
+      { key: "Loc_Nombreloc", label: "CIUDAD", type: "text" },
+      { key: "ValorBase", label: "BASE", type: "number" },
+      { key: "Admon", label: "CUOTA ADMON", type: "number" },
+    ];
+  } else if (tipoInforme == 5) {
+    columns = [
+      { key: "pla_agenciavendio", label: "COD. AGENCIA", type: "text" },
+      { key: "age_nomagencia", label: "NOMBRE AGENCIA", type: "text" },
+      { key: "valor", label: "BASE", type: "number" },
+      { key: "Tvalor", label: "CUOTA ADMON", type: "text" },
+    ];
+  }
+
+  const itemsPerPage = 15;
+
+  const updateTableData = (updatedData) => {
+    setTableData(updatedData);
+  };
+
   return (
     <div className="Efect">
       <h1 className="titulo_login">Reporte cuota de administración</h1>
       <hr />
-      <section className="contabilidad__table">
+      <section className="contabilidad__table forms__box">
         <div className="contabilidad_fr">
           <section className="contabilidad_section">
             <div className="input-container agg_colaborador">
-              <label className="label">Tipo Informe:</label>
               <select
                 className="opciones"
                 value={tipoInforme}
-                onChange={(e) => setTipoInforme(e.target.value)}
+                onChange={(e) => {
+                  setTipoInforme(e.target.value);
+                  setShowTable(false);
+                }}
               >
                 <option value="" disabled selected>
                   Seleccionar
@@ -187,13 +229,16 @@ const Inicio = ({ mostrarMensaje }) => {
                 <option value={4}>Ciudades - Colibertador</option>
                 <option value={5}>Agencias - Berlitur</option>
               </select>
+              <label className="input-label-options label">Tipo Informe</label>
             </div>
             <div className="input-container agg_colaborador">
-              <label className="label">Concepto:</label>
               <select
                 className="opciones"
                 value={concepto}
-                onChange={(e) => setConcepto(e.target.value)}
+                onChange={(e) => {
+                  setConcepto(e.target.value);
+                  setShowTable(false);
+                }}
               >
                 <option value="" disabled selected>
                   Seleccionar
@@ -201,15 +246,18 @@ const Inicio = ({ mostrarMensaje }) => {
                 <option value={"080101"}>Cuota Admon</option>
                 <option value={"080103"}>Cuota Admon Agencias</option>
               </select>
+              <label className="input-label-options label">Concepto</label>
             </div>
           </section>
           <section className="contabilidad_section">
             <div className="input-container agg_colaborador">
-              <label className="label">Empresa:</label>
               <select
                 className="opciones"
                 value={empresa}
-                onChange={(e) => setEmpresa(e.target.value)}
+                onChange={(e) => {
+                  setEmpresa(e.target.value);
+                  setShowTable(false);
+                }}
               >
                 <option value="" disabled selected>
                   Seleccionar
@@ -225,28 +273,34 @@ const Inicio = ({ mostrarMensaje }) => {
                 <option value={9000}>DATA TEST TIC</option>
                 <option value={9001}>SERVICIO ESPECIAL</option>
               </select>
+              <label className="input-label-options label">Empresa</label>
             </div>
             <div className="content__dateDH">
-              <label className="label">Rango de fecha:</label>
-              <DatePicker
-                className="input-field datepicker"
-                selected={startDate}
-                onChange={handleDateChange}
-                startDate={startDate}
-                endDate={endDate}
-                selectsRange
-                showMonthDropdown
-                showYearDropdown
-                dropdownMode="select"
-                inputMode="none"
-                onFocus={(e) => e.target.blur()}
-                onBlur={(e) => e.target.blur()}
-                disabledInput
-                locale={es}
-              />
-              {/* <p>{dateRangeText}</p> */}
-              {/* <p>{startDate}</p>
-            <p>{endDateDate}</p> */}
+              <div className="input-container">
+                <DatePicker
+                  className="input-field-datepicker datepicker icon_calendar"
+                  selected={startDate}
+                  onChange={handleDateChange}
+                  startDate={startDate}
+                  endDate={endDate}
+                  selectsRange
+                  showMonthDropdown
+                  showYearDropdown
+                  dropdownMode="select"
+                  inputMode="none"
+                  onFocus={(e) => e.target.blur()}
+                  onBlur={(e) => e.target.blur()}
+                  disabledInput
+                  locale={es}
+                />
+                <label
+                  className={`input-label-datepicker ${
+                    selectedDate ? "label" : ""
+                  }`}
+                >
+                  Rango de Fecha
+                </label>{" "}
+              </div>
             </div>
           </section>
         </div>
@@ -261,6 +315,25 @@ const Inicio = ({ mostrarMensaje }) => {
       </section>
       {/* Aquí puedes agregar una animación de carga si `isLoading` es `true` */}
       {isLoading && <div class="loader"></div>}
+      {showTable && (
+        <div className="tablaFuecOD results__box">
+          <div className="table_95p">
+            <DynamicTable
+              data={results}
+              columns={columns}
+              itemsPerPage={itemsPerPage}
+              updatedData={updateTableData}
+            />
+          </div>
+          <div className="buttons_left">
+            <div className="container__buttons_left" onClick={generarExcel}>
+              <div className="descargar-xlsx">
+                <div className="buttons_left-label">Exportar a XLSX</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
