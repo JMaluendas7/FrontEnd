@@ -145,7 +145,14 @@ const DynamicTable = ({
     } else if (column.type === "number") {
       return (
         <td key={column.key} className="colum">
-          {parseFloat(cellValue).toFixed(0)}
+          {typeof cellValue === "number" && !isNaN(cellValue)
+            ? Number.isInteger(cellValue)
+              ? cellValue.toLocaleString("es-CO")
+              : cellValue.toLocaleString("es-CO", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })
+            : cellValue}
         </td>
       );
     } else if (column.type === "select") {

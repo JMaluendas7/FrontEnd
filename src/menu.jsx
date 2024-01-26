@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 
-const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
+const Menu = ({
+  menuItems,
+  setMenuItems,
+  setContainerComponent,
+  menuRef,
+  toggleMenu,
+}) => {
   const [menuStates, setMenuStates] = useState(menuItems.map(() => false));
   const [activeSubItemIndices, setActiveSubItemIndices] = useState(
     menuItems.map(() => null)
@@ -50,13 +56,16 @@ const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
   };
 
   return (
-    <section className="menu-container">
+    <section className="menu-container" ref={menuRef}>
       <nav className="menu">
         {menuItems.map((item, index) => (
           <div key={index} className="menuItem">
             <nav
               className="menuItem-item"
-              onClick={() => abrirMenuFlecha(index)}
+              onClick={() => {
+                abrirMenuFlecha(index);
+                toggleMenu();
+              }}
             >
               <div className="menuItem-div">
                 <div className={`menuItem__icon ${item.url_img}`} />
@@ -76,9 +85,10 @@ const Menu = ({ menuItems, setMenuItems, setContainerComponent }) => {
                       activeSubItemIndices[index] === subIndex ? "active" : ""
                     }`}
                     key={subIndex}
-                    onClick={() =>
-                      toggleSubMenu(index, subIndex, String(subItem.link))
-                    }
+                    onClick={() => {
+                      toggleSubMenu(index, subIndex, String(subItem.link));
+                      // toggleMenu();
+                    }}
                   >
                     <div className={`menuItem__icon ${subItem.url_img}`} />
                     <a className="subMenu-url">{subItem.nom_modulo}</a>

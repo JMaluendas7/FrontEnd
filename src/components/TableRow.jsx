@@ -50,7 +50,6 @@ const TableRow = ({
         email: colaborador.email,
         direccion: colaborador.direccion,
         ciudad: colaborador.ciudad,
-        cargo_id: colaborador.cargo_id,
         rol_id: colaborador.rol_id,
         empresa_id: colaborador.empresa_id,
       };
@@ -197,30 +196,6 @@ const TableRow = ({
           />
         ) : (
           colaborador.email
-        )}
-      </td>
-      <td className="colum">
-        {editableFields[colaborador.num_documento] ? (
-          <select
-            type="text"
-            className="campo__input select__tb"
-            value={colaborador.cargo_id}
-            onChange={(e) =>
-              handleChange(
-                colaborador.num_documento,
-                "cargo_id",
-                e.target.value
-              )
-            }
-          >
-            {cargos.map((cargo, index) => (
-              <option key={index} value={cargo.id_cargo}>
-                {cargo.detalle_cargo}
-              </option>
-            ))}
-          </select>
-        ) : (
-          colaborador.rol_id
         )}
       </td>
       <td className="colum">

@@ -5,6 +5,7 @@ import ordenar from "/src/img/ordenar.png";
 import agregar_user from "/src/img/agregar_user.png";
 import rpto_excel from "/src/img/rpto_excel.png";
 import cerrar from "/src/img/cerrar.png";
+import descargarArchivo from "./AdminDownloadXlsx";
 
 const Contenido = ({ mostrarMensaje }) => {
   // Trae los tipos de documentos de identificacion
@@ -23,15 +24,6 @@ const Contenido = ({ mostrarMensaje }) => {
       .get("http://wsdx.berlinasdelfonce.com:9000/api/bussines/")
       .then((response) => {
         setEmpresas(response.data);
-      });
-  };
-  // Llamado a los cargos
-  const [cargos, setCargos] = useState([]);
-  const getCargos = async () => {
-    await axios
-      .get("http://wsdx.berlinasdelfonce.com:9000/api/cargos/")
-      .then((response) => {
-        setCargos(response.data);
       });
   };
 
@@ -66,7 +58,6 @@ const Contenido = ({ mostrarMensaje }) => {
   // Al cargar la pagina se llaman las sgts funciones
   useEffect(() => {
     getColaboradores();
-    getCargos();
     bussines();
     docsTi();
     rol();
@@ -86,21 +77,8 @@ const Contenido = ({ mostrarMensaje }) => {
           withCredentials: true,
         }
       );
-      // Crear un objeto URL para el blob
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-
-      // Crear un enlace (link) para iniciar la descarga
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "colaboradores.xlsx"); // Nombre del archivo
-      document.body.appendChild(link);
-
-      // Hacer clic en el enlace para iniciar la descarga
-      link.click();
-
-      // Limpiar el objeto URL y el enlace después de la descarga
-      link.parentNode.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      const fileName = "5Apps_Colaboradores";
+      descargarArchivo({ fileName: fileName, blob: response.data });
     } catch (error) {
       console.error("Error al generar el archivo Excel:", error);
     }
@@ -193,7 +171,6 @@ const Contenido = ({ mostrarMensaje }) => {
     apellidos,
     telefono,
     email,
-    cargo_id,
     direccion,
     ciudad,
     rol_id,
@@ -208,7 +185,6 @@ const Contenido = ({ mostrarMensaje }) => {
       apellidos,
       telefono,
       email,
-      cargo_id,
       direccion,
       ciudad,
       rol_id,
@@ -229,7 +205,6 @@ const Contenido = ({ mostrarMensaje }) => {
       email: editColaboradorData.email,
       direccion: editColaboradorData.direccion,
       ciudad: editColaboradorData.ciudad,
-      cargo_id: editColaboradorData.cargo_id,
       rol_id: editColaboradorData.rol_id,
       empresa_id: editColaboradorData.empresa_id,
     };
@@ -322,12 +297,6 @@ const Contenido = ({ mostrarMensaje }) => {
                 </th>
                 <th className="colum">Telefono</th>
                 <th className="colum">EMail</th>
-                <th
-                  className="colum"
-                  onClick={() => handleOrderBy("contrato_id")}
-                >
-                  Cargo
-                </th>
                 <th className="colum">
                   <div className="colum__title">
                     <p className="colum__name">Direccion</p>
@@ -355,7 +324,6 @@ const Contenido = ({ mostrarMensaje }) => {
                   selectColaborador={selectColaborador}
                   empresas={empresas}
                   roles={roles}
-                  cargos={cargos}
                 />
               ))}
             </tbody>
@@ -551,27 +519,6 @@ const Contenido = ({ mostrarMensaje }) => {
                 {empresas.map((empresa, index) => (
                   <option key={index} value={empresa.id_empresa}>
                     {empresa.nombre_empresa}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="input-container agg_colaborador">
-              <select
-                className="opciones"
-                name="cargo_id"
-                defaultValue={
-                  editColaboradorData ? editColaboradorData.cargo_id : ""
-                }
-                onChange={(e) =>
-                  setEditColaboradorData({
-                    ...editColaboradorData,
-                    cargo_id: e.target.value,
-                  })
-                }
-              >
-                {cargos.map((cargo, index) => (
-                  <option key={index} value={cargo.id_cargo}>
-                    {cargo.detalle_cargo}
                   </option>
                 ))}
               </select>

@@ -6,12 +6,12 @@
         transform: scale(0.9);
     }
     .container__content {
-        flex-basis: 43%;
-        height: 29rem;
+        flex-basis: 40%;
+        height: 27rem;
     }
     .container__login {
-        flex-basis: 43%;
-        height: 26rem;
+        flex-basis: 40%;
+        height: 25rem;
     }
 }
 
@@ -21,11 +21,11 @@
         max-width: 7rem;
     }
     .container__content {
-        flex-basis: 40%;
+        flex-basis: 37%;
         height: 27rem;
     }
     .container__login {
-        flex-basis: 40%;
+        flex-basis: 37%;
         height: 25rem;
     }
     .login {
@@ -184,9 +184,14 @@
     }
     .menu-hamburgesa {
         left: 19rem;
+        scale: 1.4;
     }
     .menu-open .menu-hamburgesa {
-        left: 1rem;
+        left: 1.7rem;
+        top: 1rem;
+        scale: 1.4;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
     }
     .banner {
         width: 100%;
@@ -202,7 +207,6 @@
         height: 22px;
     }
     .logo-img {
-        background-size: 60%;
         position: relative;
         top: 20%;
     }
@@ -260,7 +264,6 @@
         max-width: 50%;
     }
     .logo-img {
-        background-size: 50%;
         position: relative;
         top: 25%;
     }
@@ -272,6 +275,6 @@
         height: 18px;
     }
     .title_fuec {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
 }

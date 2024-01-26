@@ -1,24 +1,21 @@
 import React, { useState } from "react";
-import "react-datepicker/dist/react-datepicker.css";
-import "/src/css/ContabilidadInicio.css";
-import DynamicTable from "./PruebaTabla";
-import es from "date-fns/locale/es";
 import axios from "axios";
-
-import DatePicker from "react-datepicker";
+import DynamicTable from "./PruebaTabla2";
+import descargarArchivo from "./AdminDownloadXlsx";
+import useDateRange from "./AdminDateRange";
 
 const Inicio = ({ mostrarMensaje }) => {
+  const { startDate, endDate, renderDatePicker } = useDateRange();
   const [codigo, setCodigo] = useState("");
   const [tipoInforme, setTipoInforme] = useState("");
   const [concepto, setConcepto] = useState("");
   const [empresa, setEmpresa] = useState("");
-
-  const [isLoading, setIsLoading] = useState(false); // Estado de carga
+  const [isLoading, setIsLoading] = useState(false);
 
   const [results, setResults] = useState([]);
   const rptoCuotaAdmin = async () => {
     setIsLoading(true);
-    const formData = new FormData(); // Creacion del FormData
+    const formData = new FormData();
 
     if (tipoInforme && empresa && concepto && startDate && endDate) {
       const formattedStartDate =
@@ -87,74 +84,21 @@ const Inicio = ({ mostrarMensaje }) => {
           withCredentials: true,
         }
       );
-
-      // Obtener el nombre del archivo del header 'Content-Disposition' de la respuesta
-      const contentDisposition = response.headers["content-disposition"];
-      const fileNameMatch =
-        contentDisposition && contentDisposition.match(/filename="(.+)"/);
-
       let fileName = "";
-      const now = new Date();
-      const timestamp = now.toISOString().slice(0, 19).replace(/:/g, "-"); // Formato: YYYY-MM-DDTHH-mm-ss
-
       if (tipoInforme == 1) {
-        fileName = `5apps_ReporteAgenciaDeViajes_${timestamp}.xlsx`;
+        fileName = `5apps_ReporteAgenciaDeViajes`;
       } else if (tipoInforme == 2) {
-        fileName = `5apps_ReporteCiudades_${timestamp}.xlsx`;
+        fileName = `5apps_ReporteCiudades`;
       } else if (tipoInforme == 3) {
-        fileName = `5apps_ReportePropietarios_${timestamp}.xlsx`;
+        fileName = `5apps_ReportePropietarios`;
       } else if (tipoInforme == 4) {
-        fileName = `5apps_ReporteCiudadesColibertador_${timestamp}.xlsx`;
+        fileName = `5apps_ReporteCiudadesColibertador`;
       } else if (tipoInforme == 5) {
-        fileName = `5apps_ReporteAgenciasBerlitur_${timestamp}.xlsx`;
+        fileName = `5apps_ReporteAgenciasBerlitur`;
       }
-
-      if (fileNameMatch && fileNameMatch.length > 1) {
-        fileName = fileNameMatch[1]; // Usar el nombre del archivo recibido del backend
-      }
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", fileName); // Establecer el nombre del archivo
-      document.body.appendChild(link);
-
-      link.click();
-
-      link.parentNode.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      descargarArchivo({ fileName: fileName, blob: response.data });
     } catch (error) {
       console.error("Error al generar el archivo Excel:", error);
-    }
-  };
-
-  // Manejo de campo date inicioFin
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [dateRangeText, setDateRangeText] = useState("");
-  const [selectedDate, setSelectedDate] = useState(null);
-
-  const handleDateChange = (dates) => {
-    setSelectedDate(dates);
-    const [start, end] = dates;
-    setStartDate(start);
-    setEndDate(end);
-
-    if (start && end) {
-      const formattedStartDate = start.toLocaleDateString("es-ES", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-      });
-      const formattedEndDate = end.toLocaleDateString("es-ES", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-      });
-      setDateRangeText(`${formattedStartDate} - ${formattedEndDate}`);
-    } else {
-      setDateRangeText("");
     }
   };
 
@@ -164,7 +108,7 @@ const Inicio = ({ mostrarMensaje }) => {
 
   if (tipoInforme == 2) {
     columns = [
-      { key: "year", label: "AÑO", type: "number" },
+      { key: "year", label: "AÑO", type: "text" },
       { key: "mes", label: "MES", type: "number" },
       { key: "ciudad", label: "CIUDAD", type: "text" },
       { key: "Base", label: "BASE", type: "number" },
@@ -192,7 +136,7 @@ const Inicio = ({ mostrarMensaje }) => {
       { key: "pla_agenciavendio", label: "COD. AGENCIA", type: "text" },
       { key: "age_nomagencia", label: "NOMBRE AGENCIA", type: "text" },
       { key: "valor", label: "BASE", type: "number" },
-      { key: "Tvalor", label: "CUOTA ADMON", type: "text" },
+      { key: "Tvalor", label: "CUOTA ADMON", type: "number" },
     ];
   }
 
@@ -218,7 +162,7 @@ const Inicio = ({ mostrarMensaje }) => {
                   setShowTable(false);
                 }}
               >
-                <option value="" disabled selected>
+                <option value="" disabled>
                   Seleccionar
                 </option>
                 <option disabled value={1}>
@@ -240,7 +184,7 @@ const Inicio = ({ mostrarMensaje }) => {
                   setShowTable(false);
                 }}
               >
-                <option value="" disabled selected>
+                <option value="" disabled>
                   Seleccionar
                 </option>
                 <option value={"080101"}>Cuota Admon</option>
@@ -259,7 +203,7 @@ const Inicio = ({ mostrarMensaje }) => {
                   setShowTable(false);
                 }}
               >
-                <option value="" disabled selected>
+                <option value="" disabled>
                   Seleccionar
                 </option>
                 <option value={277}>BERLINAS DEL FONCE S.A.</option>
@@ -275,46 +219,18 @@ const Inicio = ({ mostrarMensaje }) => {
               </select>
               <label className="input-label-options label">Empresa</label>
             </div>
-            <div className="content__dateDH">
-              <div className="input-container">
-                <DatePicker
-                  className="input-field-datepicker datepicker icon_calendar"
-                  selected={startDate}
-                  onChange={handleDateChange}
-                  startDate={startDate}
-                  endDate={endDate}
-                  selectsRange
-                  showMonthDropdown
-                  showYearDropdown
-                  dropdownMode="select"
-                  inputMode="none"
-                  onFocus={(e) => e.target.blur()}
-                  onBlur={(e) => e.target.blur()}
-                  disabledInput
-                  locale={es}
-                />
-                <label
-                  className={`input-label-datepicker ${
-                    selectedDate ? "label" : ""
-                  }`}
-                >
-                  Rango de Fecha
-                </label>{" "}
-              </div>
-            </div>
+            <div className="content__dateDH">{renderDatePicker()}</div>
           </section>
         </div>
         <button
           className="submit-button botton_gp"
-          // onClick={generarExcel}
           onClick={rptoCuotaAdmin}
           disabled={isLoading}
         >
           {isLoading ? "Generando..." : "Generar reporte"}
         </button>
       </section>
-      {/* Aquí puedes agregar una animación de carga si `isLoading` es `true` */}
-      {isLoading && <div class="loader"></div>}
+      {isLoading && <div className="loader"></div>}
       {showTable && (
         <div className="tablaFuecOD results__box">
           <div className="table_95p">

@@ -10,9 +10,9 @@ import es from "date-fns/locale/es";
 const Inicio = ({ mostrarMensaje }) => {
   const [empresa, setEmpresa] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [results, setResults] = useState([]); // Contiene los resultados del procedimiento almacenado
+  const [results, setResults] = useState([]);
 
-  const rptoOperacionesViajes = async () => {
+  const getData = async () => {
     setShowTable(false);
     setIsLoading(true);
     const formData = new FormData();
@@ -87,11 +87,6 @@ const Inicio = ({ mostrarMensaje }) => {
         }
       );
 
-      // Obtener el nombre del archivo del header 'Content-Disposition' de la respuesta
-      const contentDisposition = response.headers["content-disposition"];
-      const fileNameMatch =
-        contentDisposition && contentDisposition.match(/filename="(.+)"/);
-
       let fileName = "";
       const now = new Date();
       const timestamp = now.toISOString().slice(0, 19).replace(/:/g, "-"); // Formato: YYYY-MM-DDTHH-mm-ss
@@ -100,19 +95,12 @@ const Inicio = ({ mostrarMensaje }) => {
         fileName = `5apps_ReporteOperacionesViajes_${timestamp}.xlsx`;
       }
 
-      if (fileNameMatch && fileNameMatch.length > 1) {
-        fileName = fileNameMatch[1]; // Usar el nombre del archivo recibido del backend
-      }
-
       const url = window.URL.createObjectURL(new Blob([response.data]));
-
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", fileName); // Establecer el nombre del archivo
+      link.setAttribute("download", fileName);
       document.body.appendChild(link);
-
       link.click();
-
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
@@ -129,24 +117,19 @@ const Inicio = ({ mostrarMensaje }) => {
   const handleDateChange = (dates) => {
     setSelectedDate(dates);
     const [start, end] = dates;
+
+    const formatDate = (date) =>
+      date.toLocaleDateString("es-ES", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+      });
+
     setStartDate(start);
     setEndDate(end);
-
-    if (start && end) {
-      const formattedStartDate = start.toLocaleDateString("es-ES", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-      });
-      const formattedEndDate = end.toLocaleDateString("es-ES", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-      });
-      setDateRangeText(`${formattedStartDate} - ${formattedEndDate}`);
-    } else {
-      setDateRangeText("");
-    }
+    setDateRangeText(
+      start && end ? `${formatDate(start)} - ${formatDate(end)}` : ""
+    );
   };
 
   // Handle of table dynamic
@@ -182,7 +165,7 @@ const Inicio = ({ mostrarMensaje }) => {
               value={empresa}
               onChange={(e) => setEmpresa(e.target.value)}
             >
-              <option value="" disabled selected>
+              <option value="" disabled>
                 Seleccionar
               </option>
               <option value={277}>BERLINAS DEL FONCE S.A.</option>
@@ -227,8 +210,7 @@ const Inicio = ({ mostrarMensaje }) => {
           </div>
           <button
             className="submit-button"
-            // onClick={generarExcel}
-            onClick={rptoOperacionesViajes}
+            onClick={getData}
             disabled={isLoading}
           >
             {isLoading ? "Consultando..." : "Consultar Reporte"}
@@ -236,7 +218,7 @@ const Inicio = ({ mostrarMensaje }) => {
         </section>
       </section>
       {/* Handle animacion (Loading) */}
-      {isLoading && <div class="loader"></div>}
+      {isLoading && <div className="loader"></div>}
 
       {showTable && (
         <div className="tablaFuecOD results__box">

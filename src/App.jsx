@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Banner from "./banner";
 import Menu from "./menu";
 import Container from "./Container";
@@ -12,7 +12,7 @@ import "../src/css/menu.css";
 import "../src/css/contenido.css";
 import "../src/css/Notificacion.css";
 import "../src/css/scroll.css";
-// import "../src/css/ContabilidadInicio.css";
+import "../src/css/ContabilidadInicio.css";
 import "../src/css/administracion/AddColaboradores.css";
 import "./components/Contenido";
 import "./components/administracion/AddColaboradores";
@@ -24,6 +24,8 @@ function App() {
   const [token, setToken] = useState("");
   const [menuData, setMenuData] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado de autenticación
+  const menuRef = useRef(null);
+  const menuHRef = useRef(null);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -154,25 +156,6 @@ function App() {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  useEffect(() => {
-    function handleResize() {
-      const windowWidth = window.innerWidth;
-      const screenWidthThreshold = 750; // Umbral de ancho de pantalla
-
-      if (windowWidth < screenWidthThreshold) {
-        // if(windowWidth < 760) {
-        //   setIsMenuOpen(true)
-        // }
-        setIsMenuOpen(true);
-      } else {
-        setIsMenuOpen(false);
-      }
-    }
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const [notificaciones, setNotificaciones] = useState([]);
   // Cierra la notificacion y la elimina
@@ -206,15 +189,46 @@ function App() {
     ]);
   };
 
+  const handleClickOutsideMenu = (event) => {
+    if (
+      (menuRef.current && !menuRef.current.contains(event.target)) ||
+      (menuHRef.current && !menuHRef.current.contains(event.target))
+    ) {
+      toggleMenu();
+    }
+  };
+
+  // Handle of Resize window
+  useEffect(() => {
+    const handleResize = () => {
+      const windowWidth = window.innerWidth;
+
+      if (windowWidth < 1110 && !isMenuOpen) {
+        document.addEventListener("mouseup", handleClickOutsideMenu);
+      } else {
+        document.removeEventListener("mouseup", handleClickOutsideMenu);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      document.removeEventListener("mouseup", handleClickOutsideMenu);
+    };
+  }, [isMenuOpen]);
+
   return (
     <div>
       {isAuthenticated ? (
         <div className={`main-content ${isMenuOpen ? "menu-open" : ""}`}>
-          {/* Componentes cuando el usuario está autenticado */}
           <Menu
             menuItems={menuData}
             setMenuItems={setMenuData}
             setContainerComponent={setContainerComponent}
+            menuRef={menuRef}
+            toggleMenu={toggleMenu}
           />
           <Container
             Component={containerComponent}
@@ -223,11 +237,15 @@ function App() {
           />
           <Banner
             toggleMenu={toggleMenu}
+            isMenuOpen={isMenuOpen}
             setContainerComponent={setContainerComponent}
             setIsAuthenticated={setIsAuthenticated}
             username={username}
             nombre={nombre}
             apellido={apellido}
+            menuHRef={menuHRef}
+            menuRef={menuRef}
+            setIsMenuOpen={setIsMenuOpen}
           />
         </div>
       ) : (
@@ -240,7 +258,6 @@ function App() {
           />
         </div>
       )}
-      {/* Componente de notificaciones */}
       <Notificacion
         notificaciones={notificaciones}
         cerrarNotificacion={cerrarNotificacion}

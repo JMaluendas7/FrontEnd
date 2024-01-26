@@ -1,22 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import "/src/css/ContabilidadInicio.css";
-import "react-datepicker/dist/react-datepicker.css";
-import DynamicTable from "./PruebaTabla";
-import DatePicker from "react-datepicker";
-import es from "date-fns/locale/es";
+import DynamicTable from "./PruebaTabla2";
+import descargarArchivo from "./AdminDownloadXlsx";
+import useDateRange from "./AdminDateRange";
 
 const Inicio = ({ mostrarMensaje }) => {
+  const { startDate, endDate, renderDatePicker } = useDateRange();
   const [tipoInforme, setTipoInforme] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [results, setResults] = useState([]); // Contiene los resultados del procedimiento almacenado
+  const [results, setResults] = useState([]);
   const [empresa, setEmpresa] = useState("");
 
-  const rptoPOL = async () => {
+  const getData = async () => {
     setIsLoading(true);
     setShowTable(false);
     const formData = new FormData();
-    // Conversion de fecha y agregar hora
     if (tipoInforme && empresa && startDate && endDate) {
       const formattedStartDate =
         startDate.toISOString().split("T")[0] + "T00:00:00.00Z";
@@ -29,7 +27,7 @@ const Inicio = ({ mostrarMensaje }) => {
       formData.append("empresa", empresa);
       try {
         const response = await axios.post(
-          "http://wsdx.berlinasdelfonce.com:9000/RptosDominicales/",
+          "http://wsdx.berlinasdelfonce.com:9000/RptoComercialEst/",
           formData,
           {
             headers: {
@@ -43,6 +41,7 @@ const Inicio = ({ mostrarMensaje }) => {
         );
         if (response.status === 200) {
           if (response.data.results && response.data.results.length > 0) {
+            setexcelGenerate(false);
             setResults(response.data.results);
             setShowTable(true);
             setIsLoading(false);
@@ -64,12 +63,20 @@ const Inicio = ({ mostrarMensaje }) => {
     }
   };
 
-  const generarExcel = async () => {
-    setIsLoading(true);
+  const generarExcel = async (via) => {
     try {
       const response = await axios.post(
-        "http://wsdx.berlinasdelfonce.com:9000/generar_excel/",
-        results,
+        via
+          ? "http://wsdx.berlinasdelfonce.com:9000/generar_excel/"
+          : "http://wsdx.berlinasdelfonce.com:9000/generarRptoComercial/",
+        via
+          ? results
+          : {
+              results: results,
+              Opcion: tipoInforme,
+              empresa: empresa,
+              startDate: startDate,
+            },
         {
           responseType: "blob",
           headers: {
@@ -79,116 +86,112 @@ const Inicio = ({ mostrarMensaje }) => {
           withCredentials: true,
         }
       );
-      // Crear un objeto URL para el blob
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-
-      // Crear un enlace (link) para iniciar la descarga
-      const link = document.createElement("a");
-      link.href = url;
       let fileName = "";
-      const now = new Date();
-      const timestamp = now.toISOString().slice(0, 19).replace(/:/g, "-"); // Formato: YYYY-MM-DDTHH-mm-ss
-
       if (tipoInforme == 0) {
-        fileName = `Dominicales_DetalladoDeViajesXConductor_${timestamp}.xlsx`;
+        fileName = `Estadisticas_DetalladoDeViajesPorConductor`;
       } else if (tipoInforme == 1) {
-        fileName = `Dominicales_Consolidado-Empleado-Dominical-Bus_${timestamp}.xlsx`;
+        fileName = `Estadisticas_EstadisticasDeOperaciones`;
       } else if (tipoInforme == 2) {
-        fileName = `Dominicales_TotalConductorXBus_${timestamp}.xlsx`;
+        fileName = `Estadisticas_TiquetesMovilesDetallados`;
       } else if (tipoInforme == 3) {
-        fileName = `Dominicales_TotalXConductor_${timestamp}.xlsx`;
+        fileName = `Estadisticas_TiquetesMovilesDelDia`;
       } else if (tipoInforme == 4) {
-        fileName = `Dominicales_TotalXBus_${timestamp}.xlsx`;
+        fileName = `Estadisticas_Cafam`;
       } else if (tipoInforme == 5) {
-        fileName = `Dominicales_DetalladoXBus_${timestamp}.xlsx`;
+        fileName = `Estadisticas_FuerzaPublica`;
+      } else if (tipoInforme == 6) {
+        fileName = `Estadisticas_Planillados-PasajerosPorRutas`;
+      } else if (tipoInforme == 7) {
+        fileName = `Estadisticas_Planillados-PasajerosPorTrayectos`;
+      } else if (tipoInforme == 8) {
+        fileName = `Estadisticas_Planillados-PasajerosOrigen-Destino`;
+      } else if (tipoInforme == 9) {
+        fileName = `Estadisticas_TiquetesPromedioXBoleteria`;
+      } else if (tipoInforme == 10) {
+        fileName = `Estadisticas_ConsolidadoXBoleteriaPromedio`;
+      } else if (tipoInforme == 18) {
+        fileName = `Estadisticas_PasajerosQueViajaron`;
+      } else if (tipoInforme == 19) {
+        fileName = `Estadisticas_TarjetaJoven`;
+      } else if (tipoInforme == 22) {
+        fileName = `Estadisticas_PasajerosColsubsidio`;
       }
-      link.setAttribute("download", fileName); // Nombre del archivo
-      document.body.appendChild(link);
-
-      // Hacer clic en el enlace para iniciar la descarga
-      link.click();
-
-      // Limpiar el objeto URL y el enlace después de la descarga
-      link.parentNode.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      descargarArchivo({ fileName: fileName, blob: response.data });
+      setexcelGenerate(true);
       setIsLoading(false);
     } catch (error) {
       console.error("Error al generar el archivo Excel:", error);
     }
   };
-  // Utiliza useEffect para ejecutar generarExcel cuando results se actualice
-  // useEffect(() => {
-  //   if (results.length > 0) {
-  //     generarExcel();
-  //   }
-  // }, [results]);
-
-  // Manejo de campo date inicioFin
-  const [startDate, setStartDate] = useState(false);
-  const [endDate, setEndDate] = useState(false);
-  const [dateRangeText, setDateRangeText] = useState("");
-  const [selectedDate, setSelectedDate] = useState(null);
-
-  const handleDateChange = (dates) => {
-    setSelectedDate(dates);
-    const [start, end] = dates;
-    setStartDate(start);
-    setEndDate(end);
-    console.log(start);
-    console.log(end);
-
-    if (start && end) {
-      const formattedStartDate = start.toLocaleDateString("es-ES", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-      });
-      const formattedEndDate = end.toLocaleDateString("es-ES", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-      });
-      setDateRangeText(`${formattedStartDate} - ${formattedEndDate}`);
-    } else {
-      setDateRangeText("");
-    }
-  };
 
   // Handle of table dynamic
   const [showTable, setShowTable] = useState(false);
+  const [excelGenerate, setexcelGenerate] = useState(false);
   let columns = [];
 
-  if (tipoInforme == 0) {
+  if (
+    (tipoInforme == 0 ||
+      tipoInforme == 1 ||
+      tipoInforme == 4 ||
+      tipoInforme == 5 ||
+      tipoInforme == 19 ||
+      tipoInforme == 18) &&
+    results.length > 0 &&
+    !excelGenerate
+  ) {
+    (async () => {
+      await generarExcel(true);
+      await setShowTable(false);
+      await setexcelGenerate(true);
+    })();
+  } else if (tipoInforme == 6) {
     columns = [
-      { key: "fecha", label: "FECHA", type: "text" },
-      { key: "documento", label: "DOCUMENTO", type: "number" },
-      { key: "apellido", label: "APELLIDO", type: "text" },
-      { key: "nombre", label: "VIAJES", type: "text" },
-      { key: "bus", label: "DISPONIBLES", type: "number" },
-    ];
-  } else if (tipoInforme == 1) {
-    columns = [
-      { key: "fecha", label: "FECHA", type: "text" },
-      { key: "documento", label: "DOCUMENTO", type: "number" },
-      { key: "apellido", label: "APELLIDO", type: "text" },
-      { key: "nombre", label: "VIAJES", type: "text" },
-      { key: "bus", label: "DISPONIBLES", type: "number" },
-    ];
-  } else if (tipoInforme == 2) {
-    columns = [
-      { key: "fecha", label: "FECHA", type: "number" },
-      { key: "documento", label: "DOCUMENTO", type: "number" },
-      { key: "apellido", label: "APELLIDO", type: "text" },
-      { key: "nombre", label: "VIAJES", type: "text" },
-      { key: "bus", label: "DISPONIBLES", type: "number" },
-    ];
-  } else if (tipoInforme == 3) {
-    columns = [
-      { key: "documento", label: "DOCUMENTO", type: "number" },
-      { key: "apellido", label: "APELLIDO", type: "text" },
+      { key: "Mes", label: "MES", type: "number" },
       { key: "nombre", label: "NOMBRE", type: "text" },
-      { key: "bus", label: "BUS", type: "text" },
-      { key: "Total_dominicales", label: "TOTAL DOMINICALES", type: "text" },
+      { key: "nviajes", label: "N° VIAJES", type: "text" },
+      { key: "butacas", label: "BUTACAS", type: "text" },
+      { key: "tiquetes", label: "TIQUETES", type: "text" },
+      { key: "valor", label: "VALOR", type: "text" },
+    ];
+  } else if (tipoInforme == 7) {
+    columns = [
+      { key: "Mes", label: "MES", type: "number" },
+      { key: "origen", label: "ORIGEN", type: "text" },
+      { key: "destino", label: "DESTINO", type: "text" },
+      { key: "tiquetes", label: "TIQUETES", type: "text" },
+      { key: "valor", label: "VALOR", type: "text" },
+    ];
+  } else if (tipoInforme == 8) {
+    columns = [
+      { key: "Mes", label: "MES", type: "number" },
+      { key: "nombre", label: "NOMBRE", type: "text" },
+      { key: "tiquetes", label: "TIQUETES", type: "text" },
+      { key: "valor", label: "VALOR", type: "text" },
+      { key: "lorigen", label: "L ORIGEN", type: "text" },
+      { key: "ldestino", label: "L DESTINO", type: "text" },
+      { key: "TIQOD", label: "TIQOD", type: "text" },
+      { key: "ValorOD", label: "VALOR OD", type: "text" },
+      { key: "PORCO", label: "PORCO", type: "text" },
+      { key: "PORCV", label: "PORCV", type: "text" },
+    ];
+  } else if (tipoInforme == 22) {
+    columns = [
+      { key: "id", label: "ID", type: "number" },
+      { key: "Pasajenumero", label: "N° PASAJE", type: "text" },
+      { key: "fechaoperacion", label: "FECHA OPERACION", type: "text" },
+      { key: "importefinal", label: "NOMBRE", type: "text" },
+      { key: "boleteria", label: "BUS", type: "text" },
+      { key: "mediopago", label: "TOTAL DOMINICALES", type: "text" },
+      { key: "documento", label: "TOTAL DOMINICALES", type: "text" },
+      { key: "apellido", label: "TOTAL DOMINICALES", type: "text" },
+      { key: "nombres", label: "TOTAL DOMINICALES", type: "text" },
+      { key: "origen", label: "TOTAL DOMINICALES", type: "text" },
+      { key: "TERMINALORIGEN", label: "TOTAL DOMINICALES", type: "text" },
+      { key: "TORIGEN", label: "TOTAL DOMINICALES", type: "text" },
+      { key: "destino", label: "TOTAL DOMINICALES", type: "text" },
+      { key: "TERMINALDESTINO", label: "TOTAL DOMINICALES", type: "text" },
+      { key: "TDESTINO", label: "TOTAL DOMINICALES", type: "text" },
+      { key: "viaje", label: "TOTAL DOMINICALES", type: "text" },
     ];
   }
 
@@ -213,25 +216,23 @@ const Inicio = ({ mostrarMensaje }) => {
                 setShowTable(false);
               }}
             >
-              <option value="" disabled selected>
+              <option value="" disabled>
                 Seleccionar
               </option>
-              <option disabled value={0}>
-                Detallado de Viajes por Conductor
-              </option>
+              {/* <option value={0}>Detallado de Viajes por Conductor</option> */}
               <option value={1}>Estadisticas de Operaciones</option>
-              <option value={2}>Tiquetes Moviles Detallados</option>
-              <option value={3}>Tiquetes Moviles del Dia</option>
+              {/* <option value={2}>Tiquetes Moviles Detallados</option> */}
+              {/* <option value={3}>Tiquetes Moviles del Dia</option> */}
               <option value={4}>Estadisticas Cafam</option>
               <option value={5}>Estadisticas Fuerza Publica</option>
               <option value={6}>Planillados - Pasajeros por Rutas</option>
               <option value={7}>Planillados - Pasajeros por Trayectos</option>
               <option value={8}>Planillados - Pasajeros Origen-Destino</option>
-              <option value={9}>Tiquetes Promedio por Boleteria</option>
-              <option value={10}>Consolidado por Boleteria Promedio</option>
-              <option value={11}>Pasajeros que Viajaron</option>
-              <option value={12}>Estadistica Tarjeta Joven</option>
-              <option value={13}>Pasajeros Colsubsidio</option>
+              {/* <option value={9}>Tiquetes Promedio por Boleteria</option> */}
+              {/* <option value={10}>Consolidado por Boleteria Promedio</option> */}
+              <option value={18}>Pasajeros que Viajaron</option>
+              <option value={19}>Estadistica Tarjeta Joven</option>
+              <option value={22}>Pasajeros Colsubsidio</option>
             </select>
             <label className="input-label-options label">Tipo Informe</label>
           </div>
@@ -241,7 +242,7 @@ const Inicio = ({ mostrarMensaje }) => {
               value={empresa}
               onChange={(e) => setEmpresa(e.target.value)}
             >
-              <option value="" disabled selected>
+              <option value="" disabled>
                 Seleccionar
               </option>
               <option value={277}>BERLINAS DEL FONCE S.A.</option>
@@ -252,51 +253,24 @@ const Inicio = ({ mostrarMensaje }) => {
               </option>
               <option value={320}>TOURLINE EXPRESS S.A.S.</option>
               <option value={2771}>TRANSCARGA BERLINAS S.A.</option>
-              <option value={9000}>DATA TEST TIC</option>
               <option value={9001}>SERVICIO ESPECIAL</option>
             </select>
             <label className="input-label-options label">Empresa</label>
           </div>
         </section>
         <section className="contabilidad_section">
-          <div className="content__dateDH">
-            <div className="input-container">
-              <DatePicker
-                className="input-field-datepicker datepicker icon_calendar"
-                selected={startDate}
-                onChange={handleDateChange}
-                startDate={startDate}
-                endDate={endDate}
-                selectsRange
-                showMonthDropdown
-                showYearDropdown
-                dropdownMode="select"
-                inputMode="none"
-                onFocus={(e) => e.target.blur()}
-                onBlur={(e) => e.target.blur()}
-                disabledInput
-                locale={es}
-              />
-              <label
-                className={`input-label-datepicker ${
-                  selectedDate ? "label" : ""
-                }`}
-              >
-                Rango de Fecha
-              </label>
-            </div>
-          </div>
+          <div className="content__dateDH">{renderDatePicker()}</div>
         </section>
         <button
           className="submit-button"
-          onClick={rptoPOL}
+          onClick={getData}
           disabled={isLoading}
         >
           {isLoading ? "Generando..." : "Generar reporte"}
         </button>
       </section>
       {/* Handle animacion (Loading) */}
-      {isLoading && <div class="loader"></div>}
+      {isLoading && <div className="loader"></div>}
       {showTable && (
         <div className="tablaFuecOD results__box">
           <div className="table_95p">
@@ -308,7 +282,10 @@ const Inicio = ({ mostrarMensaje }) => {
             />
           </div>
           <div className="buttons_left">
-            <div className="container__buttons_left" onClick={generarExcel}>
+            <div
+              className="container__buttons_left"
+              onClick={() => generarExcel(false)}
+            >
               <div className="descargar-xlsx">
                 <div className="buttons_left-label">Exportar a XLSX</div>
               </div>

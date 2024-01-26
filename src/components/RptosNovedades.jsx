@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import "/src/css/ContabilidadInicio.css";
 import "react-datepicker/dist/react-datepicker.css";
 import DynamicTable from "./PruebaTabla";
-import DatePicker from "react-datepicker";
-import es from "date-fns/locale/es";
 
 const Inicio = ({ mostrarMensaje }) => {
   const [tipoInforme, setTipoInforme] = useState();
@@ -14,7 +12,7 @@ const Inicio = ({ mostrarMensaje }) => {
   const [DateMY, setDateMY] = useState("");
   const [empresa, setEmpresa] = useState("");
 
-  const rptoPOL = async () => {
+  const getData = async () => {
     setIsLoading(true);
     setShowTable(false);
     const formData = new FormData();
@@ -80,10 +78,7 @@ const Inicio = ({ mostrarMensaje }) => {
           withCredentials: true,
         }
       );
-      // Crear un objeto URL para el blob
       const url = window.URL.createObjectURL(new Blob([response.data]));
-
-      // Crear un enlace (link) para iniciar la descarga
       const link = document.createElement("a");
       link.href = url;
       let fileName = "";
@@ -105,11 +100,7 @@ const Inicio = ({ mostrarMensaje }) => {
       }
       link.setAttribute("download", fileName); // Nombre del archivo
       document.body.appendChild(link);
-
-      // Hacer clic en el enlace para iniciar la descarga
       link.click();
-
-      // Limpiar el objeto URL y el enlace después de la descarga
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
       setIsLoading(false);
@@ -117,12 +108,6 @@ const Inicio = ({ mostrarMensaje }) => {
       console.error("Error al generar el archivo Excel:", error);
     }
   };
-  // Utiliza useEffect para ejecutar generarExcel cuando results se actualice
-  // useEffect(() => {
-  //   if (results.length > 0) {
-  //     generarExcel();
-  //   }
-  // }, [results]);
 
   // Manejo de campo date inicioFin
   const [startDate, setStartDate] = useState(false);
@@ -135,8 +120,6 @@ const Inicio = ({ mostrarMensaje }) => {
     const [start, end] = dates;
     setStartDate(start);
     setEndDate(end);
-    console.log(start);
-    console.log(end);
 
     if (start && end) {
       const formattedStartDate = start.toLocaleDateString("es-ES", {
@@ -244,7 +227,7 @@ const Inicio = ({ mostrarMensaje }) => {
                   handleTipoInformeChange2(e);
                 }}
               >
-                <option value="" disabled selected>
+                <option value="" disabled>
                   Seleccionar
                 </option>
                 <option value={0}>Ingreso</option>
@@ -269,7 +252,6 @@ const Inicio = ({ mostrarMensaje }) => {
                   value={DateMY}
                   onChange={(e) => {
                     setDateMY(e.target.value);
-                    console.log(DateMY);
                   }}
                   min="YYYY-01"
                   max="YYYY-12"
@@ -283,7 +265,7 @@ const Inicio = ({ mostrarMensaje }) => {
                 value={empresa}
                 onChange={(e) => setEmpresa(e.target.value)}
               >
-                <option value="" disabled selected>
+                <option value="" disabled>
                   Seleccionar
                 </option>
                 <option value={277}>BERLINAS DEL FONCE S.A.</option>
@@ -319,7 +301,6 @@ const Inicio = ({ mostrarMensaje }) => {
                   value={DateMY}
                   onChange={(e) => {
                     setDateMY(e.target.value);
-                    console.log(DateMY);
                   }}
                   min="YYYY-01"
                   max="YYYY-12"
@@ -333,7 +314,7 @@ const Inicio = ({ mostrarMensaje }) => {
                 value={empresa}
                 onChange={(e) => setEmpresa(e.target.value)}
               >
-                <option value="" disabled selected>
+                <option value="" disabled>
                   Seleccionar
                 </option>
                 <option value={277}>BERLINAS DEL FONCE S.A.</option>
@@ -371,7 +352,7 @@ const Inicio = ({ mostrarMensaje }) => {
                 handleTipoInformeChange2(e);
               }}
             >
-              <option value="" disabled selected>
+              <option value="" disabled>
                 Seleccionar
               </option>
               <option value={0}>Tipo Novedad</option>
@@ -394,7 +375,7 @@ const Inicio = ({ mostrarMensaje }) => {
                   setTipoInforme2(e.target.value);
                 }}
               >
-                <option value="" disabled selected>
+                <option value="" disabled>
                   Seleccionar
                 </option>
                 {tipoInforme2Options.map((option) => (
@@ -415,7 +396,7 @@ const Inicio = ({ mostrarMensaje }) => {
               </div>
               <button
                 className="submit-button"
-                onClick={rptoPOL}
+                onClick={getData}
                 disabled={isLoading}
               >
                 {isLoading ? "Generando..." : "Generar reporte"}
@@ -425,9 +406,9 @@ const Inicio = ({ mostrarMensaje }) => {
         </section>
       </section>
       {/* Handle animacion (Loading) */}
-      {isLoading && <div class="loader"></div>}
+      {isLoading && <div className="loader"></div>}
       {showTable && (
-        <div className="tablaFuecOD results__box">
+        <div className="tablaFuecOD results__box fade">
           <div className="table_95p">
             <DynamicTable
               data={results}

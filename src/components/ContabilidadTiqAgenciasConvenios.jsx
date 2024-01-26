@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "/src/css/ContabilidadInicio.css";
-import "react-datepicker/dist/react-datepicker.css";
-import DynamicTable from "./PruebaTabla";
-import DatePicker from "react-datepicker";
-import es from "date-fns/locale/es";
+import DynamicTable from "./PruebaTabla2";
+import descargarArchivo from "./AdminDownloadXlsx";
+import useDateRange from "./AdminDateRange";
 
 const Inicio = ({ mostrarMensaje }) => {
+  const { startDate, endDate, renderDatePicker } = useDateRange();
   const [empresa, setEmpresa] = useState("");
   const [Opcion, setOpcion] = useState();
   const [SubOpcion, setSubOpcion] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState([]); // Contiene los resultados del procedimiento almacenado
 
-  const rptoTAC = async (Opcion, SubOpcion) => {
+  const getData = async (Opcion, SubOpcion) => {
     setOpcion(Opcion);
     setSubOpcion(SubOpcion);
     setIsLoading(true);
@@ -124,68 +123,15 @@ const Inicio = ({ mostrarMensaje }) => {
           withCredentials: true,
         }
       );
-
-      // Obtener el nombre del archivo del header 'Content-Disposition' de la respuesta
-      const contentDisposition = response.headers["content-disposition"];
-      const fileNameMatch =
-        contentDisposition && contentDisposition.match(/filename="(.+)"/);
-
       let fileName = "";
-      const now = new Date();
-      const timestamp = now.toISOString().slice(0, 19).replace(/:/g, "-"); // Formato: YYYY-MM-DDTHH-mm-ss
-
       if (Opcion == 1) {
         if (SubOpcion == 2)
           fileName = `5apps_InformeXFechasPM_${timestamp}.xlsx`;
       }
 
-      if (fileNameMatch && fileNameMatch.length > 1) {
-        fileName = fileNameMatch[1]; // Usar el nombre del archivo recibido del backend
-      }
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", fileName); // Establecer el nombre del archivo
-      document.body.appendChild(link);
-
-      link.click();
-
-      link.parentNode.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      descargarArchivo({ fileName: fileName, blob: response.data });
     } catch (error) {
       mostrarMensaje("Error al generar el documento", "error_notification");
-    }
-  };
-
-  // Manejo de campo date inicioFin
-  const [startDate, setStartDate] = useState(false);
-  const [endDate, setEndDate] = useState(false);
-  const [dateRangeText, setDateRangeText] = useState("");
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
-
-  const handleDateChange = (dates) => {
-    setSelectedDate(dates);
-    const [start, end] = dates;
-    setStartDate(start);
-    setEndDate(end);
-
-    if (start && end) {
-      const formattedStartDate = start.toLocaleDateString("es-ES", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-      });
-      const formattedEndDate = end.toLocaleDateString("es-ES", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-      });
-      setDateRangeText(`${formattedStartDate} - ${formattedEndDate}`);
-    } else {
-      setDateRangeText("");
     }
   };
 
@@ -235,7 +181,7 @@ const Inicio = ({ mostrarMensaje }) => {
         { key: "Estadodescripcion", label: "ESTADO DESCRIPCION", type: "text" },
         { key: "ticketIDExterno", label: "TICKET ID EXT", type: "text" },
         { key: "pasajenumero", label: "N° PASAJE", type: "text" },
-        { key: "importeoperacion", label: "IMPORTE OPERACION", type: "text" },
+        { key: "importeoperacion", label: "IMPORTE OPERACION", type: "number" },
         { key: "opcionPago", label: "OPCION PAGO", type: "text" },
         { key: "medioPago", label: "MEDIO DE PAGO", type: "text" },
         { key: "ESTADO", label: "ESTADO", type: "text" },
@@ -252,7 +198,7 @@ const Inicio = ({ mostrarMensaje }) => {
         { key: "AGENCIA", label: "AGENCIA", type: "text" },
         { key: "TAQUILLERO", label: "TAQUILLERO", type: "text" },
         { key: "PASAJENUMERO", label: "N° PASAJE", type: "text" },
-        { key: "Valor", label: "VALOR", type: "text" },
+        { key: "Valor", label: "VALOR", type: "number" },
         { key: "TPoCanal", label: "TPO CANAL", type: "text" },
         { key: "MedioPago", label: "MEDIO PAGO", type: "text" },
         { key: "Convenio", label: "CONVENIO", type: "text" },
@@ -311,38 +257,12 @@ const Inicio = ({ mostrarMensaje }) => {
       <h1 className="titulo_login">Informes de Tiquetes y Agencias</h1>
       <hr />
       <section className="contabilidad_section forms__box">
-        <div className="content__dateDH">
-          <div className="input-container">
-            <DatePicker
-              className="input-field-datepicker datepicker icon_calendar"
-              selected={startDate}
-              onChange={handleDateChange}
-              startDate={startDate}
-              endDate={endDate}
-              selectsRange
-              showMonthDropdown
-              showYearDropdown
-              dropdownMode="select"
-              inputMode="none"
-              onFocus={(e) => e.target.blur()}
-              onBlur={(e) => e.target.blur()}
-              disabledInput
-              locale={es}
-            />
-            <label
-              className={`input-label-datepicker ${
-                selectedDate ? "label" : ""
-              }`}
-            >
-              Fecha
-            </label>{" "}
-          </div>
-        </div>
+        <div className="content__dateDH">{renderDatePicker()}</div>
         <div className="buttons_rptos">
           <div className="options__box">
             <button
               className="submit-button"
-              onClick={() => rptoTAC(22, 0)}
+              onClick={() => getData(22, 0)}
               disabled={isLoading}
             >
               {isLoading ? "Generando..." : "Tiquetes Bello Sol SE"}
@@ -371,7 +291,7 @@ const Inicio = ({ mostrarMensaje }) => {
             </div>
             <button
               className="submit-button botton_gp"
-              onClick={() => rptoTAC(22, 1)}
+              onClick={() => getData(22, 1)}
               disabled={isLoading}
             >
               {isLoading ? "Generando..." : "Convenio Bolivariano"}
@@ -380,8 +300,7 @@ const Inicio = ({ mostrarMensaje }) => {
           <div className="options__box">
             <button
               className="submit-button botton_gp"
-              // onClick={generarExcel}
-              onClick={() => rptoTAC(19, 0)}
+              onClick={() => getData(19, 0)}
               disabled={isLoading}
             >
               {isLoading ? "Generando..." : "Venta Online Berlitur"}
@@ -391,7 +310,7 @@ const Inicio = ({ mostrarMensaje }) => {
             <button
               className="submit-button botton_gp"
               onClick={() => {
-                rptoTAC(19, 2);
+                getData(19, 2);
               }}
               disabled={isLoading}
             >
@@ -402,7 +321,7 @@ const Inicio = ({ mostrarMensaje }) => {
             <button
               className="submit-button botton_gp"
               onClick={() => {
-                rptoTAC(19, 3);
+                getData(19, 3);
               }}
               disabled={isLoading}
             >
@@ -414,7 +333,7 @@ const Inicio = ({ mostrarMensaje }) => {
         </div>
       </section>
       {/* Handle animacion (Loading) */}
-      {isLoading && <div class="loader"></div>}
+      {isLoading && <div className="loader"></div>}
       {showTable && (
         <div className="tablaFuecOD">
           <hr className="hr" />
@@ -428,7 +347,6 @@ const Inicio = ({ mostrarMensaje }) => {
           </div>
           <button
             className="submit-button botton_gp"
-            // onClick={generarExcel}
             onClick={generarExcel}
             disabled={isLoading}
           >

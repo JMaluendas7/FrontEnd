@@ -288,7 +288,7 @@ const Inicio = ({ mostrarMensaje }) => {
         </button>
       </section>
       {/* Handle animacion (Loading) */}
-      {isLoading && <div class="loader"></div>}
+      {isLoading && <div className="loader"></div>}
       {showTable && (
         <div className="tablaFuecOD results__box">
           <div className="table_95p">

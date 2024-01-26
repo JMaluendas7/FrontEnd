@@ -34,7 +34,7 @@
   position: absolute;
   left: 1rem;
   top: 0rem;
-  cursor: pointer;
+  cursor: grab;
   border-bottom-right-radius: .3rem;
   border-bottom-left-radius: .3rem;
   transition: all 700ms ease-in-out, height 200ms ease-in-out;
@@ -43,10 +43,14 @@
   height: 40px;
   border-top-left-radius: .3rem;
 }
+.menu-hamburgesa:active {
+  cursor: grabbing;
+}
 
 .menu-open .menu-hamburgesa {
   transform: rotate(90deg);
   border-top-right-radius: .3rem;
+  border-top-left-radius: .3rem;
 }
 
 .menu {
@@ -165,6 +169,15 @@
   height: 24px;
   width: 24px;
   background-repeat: no-repeat;
+  background-size: contain;
+  transition: transform 300ms ease-in-out, scale 40ms ease-in-out;
+}
+/* .menuItem-div:hover .menuItem__icon, */
+.subMenu-item:hover .menuItem__icon {
+  transform: scale(1.2);
+}
+.subMenu-item:active .menuItem__icon {
+  scale: 0.7;
 }
 
 .administracion {
@@ -256,4 +269,73 @@
 }
 .estadistica {
   background-image: url(../img/icons_menu/estadistica.png);
+}
+.certificacion {
+  background-image: url(../img/icons_menu/certificacion.png);
+}
+.boletos {
+  background-image: url(../img/icons_menu/boletos.png);
+}
+.domicilios {
+  background-image: url(../img/icons_menu/domicilios.png);
+}
+.est_ventas {
+  background-image: url(../img/icons_menu/est_ventas.png);
+}
+.viaje_persona {
+  background-image: url(../img/icons_menu/viaje_persona.png);
+}
+.otros {
+  background-image: url(../img/icons_menu/otros.png);
+}
+.viaje_persona {
+  background-image: url(../img/icons_menu/viaje_persona.png);
+}
+.migracion {
+  background-image: url(../img/icons_menu/migracion.png);
+}
+.rpto_migracion {
+  background-image: url(../img/icons_menu/rpto_migracion.png);
+}
+.puntoventa {
+  background-image: url(../img/icons_menu/puntoventa.png);
+}
+.vendido {
+  background-image: url(../img/icons_menu/vendido.png);
+}
+.bogota {
+  background-image: url(../img/icons_menu/bogota.png);
+}
+.ventas {
+  background-image: url(../img/icons_menu/ventas.png);
+}
+.microseguros {
+  background-image: url(../img/icons_menu/microseguros.png);
+}
+.aseguradora {
+  background-image: url(../img/icons_menu/aseguradora.png);
+}
+.tiquetes_microseguro {
+  background-image: url(../img/icons_menu/tiquetes_microseguro.png);
+}
+.biometrico {
+  background-image: url(../img/icons_menu/biometrico.png);
+}
+.rptobiometrico {
+  background-image: url(../img/icons_menu/rptobiometrico.png);
+}
+.tesoreria {
+  background-image: url(../img/icons_menu/tesoreria.png);
+}
+.comision {
+  background-image: url(../img/icons_menu/comision.png);
+}
+.rpto_microseguros {
+  background-image: url(../img/icons_menu/rpto_microseguros.png);
+}
+.seguridadsalud {
+  background-image: url(../img/icons_menu/seguridadsalud.png);
+}
+.segurida_vial {
+  background-image: url(../img/icons_menu/segurida_vial.png);
 }

@@ -3,7 +3,7 @@ import axios from "axios";
 import "/src/css/ContabilidadInicio.css";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
-import DynamicTable from "./PruebaTabla";
+import DynamicTable from "./PruebaTabla2";
 import es from "date-fns/locale/es";
 
 const Inicio = ({ mostrarMensaje }) => {
@@ -83,31 +83,15 @@ const Inicio = ({ mostrarMensaje }) => {
           withCredentials: true,
         }
       );
-
-      // Obtener el nombre del archivo del header 'Content-Disposition' de la respuesta
-      const contentDisposition = response.headers["content-disposition"];
-      const fileNameMatch =
-        contentDisposition && contentDisposition.match(/filename="(.+)"/);
-
-      let fileName = "";
       const now = new Date();
-      const timestamp = now.toISOString().slice(0, 19).replace(/:/g, "-"); // Formato: YYYY-MM-DDTHH-mm-ss
-
-      fileName = `5apps_DetalladoCombustible_${timestamp}.xlsx`;
-
-      if (fileNameMatch && fileNameMatch.length > 1) {
-        fileName = fileNameMatch[1]; // Usar el nombre del archivo recibido del backend
-      }
-
+      const timestamp = now.toISOString().slice(0, 19).replace(/:/g, "-");
+      let fileName = `5apps_DetalladoCombustible_${timestamp}.xlsx`;
       const url = window.URL.createObjectURL(new Blob([response.data]));
-
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", fileName); // Establecer el nombre del archivo
+      link.setAttribute("download", fileName);
       document.body.appendChild(link);
-
       link.click();
-
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
@@ -150,7 +134,7 @@ const Inicio = ({ mostrarMensaje }) => {
   const columns = [
     { key: "pvh_empid", label: "ID EMPRESA", type: "text" },
     { key: "emp_nomempresa", label: "NOMBRE EMPRESA", type: "text" },
-    { key: "pvh_year", label: "AÑO", type: "number" },
+    { key: "pvh_year", label: "AÑO", type: "text" },
     { key: "pvh_mes", label: "MES", type: "number" },
     { key: "cantbus", label: "N° Buses", type: "number" },
     { key: "Valor", label: "Valor", type: "number" },
@@ -198,7 +182,6 @@ const Inicio = ({ mostrarMensaje }) => {
         </section>
         <button
           className="submit-button"
-          // onClick={generarExcel}
           onClick={rptoCombustible}
           disabled={isLoading}
         >
@@ -206,7 +189,7 @@ const Inicio = ({ mostrarMensaje }) => {
         </button>
       </section>
       {/* Handle animacion (Loading) */}
-      {isLoading && <div class="loader"></div>}
+      {isLoading && <div className="loader"></div>}
 
       {showTable && (
         <div className="tablaFuecOD results__box">

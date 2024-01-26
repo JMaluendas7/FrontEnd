@@ -12,7 +12,7 @@ const Inicio = ({ mostrarMensaje }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState([]);
 
-  const rptoConsolidadoPM = async () => {
+  const getData = async () => {
     setShowTable(false);
     setIsLoading(true);
     const formData = new FormData();
@@ -85,35 +85,20 @@ const Inicio = ({ mostrarMensaje }) => {
           withCredentials: true,
         }
       );
-
-      // Obtener el nombre del archivo del header 'Content-Disposition' de la respuesta
-      const contentDisposition = response.headers["content-disposition"];
-      const fileNameMatch =
-        contentDisposition && contentDisposition.match(/filename="(.+)"/);
-
       let fileName = "";
       const now = new Date();
-      const timestamp = now.toISOString().slice(0, 19).replace(/:/g, "-"); // Formato: YYYY-MM-DDTHH-mm-ss
-
+      const timestamp = now.toISOString().slice(0, 19).replace(/:/g, "-");
       if (tipoInforme == 0) {
         fileName = `5apps_InformeConsolidadoPLEA_${timestamp}.xlsx`;
       } else if (tipoInforme == 1) {
         fileName = `5apps_InformeDetalladoPLEA_${timestamp}.xlsx`;
       }
-
-      if (fileNameMatch && fileNameMatch.length > 1) {
-        fileName = fileNameMatch[1]; // Usar el nombre del archivo recibido del backend
-      }
-
       const url = window.URL.createObjectURL(new Blob([response.data]));
-
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", fileName); // Establecer el nombre del archivo
+      link.setAttribute("download", fileName);
       document.body.appendChild(link);
-
       link.click();
-
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
@@ -198,7 +183,7 @@ const Inicio = ({ mostrarMensaje }) => {
                 setShowTable(false);
               }}
             >
-              <option value="" disabled selected>
+              <option value="" disabled>
                 Seleccionar
               </option>
               <option value={0}>Informe Consolidado</option>
@@ -212,7 +197,7 @@ const Inicio = ({ mostrarMensaje }) => {
               value={empresa}
               onChange={(e) => setEmpresa(e.target.value)}
             >
-              <option value="" disabled selected>
+              <option value="" disabled>
                 Seleccionar
               </option>
               <option value={277}>BERLINAS DEL FONCE S.A.</option>
@@ -260,14 +245,14 @@ const Inicio = ({ mostrarMensaje }) => {
         </section>
         <button
           className="submit-button"
-          onClick={rptoConsolidadoPM}
+          onClick={getData}
           disabled={isLoading}
         >
           {isLoading ? "Generando..." : "Generar reporte"}
         </button>
       </section>
       {/* Handle animacion (Loading) */}
-      {isLoading && <div class="loader"></div>}
+      {isLoading && <div className="loader"></div>}
 
       {showTable && (
         <div className="tablaFuecOD results__box">

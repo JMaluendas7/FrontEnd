@@ -8,31 +8,26 @@ import DatePicker from "react-datepicker";
 const Inicio = ({ mostrarMensaje }) => {
   const [concepto, setConcepto] = useState("");
   const [empresa, setEmpresa] = useState("");
-
-  const [isLoading, setIsLoading] = useState(false); // Estado de carga
-
+  const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState([]);
-  const rptoAlcoholimetria = async () => {
-    setIsLoading(true);
-    const formData = new FormData(); // Creacion del FormData
 
-    // Convertir fechas al formato deseado
+  const getData = async () => {
+    setIsLoading(true);
+    const formData = new FormData();
+
     const formattedStartDate =
       startDate.toISOString().split("T")[0] + "T00:00:00.00Z";
     const formattedEndDate =
       endDate.toISOString().split("T")[0] + "T23:59:59.00Z";
 
-    // Agregar las fechas al formData
     formData.append("startDate", formattedStartDate);
     formData.append("endDate", formattedEndDate);
-
-    // Obtiene los valores de los campos
     formData.append("concepto", concepto);
     formData.append("empresa", empresa);
 
     try {
       const response = await axios.post(
-        "http://wsdx.berlinasdelfonce.com:9000/rptoAlcoholimetria/",
+        "http://wsdx.berlinasdelfonce.com:9000/getData/",
         formData,
         {
           headers: {
@@ -72,12 +67,6 @@ const Inicio = ({ mostrarMensaje }) => {
           withCredentials: true,
         }
       );
-
-      // Obtener el nombre del archivo del header 'Content-Disposition' de la respuesta
-      const contentDisposition = response.headers["content-disposition"];
-      const fileNameMatch =
-        contentDisposition && contentDisposition.match(/filename="(.+)"/);
-
       let fileName = "";
       const now = new Date();
       const timestamp = now.toISOString().slice(0, 19).replace(/:/g, "-"); // Formato: YYYY-MM-DDTHH-mm-ss
@@ -93,20 +82,12 @@ const Inicio = ({ mostrarMensaje }) => {
       } else if (concepto == 5) {
         fileName = `5apps_ReporteAgenciasBerlitur_${timestamp}.xlsx`;
       }
-
-      if (fileNameMatch && fileNameMatch.length > 1) {
-        fileName = fileNameMatch[1]; // Usar el nombre del archivo recibido del backend
-      }
-
       const url = window.URL.createObjectURL(new Blob([response.data]));
-
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", fileName); // Establecer el nombre del archivo
+      link.setAttribute("download", fileName);
       document.body.appendChild(link);
-
       link.click();
-
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
@@ -129,25 +110,21 @@ const Inicio = ({ mostrarMensaje }) => {
   const [dateRangeText, setDateRangeText] = useState("");
 
   const handleDateChange = (dates) => {
+    setSelectedDate(dates);
     const [start, end] = dates;
+
+    const formatDate = (date) =>
+      date.toLocaleDateString("es-ES", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+      });
+
     setStartDate(start);
     setEndDate(end);
-
-    if (start && end) {
-      const formattedStartDate = start.toLocaleDateString("es-ES", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-      });
-      const formattedEndDate = end.toLocaleDateString("es-ES", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-      });
-      setDateRangeText(`${formattedStartDate} - ${formattedEndDate}`);
-    } else {
-      setDateRangeText("");
-    }
+    setDateRangeText(
+      start && end ? `${formatDate(start)} - ${formatDate(end)}` : ""
+    );
   };
 
   return (
@@ -156,17 +133,6 @@ const Inicio = ({ mostrarMensaje }) => {
       <hr />
       <section className="contabilidad__table">
         <section className="contabilidad_section">
-          {/* <div className="user input-container">
-            <input
-              name="codigo"
-              className="input-field"
-              placeholder=""
-              type="text"
-              value={codigo}
-              onChange={(e) => setCodigo(e.target.value)}
-            />
-            <label className="input-label">Codigo</label>
-          </div> */}
           <div className="input-container agg_colaborador">
             <label className="label">Empresa:</label>
             <select
@@ -185,8 +151,6 @@ const Inicio = ({ mostrarMensaje }) => {
               </option>
               <option value={2771}>TRANSCARGA BERLINAS S.A.</option>
               <option value={9001}>SERVICIO ESPECIAL</option>
-              {/* <option value={320}>TOURLINE EXPRESS S.A.S.</option> */}
-              {/* <option value={9000}>DATA TEST TIC</option> */}
             </select>
           </div>
 
@@ -219,21 +183,16 @@ const Inicio = ({ mostrarMensaje }) => {
               placeholderText="Selecciona un rango"
               placeholder="Prueba texto"
             />
-            {/* <p>{dateRangeText}</p> */}
-            {/* <p>{startDate}</p>
-            <p>{endDateDate}</p> */}
           </div>
         </section>
       </section>
       <button
         className="submit-button botton_gp"
-        // onClick={generarExcel}
-        onClick={rptoAlcoholimetria}
+        onClick={getData}
         disabled={isLoading}
       >
         {isLoading ? "Generando..." : "Generar reporte"}
       </button>
-      {/* Aquí puedes agregar una animación de carga si `isLoading` es `true` */}
       {isLoading && <div class="loader"></div>}
     </div>
   );

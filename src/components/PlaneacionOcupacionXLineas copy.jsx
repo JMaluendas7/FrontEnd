@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import "/src/css/ContabilidadInicio.css";
 import "react-datepicker/dist/react-datepicker.css";
@@ -66,7 +66,6 @@ const Inicio = ({ mostrarMensaje }) => {
   };
 
   const generarExcel = async () => {
-    console.log(results);
     try {
       const response = await axios.post(
         "http://wsdx.berlinasdelfonce.com:9000/generar_excel/",
@@ -154,8 +153,6 @@ const Inicio = ({ mostrarMensaje }) => {
     const [start, end] = dates;
     setStartDate(start);
     setEndDate(end);
-    console.log(start);
-    console.log(end);
 
     if (start && end) {
       const formattedStartDate = start.toLocaleDateString("es-ES", {
@@ -297,9 +294,6 @@ const Inicio = ({ mostrarMensaje }) => {
               disabledInput
               locale={es}
             />
-            {/* <p>{dateRangeText}</p> */}
-            {/* <p>{startDate}</p>
-            <p>{endDateDate}</p> */}
           </div>
         </section>
         <button
@@ -312,7 +306,7 @@ const Inicio = ({ mostrarMensaje }) => {
         </button>
       </section>
       {/* Handle animacion (Loading) */}
-      {isLoading && <div class="loader"></div>}
+      {isLoading && <div className="loader"></div>}
       {showTable && (
         <div className="tablaFuecOD">
           <hr className="hr" />

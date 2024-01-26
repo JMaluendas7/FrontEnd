@@ -11,21 +11,22 @@ const Inicio = ({ mostrarMensaje }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState([]); // Contiene los resultados del procedimiento almacenado
   const [empresa, setEmpresa] = useState("");
+  const [Opcion, setOpcion] = useState(9);
 
   const rptoPOL = async () => {
     setIsLoading(true);
     setShowTable(false);
     const formData = new FormData();
     // Conversion de fecha y agregar hora
-    if (tipoInforme && empresa && startDate && endDate) {
-      const formattedStartDate =
-        startDate.toISOString().split("T")[0] + "T00:00:00.00Z";
-      const formattedEndDate =
-        endDate.toISOString().split("T")[0] + "T23:59:59.00Z";
+    if (empresa && startDate && endDate) {
+      const formattedStartDate = startDate.toISOString().split("T")[0];
+      const formattedEndDate = endDate.toISOString().split("T")[0];
 
       formData.append("startDate", formattedStartDate);
       formData.append("endDate", formattedEndDate);
-      formData.append("Opcion", 9);
+      if (empresa == 300) {
+      }
+      formData.append("Opcion", Opcion);
       formData.append("SubOpcion", tipoInforme);
       formData.append("empresa", empresa);
       try {
@@ -50,6 +51,7 @@ const Inicio = ({ mostrarMensaje }) => {
           } else {
             mostrarMensaje("Respuesta vacía", "warning_notification");
             setIsLoading(false);
+            setShowTable(false);
           }
         }
       } catch (error) {
@@ -66,8 +68,6 @@ const Inicio = ({ mostrarMensaje }) => {
   };
 
   const generarExcel = async () => {
-    console.log(results);
-    const Opcion = 9;
     try {
       const response = await axios.post(
         "http://wsdx.berlinasdelfonce.com:9000/generarRptoPL/",
@@ -110,14 +110,11 @@ const Inicio = ({ mostrarMensaje }) => {
       }
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
-
       const link = document.createElement("a");
       link.href = url;
       link.setAttribute("download", fileName); // Establecer el nombre del archivo
       document.body.appendChild(link);
-
       link.click();
-
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
@@ -136,8 +133,6 @@ const Inicio = ({ mostrarMensaje }) => {
     const [start, end] = dates;
     setStartDate(start);
     setEndDate(end);
-    console.log(start);
-    console.log(end);
 
     if (start && end) {
       const formattedStartDate = start.toLocaleDateString("es-ES", {
@@ -160,54 +155,93 @@ const Inicio = ({ mostrarMensaje }) => {
   const [showTable, setShowTable] = useState(false);
   let columns = [];
 
-  if (tipoInforme == 0) {
+  if (Opcion == 9) {
+    if (tipoInforme == 0) {
+      columns = [
+        { key: "year", label: "AÑO", type: "number" },
+        { key: "mes", label: "MES", type: "number" },
+        { key: "nbuses", label: "N° BUSES", type: "number" },
+        { key: "viajes", label: "VIAJES", type: "viajes" },
+        { key: "disponibles", label: "DISPONIBLES", type: "number" },
+        { key: "pasajeros", label: "PASAJEROS", type: "number" },
+        { key: "valorbruto", label: "V BRUTO", type: "number" },
+        { key: "seguro", label: "SEGURO", type: "number" },
+        { key: "valorneto", label: "V NETO", type: "number" },
+        { key: "ocupacion", label: "OCUPACION", type: "number" },
+        { key: "promPaxxviaje", label: "PROM PAX VIAJE", type: "number" },
+        {
+          key: "promValxviaje_Bruto",
+          label: "PROM PAX VJE BRUTO",
+          type: "number",
+        },
+        {
+          key: "promValxviaje_Neto",
+          label: "PROM PAX VJE NETO",
+          type: "number",
+        },
+        { key: "promTarifa_bruto", label: "PROM TAR BRUTO", type: "number" },
+        {
+          key: "promViajesMensualxbus",
+          label: "PROM VJE MENS X BUS",
+          type: "number",
+        },
+        {
+          key: "promProdxbus_bruto",
+          label: "PROM PROD X BUS BRUTO",
+          type: "number",
+        },
+        {
+          key: "PromProdxbus_Neto",
+          label: "PROM PROD X BUS NETO",
+          type: "number",
+        },
+      ];
+    } else if (tipoInforme == 1) {
+      columns = [
+        { key: "YEAR", label: "AÑO", type: "number" },
+        { key: "mes", label: "MES", type: "number" },
+        { key: "Origen", label: "ORIGEN", type: "text" },
+        { key: "Destino", label: "DESTINO", type: "text" },
+        { key: "Recorrido", label: "RECORRIDO", type: "text" },
+        { key: "viajes", label: "VIAJES", type: "number" },
+        { key: "disponibles", label: "DISPONIBLES", type: "number" },
+        { key: "pasajeros", label: "PASAJEROS", type: "number" },
+        { key: "valor", label: "VALOR", type: "number" },
+        { key: "Seguro", label: "SEGURO", type: "number" },
+      ];
+    } else if (tipoInforme == 2 || tipoInforme == 3) {
+      columns = [
+        { key: "Servicio", label: "SERVICIO", type: "text" },
+        { key: "YEAR", label: "AÑO", type: "number" },
+        { key: "mes", label: "MES", type: "number" },
+        { key: "viajes", label: "VIAJES", type: "text" },
+        { key: "disponibles", label: "BUTACAS", type: "text" },
+        { key: "pasajeros", label: "PASAJEROS", type: "number" },
+        { key: "valor", label: "VALOR", type: "number" },
+      ];
+    } else if (tipoInforme == 4) {
+      columns = [
+        { key: "year", label: "AÑO", type: "number" },
+        { key: "mes", label: "MES", type: "number" },
+        { key: "origen", label: "MES", type: "text" },
+        { key: "destino", label: "MES", type: "text" },
+        { key: "recorrido", label: "MES", type: "text" },
+        { key: "HORA", label: "MES", type: "text" },
+        { key: "viajes", label: "VIAJES", type: "text" },
+        { key: "disponibles", label: "BUTACAS", type: "text" },
+        { key: "pasajeros", label: "PASAJEROS", type: "number" },
+        { key: "valor", label: "VALOR", type: "number" },
+        { key: "Seguro", label: "VALOR", type: "number" },
+      ];
+    }
+  } else if (Opcion == 17) {
     columns = [
-      { key: "year", label: "AÑO", type: "number" },
+      { key: "SERVICIO", label: "AÑO", type: "text" },
       { key: "mes", label: "MES", type: "number" },
-      { key: "nbuses", label: "N° BUSES", type: "number" },
-      { key: "viajes", label: "VIAJES", type: "viajes" },
-      { key: "disponibles", label: "DISPONIBLES", type: "number" },
-      { key: "pasajeros", label: "PASAJEROS", type: "number" },
-      { key: "valorbruto", label: "V BRUTO", type: "number" },
-      { key: "seguro", label: "SEGURO", type: "number" },
-      { key: "valorneto", label: "V NETO", type: "number" },
-      { key: "ocupacion", label: "OCUPACION", type: "number" },
-      { key: "promPaxxviaje", label: "PROM PAX VIAJE", type: "number" },
-      {
-        key: "promValxviaje_Bruto",
-        label: "PROM PAX VJE BRUTO",
-        type: "number",
-      },
-      { key: "promValxviaje_Neto", label: "PROM PAX VJE NETO", type: "number" },
-      { key: "promTarifa_bruto", label: "PROM TAR BRUTO", type: "number" },
-      {
-        key: "promViajesMensualxbus",
-        label: "PROM VJE MENS X BUS",
-        type: "number",
-      },
-      {
-        key: "promProdxbus_bruto",
-        label: "PROM PROD X BUS BRUTO",
-        type: "number",
-      },
-      {
-        key: "PromProdxbus_Neto",
-        label: "PROM PROD X BUS NETO",
-        type: "number",
-      },
-    ];
-  } else if (tipoInforme == 1) {
-    columns = [
-      { key: "YEAR", label: "AÑO", type: "number" },
-      { key: "mes", label: "MES", type: "number" },
-      { key: "Origen", label: "ORIGEN", type: "text" },
-      { key: "Destino", label: "DESTINO", type: "text" },
-      { key: "Recorrido", label: "RECORRIDO", type: "text" },
-      { key: "viajes", label: "VIAJES", type: "number" },
-      { key: "disponibles", label: "DISPONIBLES", type: "number" },
-      { key: "pasajeros", label: "PASAJEROS", type: "number" },
+      { key: "viajes", label: "VIAJES", type: "text" },
+      { key: "butacas", label: "BUTACAS", type: "text" },
+      { key: "cantidad", label: "CANTIDAD", type: "number" },
       { key: "valor", label: "VALOR", type: "number" },
-      { key: "Seguro", label: "SEGURO", type: "number" },
     ];
   }
 
@@ -217,6 +251,27 @@ const Inicio = ({ mostrarMensaje }) => {
     setTableData(updatedData);
   };
 
+  // Actualizar las opciones de tipoInforme2 según la selección de tipoInforme
+  const [tipoInformeOptions, setTipoInformeOptions] = useState();
+  const handleTipoInforme = (e) => {
+    const selectedTipoInforme2 = e.target.value;
+
+    // Actualizar las opciones de tipoInforme2 según la selección de tipoInforme
+    if (selectedTipoInforme2 == "300") {
+      setTipoInformeOptions([
+        { value: "0", label: "Consolidado Total" },
+        { value: "1", label: "Consolidado Por Linea" },
+        { value: "2", label: "Consolidado Por Ruta" },
+        { value: "3", label: "Consolidado Mensual" },
+        { value: "4", label: "Consolidado Por Horario" },
+      ]);
+    } else {
+      setTipoInformeOptions([
+        { value: "0", label: "Informe Consolidado" },
+        { value: "1", label: "Informe Detallado" },
+      ]);
+    }
+  };
   return (
     <div className="Efect">
       <h1 className="titulo_login">Informe de Ocupacion por Lineas</h1>
@@ -226,25 +281,12 @@ const Inicio = ({ mostrarMensaje }) => {
           <div className="input-container agg_colaborador">
             <select
               className="opciones"
-              value={tipoInforme}
+              value={empresa}
               onChange={(e) => {
-                setTipoInforme(e.target.value);
+                setEmpresa(e.target.value);
+                handleTipoInforme(e);
                 setShowTable(false);
               }}
-            >
-              <option value="" disabled selected>
-                Seleccionar
-              </option>
-              <option value={0}>Informe Consolidado</option>
-              <option value={1}>Informe Detallado</option>
-            </select>
-            <label className="input-label-options label">Tipo Informe</label>
-          </div>
-          <div className="input-container agg_colaborador">
-            <select
-              className="opciones"
-              value={empresa}
-              onChange={(e) => setEmpresa(e.target.value)}
             >
               <option value="" disabled selected>
                 Seleccionar
@@ -254,11 +296,36 @@ const Inicio = ({ mostrarMensaje }) => {
               <option value={310}>
                 CARTAGENA INTERNATIONAL TRAVELS S.A.S. "CIT"
               </option>
+              <option value={300}>COLIBERTADOR</option>
               <option value={320}>TOURLINE EXPRESS S.A.S.</option>
               <option value={9001}>SERVICIO ESPECIAL</option>
             </select>
             <label className="input-label-options label">Empresa</label>
           </div>
+          {tipoInformeOptions && (
+            <div className="input-container agg_colaborador">
+              <select
+                className="opciones"
+                value={tipoInforme}
+                onChange={(e) => {
+                  setTipoInforme(e.target.value);
+                  setShowTable(false);
+                }}
+              >
+                <option value="" disabled selected>
+                  Seleccionar
+                </option>
+                {tipoInformeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <label className="input-label-options label">
+                Tipo de Informe
+              </label>
+            </div>
+          )}
         </section>
         <section className="contabilidad_section">
           <div className="content__dateDH">
@@ -291,7 +358,6 @@ const Inicio = ({ mostrarMensaje }) => {
         </section>
         <button
           className="submit-button"
-          // onClick={generarExcel}
           onClick={rptoPOL}
           disabled={isLoading}
         >
@@ -299,10 +365,9 @@ const Inicio = ({ mostrarMensaje }) => {
         </button>
       </section>
       {/* Handle animacion (Loading) */}
-      {isLoading && <div class="loader"></div>}
+      {isLoading && <div className="loader"></div>}
       {showTable && (
-        <div className="tablaFuecOD">
-          <hr className="hr" />
+        <div className="tablaFuecOD results__box">
           <div className="table_95p">
             <DynamicTable
               data={results}

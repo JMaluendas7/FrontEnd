@@ -7,6 +7,10 @@ const Banner = ({
   username,
   nombre,
   apellido,
+  isMenuOpen,
+  menuHRef,
+  menuRef,
+  setIsMenuOpen,
 }) => {
   const toggleSubMenu = (component) => {
     if (component) {
@@ -26,7 +30,11 @@ const Banner = ({
 
   return (
     <header className="banner">
-      <nav className="menu-hamburgesa" onClick={toggleMenu}></nav>
+      <div
+        className="menu-hamburgesa"
+        ref={menuRef}
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+      ></div>
       <nav className="nav">
         <a
           className="logo"
