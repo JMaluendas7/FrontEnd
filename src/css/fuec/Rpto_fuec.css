@@ -55,10 +55,11 @@
     color: black;
     box-shadow: none;
     width: fit-content;
-    padding: 1rem .4rem;
-}
-.volver:hover {
-    background: transparent;
+    padding: 1rem 0.4rem;
+    transition: all 120ms ease-in-out;
+    font-size: 1rem;
+    align-items: center;
+    outline: none;
 }
 .volver_img {
     margin-right: .2rem;
@@ -66,4 +67,5 @@
 
 .volver:hover {
     transform: translate(-0.3rem);
+    border-color: transparent;
 }

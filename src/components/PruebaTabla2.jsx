@@ -1,5 +1,56 @@
 import React, { useState, useEffect } from "react";
 
+const Pagination = ({ totalPages, currentPage, onPageChange }) => {
+  const [pageNumberInput, setPageNumberInput] = useState(
+    currentPage.toString()
+  );
+
+  useEffect(() => {
+    setPageNumberInput(currentPage.toString());
+  }, [currentPage]);
+
+  const handlePageNumberChange = (e) => {
+    const input = e.target.value;
+    setPageNumberInput(input);
+
+    const pageNumber = parseInt(input, 10);
+    if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= totalPages) {
+      onPageChange(pageNumber);
+    }
+  };
+
+  return (
+    <section className="section_pagination">
+      <div className="container_pagination">
+        <button
+          className="pagination_left"
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage <= 1}
+        ></button>
+        <span className="pagination_text">
+          Página{" "}
+          <input
+            type="number"
+            className="input_number"
+            min="1"
+            max={totalPages}
+            maxLength={3}
+            value={pageNumberInput}
+            onChange={handlePageNumberChange}
+            inputMode="numeric"
+          />{" "}
+          de {totalPages}
+        </span>
+        <button
+          className="pagination_rigth"
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        ></button>
+      </div>
+    </section>
+  );
+};
+
 const DynamicTable = ({
   data,
   columns,
@@ -48,6 +99,9 @@ const DynamicTable = ({
   const currentItems = sortedData().slice(indexOfFirstItem, indexOfLastItem);
 
   const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+  const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
@@ -174,6 +228,13 @@ const DynamicTable = ({
 
   return (
     <section className="container__table">
+      {totalPages > 1 && (
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
+      )}
       <table className="filas__container">
         <thead>
           <tr className="title__campos">
@@ -225,20 +286,6 @@ const DynamicTable = ({
           ))}
         </tbody>
       </table>
-      {totalPages > 1 && (
-        <ul className="paginacion_table">
-          {Array.from({ length: totalPages }).map((_, index) => (
-            <li key={index} className="li_paginacion">
-              <button
-                className="button_paginacion"
-                onClick={() => paginate(index + 1)}
-              >
-                {index + 1}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
       {editableRow !== null && (
         <div>
           <button onClick={handleSaveEdit}>Guardar</button>

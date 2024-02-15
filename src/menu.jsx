@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Menu = ({
   menuItems,
@@ -55,8 +55,16 @@ const Menu = ({
     toggleMenuMenu(index);
   };
 
+  const [containerClass, setContainerClass] = useState("container-initial");
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      setContainerClass("container-final");
+    }, 70);
+    return () => clearTimeout(delay);
+  }, []);
+
   return (
-    <section className="menu-container" ref={menuRef}>
+    <section className={`menu-container ${containerClass}`} ref={menuRef}>
       <nav className="menu">
         {menuItems.map((item, index) => (
           <div key={index} className="menuItem">
@@ -64,7 +72,9 @@ const Menu = ({
               className="menuItem-item"
               onClick={() => {
                 abrirMenuFlecha(index);
-                toggleMenu();
+                if (window.innerWidth < 1110) {
+                  toggleMenu();
+                }
               }}
             >
               <div className="menuItem-div">

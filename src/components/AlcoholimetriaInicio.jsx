@@ -72,15 +72,15 @@ const Inicio = ({ mostrarMensaje }) => {
       const timestamp = now.toISOString().slice(0, 19).replace(/:/g, "-"); // Formato: YYYY-MM-DDTHH-mm-ss
 
       if (concepto == 0) {
-        fileName = `5apps_ReporteAlcoholimetriaDetallado_${timestamp}.xlsx`;
+        fileName = `ReporteAlcoholimetriaDetallado_${timestamp}.xlsx`;
       } else if (concepto == 2) {
-        fileName = `5apps_ReporteCiudades_${timestamp}.xlsx`;
+        fileName = `ReporteCiudades_${timestamp}.xlsx`;
       } else if (concepto == 3) {
-        fileName = `5apps_ReportePropietarios_${timestamp}.xlsx`;
+        fileName = `ReportePropietarios_${timestamp}.xlsx`;
       } else if (concepto == 4) {
-        fileName = `5apps_ReporteCiudadesColibertador_${timestamp}.xlsx`;
+        fileName = `ReporteCiudadesColibertador_${timestamp}.xlsx`;
       } else if (concepto == 5) {
-        fileName = `5apps_ReporteAgenciasBerlitur_${timestamp}.xlsx`;
+        fileName = `ReporteAgenciasBerlitur_${timestamp}.xlsx`;
       }
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");

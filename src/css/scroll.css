@@ -35,13 +35,14 @@ no pase de determinado lugar */
 
 /* Este es la barra de fondo del scrollbar */
 .menu-container::-webkit-scrollbar {
-    width: 10px;
+    width: 5px;
     background: transparent;
 }
 
 /* Aca damos el diseno default para el scroll */
 .menu-container::-webkit-scrollbar-thumb {
     border: 3px solid transparent;
+    background-color: var(--color-background-body);
     box-shadow: none;
     border-radius: 40px;
 }
@@ -96,9 +97,19 @@ no pase de determinado lugar */
 }
     
 /* Scroll Moz*/
-.container,
-.menu-container,
-.container__table{
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-background-body) transparent;
+@-moz-document url-prefix() {
+    .container,
+    .menu-container,
+    .container__table {
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-ok) transparent;
+        scroll-behavior: smooth;
+        scrollbar-width: 15px;
+    }
+
+    .container:hover,
+    .menu-container:hover,
+    .container__table:hover {
+        scrollbar-color: var(--color-background-body) transparent;
+    }
 }

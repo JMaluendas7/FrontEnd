@@ -77,7 +77,7 @@ const Contenido = ({ mostrarMensaje }) => {
           withCredentials: true,
         }
       );
-      const fileName = "5Apps_Colaboradores";
+      const fileName = "Colaboradores";
       descargarArchivo({ fileName: fileName, blob: response.data });
     } catch (error) {
       console.error("Error al generar el archivo Excel:", error);

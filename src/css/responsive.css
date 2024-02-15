@@ -120,18 +120,11 @@
 @media (max-width: 1110px) {
     /* Estilos responsive para Menu y adaptabilidad de los 3 componentes*/
     .menu-container {
-        height: auto;
-        width: 25%;
-        top: -1rem;
-        bottom: 0px;
-        border-bottom-right-radius: 1rem;
-        border-top-right-radius: 0;
+        width: 30%;
         box-shadow: 3px 3px 3px 0px rgba(0,0,0,0.5);
         z-index: 2;
     }
-    /* .menu-container:hover {
-        transform: scale(1.01);
-    } */
+
     .banner {
         width: 73%;
     }
@@ -152,7 +145,7 @@
 @media (max-width: 900px) {
     /* Estilos responsive para Menu y adaptabilidad de los 3 componentes*/
     .menu-container {
-        width: 28%;
+        width: 40%;
     }
     .banner {
         width: 70%;
@@ -166,9 +159,6 @@
 }
 @media (max-width: 760px) {
     /* Estilos responsive para Menu y adaptabilidad de los 3 componentes*/
-    .menu-container {
-        width: 30%;
-    }
     .banner {
         width: 68%;
     }

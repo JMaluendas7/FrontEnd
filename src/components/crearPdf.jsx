@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React from "react";
 import html2pdf from "html2pdf.js";
 import "./crearPdf.css";
 import axios from "axios";
@@ -6,11 +6,13 @@ import axios from "axios";
 // Import images
 import logoMint from "/src/img/rpt_pdf/logo_mint.png";
 import logoIso from "/src/img/rpt_pdf/logo_iso.png";
-import logoBer from "/src/img/rpt_pdf/logo_ber.jpeg";
+import logoBer from "/src/img/rpt_pdf/logo_ber.png";
 import logoTourline from "/src/img/rpt_pdf/logo-tourline.png";
 import logoCit from "/src/img/rpt_pdf/logo_cit.png";
 import logoSt from "/src/img/rpt_pdf/logo_st.png";
 import firmaPjc from "/src/img/rpt_pdf/FIRMA_PJC.jpg";
+import generarExcelFunc from "./AdminGenerarXlsx";
+import getDataFunc from "./AdminGetData";
 
 class HTMLtoPDF extends React.Component {
   constructor(props) {
@@ -47,35 +49,12 @@ class HTMLtoPDF extends React.Component {
     const pdfFile = new File([pdfBlob], fileName, { type: "application/pdf" });
 
     const formData = new FormData();
-    const modifiedFields = this.getModifiedFieldsString();
-    const bus = this.datosForm3.Bus;
-    const viaje = this.datosForm3.Viaje;
-    const username = this.username;
-
     formData.append("pdf_file", pdfFile);
-    formData.append("modifiedFields", modifiedFields);
-    formData.append("bus", bus);
-    formData.append("viaje", viaje);
-    formData.append("username", username);
-
-    try {
-      const response = await axios.post(
-        "http://wsdx.berlinasdelfonce.com:9000/saveRpto/",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-          crossDomain: true,
-          xsrfCookieName: "csrftoken",
-          xsrfHeaderName: "X-CSRFToken",
-        }
-      );
-      // this.mostrarMensaje(response.data.message, "success_notification");
-    } catch (error) {
-      // this.mostrarMensaje(response.data.message, "success_notification");
-    }
+    formData.append("modifiedFields", this.getModifiedFieldsString());
+    formData.append("bus", this.datosForm3.Bus);
+    formData.append("viaje", this.datosForm3.Viaje);
+    formData.append("username", this.username);
+    getDataFunc("saveRpto", formData);
   };
 
   convertToPDF = async () => {
@@ -84,7 +63,7 @@ class HTMLtoPDF extends React.Component {
     const formattedDate = `${currentDate.getDate()}_${
       currentDate.getMonth() + 1
     }_${currentDate.getFullYear()}-${currentDate.getHours()}-${currentDate.getMinutes()}-${currentDate.getSeconds()}`;
-    const nameApp = "5apps";
+    const nameApp = "5Apps";
     const viaje = this.datosForm3.Viaje;
     const bus = this.datosForm3.Bus;
 
@@ -94,7 +73,7 @@ class HTMLtoPDF extends React.Component {
       margin: 10,
       filename: fileName,
       image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 4 },
+      html2canvas: { scale: 2 },
       jsPDF: { format: "letter", orientation: "portrait" },
     };
 
@@ -276,10 +255,10 @@ class HTMLtoPDF extends React.Component {
                       <div className="item_name bold">RAZON SOCIAL</div>
                       <div
                         className="item_desc"
-                        onInput={() =>
-                          this.handleFieldChange("Empresa_Registrado")
-                        }
                         contentEditable={isEditable}
+                        onInput={(e) =>
+                          this.handleFieldChange("Empresa_Registrado", e)
+                        }
                       >
                         {this.datosForm3.Empresa_Registrado}
                       </div>

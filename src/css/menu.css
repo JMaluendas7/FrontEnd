@@ -3,17 +3,19 @@
   position: absolute;
   width: 19.4%;
   height: 100%;
+  height: auto;
+  max-height: 100%;
   background: var(--color-scrollbar);
   padding: 0px;
   margin: .6rem .3rem .4rem 0;
-  bottom: 0rem;
   font-size: 1rem;
-  /* Al eliminar lo siguiente se queda en un buen diseño */
   border-bottom-right-radius: 3rem;
   border-top-right-radius: 1rem;
   box-shadow: 0 0 7px 4px rgba(0,0,0,0.2);
   color: #484141;
+  bottom: auto;
   left: 0px;
+  top: -1rem;
   transition: all 710ms ease-in-out;
 }
 
@@ -55,6 +57,7 @@
 
 .menu {
   margin: .7rem .5rem;
+  transition: all 500ms ease-in-out;
 }
 
 .menuItem {

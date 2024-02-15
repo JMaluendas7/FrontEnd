@@ -6,8 +6,15 @@ import "/src/css/administracion/AddUser.css";
 import "/src/css/administracion/Pruebas.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import useDateRange from "./AdminDateRange";
 
 const Pruebas = () => {
+  const {
+    formattedStartDate,
+    formattedEndDate,
+    dateRangeText,
+    renderDatePicker,
+  } = useDateRange();
   // Llamado a lista de los colaboradores
   const [colaboradores, setColaboradores] = useState([]);
   useEffect(() => {
@@ -117,38 +124,10 @@ const Pruebas = () => {
     setEndDate2(date);
   };
 
-  // Manejo de campo date inicioFin
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [dateRangeText, setDateRangeText] = useState("");
-
-  const handleDateChange = (dates) => {
-    const [start, end] = dates;
-    setStartDate(start);
-    setEndDate(end);
-
-    if (start && end) {
-      console.log(start, end);
-      const formattedStartDate = start.toLocaleDateString("es-ES", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-      const formattedEndDate = end.toLocaleDateString("es-ES", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-      console.log(startDate, endDate);
-      setDateRangeText(`${formattedStartDate} - ${formattedEndDate}`);
-    } else {
-      setDateRangeText("");
-    }
-  };
-
   return (
     <div className="Efect">
       <h1 className="titulo_login">Pruebas</h1>
+      <div className="loader"></div>
       <h3 className="subtitulo_logi">Campo Search con dropdown list</h3>
       <form method="post" onSubmit={enviarSubmit}>
         <div className="form-regUsers">
@@ -312,15 +291,7 @@ const Pruebas = () => {
           <div>
             <label>Selecciona el rango de fechas:</label>
             <div className="content__dateDH">
-              <DatePicker
-                className="input-field"
-                selected={startDate}
-                onChange={handleDateChange}
-                startDate={startDate}
-                endDate={endDate}
-                selectsRange
-                placeholderText="Selecciona un rango"
-              />
+              {renderDatePicker()}
               <p>{dateRangeText}</p>
             </div>
           </div>

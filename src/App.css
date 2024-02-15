@@ -53,7 +53,6 @@
 @font-face {
   font-family: 'Source Sans Pro';
   src: url('fonts/SourceSansPro-Regular.otf') format('woff2');
-  /* Puedes agregar más formatos de fuente si lo deseas, como woff, ttf, etc. */
   font-weight: normal;
   font-style: normal;
 }
@@ -68,7 +67,12 @@ body {
   background-color: var(--color-background-body);
   user-select: none;
   font-size: 10px;
-  font-family: 'Source Sans Pro', sans-serif;
+  /* font-family: 'Source Sans Pro', sans-serif; */
+}
+
+::selection {
+  background-color: var(--color-background-body);
+  color: var(--color-background-add);
 }
 
 @keyframes logo-spin {
@@ -110,7 +114,7 @@ hr:before {
 }
 
 .menu-open .menu {
-  display: none;
+  opacity: 0;
 }
 
 .menu-open .container {
@@ -202,6 +206,7 @@ hr:before {
   background-color: transparent;
   color: var(--color-text);
   font-size: 14px;
+  text-transform: capitalize;
   outline: none;
 }
 
@@ -288,7 +293,8 @@ th, td {
 }
 .colum {
   width: auto;
-  max-width: 7rem;
+  max-width: 13rem;
+  padding: 0 .1rem;
 }
 
 .buttoms-sc {
@@ -418,10 +424,11 @@ th, td {
 .loader {
   width: 65px;
   aspect-ratio: 1;
-  position: relative;
+  position: sticky;
   /* background-color: var(--color-background-body); */
-  margin: 0 auto;
-  margin-top: 2rem;
+  /* margin: 0 auto;
+  margin-top: 2rem; */
+  bottom: 1rem;
 }
 .loader:before,
 .loader:after {
@@ -535,7 +542,7 @@ th, td {
   border-radius: 0.3rem !important;
   font-weight: bolder !important;
   background-color: var(--color-button-primary) !important;
-  /* color: white !important; */
+  color: white !important;
 }
 .react-datepicker__day--keyboard-selected:hover {
   background-color: var(--color-accent-dark) !important;
@@ -598,11 +605,13 @@ th, td {
 }
 .results__box {
   border-radius: .4rem;
-  padding: 1.5rem 1rem;
-  margin: 1rem 0;
+  padding: 1.5rem 2rem;
+  margin: 1rem auto;
   box-shadow: 0 2px 5px var(--color-shadow);
 }
 .forms__box, .results__box {
+  width: max-content;
+  max-width: 80%;
   border: 1px solid var(--color-background-table-header);
   transition: all 300ms ease-in-out;
 }
@@ -612,6 +621,7 @@ th, td {
 
 .box__sheet {
   width: fit-content;
+  max-width: max-content;
   margin: 0 auto;
 }
 
@@ -700,4 +710,14 @@ th, td {
 .fade-exit-active {
   opacity: 0;
   transition: opacity 0.5s ease-in-out; /* Ajusta la duración y la función de temporización según tus necesidades */
+}
+
+.container-initial {
+  margin: -45rem;
+  transition: all 1s ease-in-out;
+}
+
+.container-final {
+  /* margin: 0; */
+  transition: all 1s ease-in-out;
 }

@@ -7,6 +7,8 @@ const useDateRange = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [dateRangeText, setDateRangeText] = useState("");
+  const [formattedStartDate, setformattedStartDate] = useState(null);
+  const [formattedEndDate, setformattedEndDate] = useState(null);
 
   const handleDateChange = (dates) => {
     const [start, end] = dates;
@@ -23,33 +25,44 @@ const useDateRange = () => {
     setDateRangeText(
       start && end ? `${formatDate(start)} - ${formatDate(end)}` : ""
     );
+
+    setformattedStartDate(
+      start ? start.toISOString().split("T")[0] + "T00:00:00.00Z" : ""
+    );
+    setformattedEndDate(
+      end ? end.toISOString().split("T")[0] + "T23:59:59.00Z" : ""
+    );
   };
 
   const renderDatePicker = () => (
-    <div className="input-container">
-      <DatePicker
-        className="input-field-datepicker datepicker icon_calendar"
-        selected={startDate}
-        onChange={handleDateChange}
-        startDate={startDate}
-        endDate={endDate}
-        selectsRange
-        showMonthDropdown
-        showYearDropdown
-        dropdownMode="select"
-        inputMode="none"
-        onFocus={(e) => e.target.blur()}
-        onBlur={(e) => e.target.blur()}
-        disabledInput
-        locale={es}
-      />
-      <label className={`input-label-datepicker ${startDate ? "label" : ""}`}>
-        Rango de Fecha
-      </label>
+    <div className="content__dateDH">
+      <div className="input-container">
+        <DatePicker
+          className="input-field-datepicker datepicker icon_calendar"
+          selected={startDate}
+          onChange={handleDateChange}
+          startDate={startDate}
+          endDate={endDate}
+          selectsRange
+          showMonthDropdown
+          showYearDropdown
+          dropdownMode="select"
+          inputMode="none"
+          onFocus={(e) => e.target.blur()}
+          onBlur={(e) => e.target.blur()}
+          disabledInput
+          locale={es}
+        />
+        <label className={`input-label-datepicker ${startDate ? "label" : ""}`}>
+          Rango de Fecha
+        </label>
+      </div>
     </div>
   );
 
   return {
+    formattedStartDate,
+    formattedEndDate,
     startDate,
     endDate,
     dateRangeText,

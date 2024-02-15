@@ -6,17 +6,18 @@ import LoginForm from "./Login";
 import Notificacion from "./Notificacion";
 import axios from "axios";
 import Cookies from "js-cookie";
-import "./App.css";
 import "../src/css/banner.css";
 import "../src/css/menu.css";
 import "../src/css/contenido.css";
 import "../src/css/Notificacion.css";
-import "../src/css/scroll.css";
 import "../src/css/ContabilidadInicio.css";
 import "../src/css/administracion/AddColaboradores.css";
 import "./components/Contenido";
 import "./components/administracion/AddColaboradores";
 import "/src/css/fuec/Rpto_fuec.css";
+import "../src/css/scroll.css";
+import "./App.css";
+import "../src/css/PruebaTabla2.css";
 import "../src/css/responsive.css";
 
 function App() {
@@ -205,8 +206,6 @@ function App() {
 
       if (windowWidth < 1110 && !isMenuOpen) {
         document.addEventListener("mouseup", handleClickOutsideMenu);
-      } else {
-        document.removeEventListener("mouseup", handleClickOutsideMenu);
       }
     };
 

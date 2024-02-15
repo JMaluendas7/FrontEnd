@@ -125,9 +125,6 @@
   filter: drop-shadow(0 0 .5em var(--color-logo-hover));
   translate: 7px;
 }
-.menu-open .menu {
-  display: none;
-}
 
 .menu-open .container {
   width: 100%;
