@@ -23,7 +23,7 @@ const Inicio = ({ mostrarMensaje }) => {
       formData.append("Date", DateF);
       formData.append("Opcion", tipoInforme);
       getDataFunc(
-        "TiquetesCRM",
+        "Rp_CRM",
         formData,
         setIsLoading,
         null,

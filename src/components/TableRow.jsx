@@ -203,25 +203,6 @@ const TableRow = ({
           <input
             type="text"
             className="campo__input"
-            name="direccion"
-            value={colaborador.direccion}
-            onChange={(e) =>
-              handleChange(
-                colaborador.num_documento,
-                "direccion",
-                e.target.value
-              )
-            }
-          />
-        ) : (
-          colaborador.direccion
-        )}
-      </td>
-      <td className="colum">
-        {editableFields[colaborador.num_documento] ? (
-          <input
-            type="text"
-            className="campo__input"
             value={colaborador.ciudad}
             onChange={(e) =>
               handleChange(colaborador.num_documento, "ciudad", e.target.value)

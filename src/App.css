@@ -700,7 +700,7 @@ th, td {
 
 .fade {
   opacity: 1;
-  transition: opacity 0.5s ease-in-out; /* Puedes ajustar la duración y la función de temporización según tus necesidades */
+  transition: opacity 0.5s ease-in-out;
 }
 
 .fade-exit {
@@ -709,7 +709,7 @@ th, td {
 
 .fade-exit-active {
   opacity: 0;
-  transition: opacity 0.5s ease-in-out; /* Ajusta la duración y la función de temporización según tus necesidades */
+  transition: opacity 0.5s ease-in-out;
 }
 
 .container-initial {
@@ -718,6 +718,5 @@ th, td {
 }
 
 .container-final {
-  /* margin: 0; */
-  transition: all 1s ease-in-out;
+  transition: all 500ms ease-in-out;
 }

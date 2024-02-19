@@ -77,7 +77,7 @@ const Inicio = ({ mostrarMensaje }) => {
       tipoInforme == 1 ||
       tipoInforme == 4 ||
       tipoInforme == 5 ||
-      tipoInforme == 9 ||
+      // tipoInforme == 9 ||
       tipoInforme == 10 ||
       tipoInforme == 18 ||
       tipoInforme == 19 ||

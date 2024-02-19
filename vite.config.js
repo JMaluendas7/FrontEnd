@@ -2,7 +2,22 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      // Configura el complemento para la recarga en caliente de CSS
+      name: "vite-plugin-style-import",
+      config: {
+        libs: [
+          {
+            libraryName: "antd", // Puedes especificar tus propias bibliotecas si es necesario
+            esModule: true,
+            resolveStyle: (name) => `antd/es/${name}/style/index`,
+          },
+        ],
+      },
+    },
+  ],
   build: {
     outDir: "dist",
     assetsDir: "assets",
@@ -22,8 +37,5 @@ export default defineConfig({
       include: ["/*.js", "/*.jsx", "src/img/*"],
     },
   },
-  //   define: {
-  //     "process.env": process.env,
-  //   }, // Añade esta sección para copiar las imágenes al directorio de salida
   assetsInclude: ["./src/img/**"], // Ruta a las imágenes
 });

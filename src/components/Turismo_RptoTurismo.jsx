@@ -21,7 +21,7 @@ const Inicio = ({ mostrarMensaje }) => {
       formData.append("month", month);
       formData.append("tipoInforme", tipoInforme);
       getDataFunc(
-        "rptoTurismo",
+        "Rp_VF3",
         formData,
         setIsLoading,
         setShowTable,

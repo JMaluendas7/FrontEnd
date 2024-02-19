@@ -24,7 +24,7 @@ const Inicio = ({ mostrarMensaje }) => {
       formData.append("Opcion", tipoInforme);
       formData.append("empresa", empresa);
       getDataFunc(
-        "RptosDominicales",
+        "RP_Dominicales",
         formData,
         setIsLoading,
         setShowTable,

@@ -1,7 +1,6 @@
 import React from "react";
 import html2pdf from "html2pdf.js";
 import "./crearPdf.css";
-import axios from "axios";
 
 // Import images
 import logoMint from "/src/img/rpt_pdf/logo_mint.png";

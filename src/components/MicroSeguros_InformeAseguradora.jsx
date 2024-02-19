@@ -20,7 +20,7 @@ const Inicio = ({ mostrarMensaje }) => {
       formData.append("endDate", formattedEndDate);
 
       getDataFunc(
-        "RptoMicroSeguros",
+        "Fics_MicroSegurosGET",
         formData,
         setIsLoading,
         setShowTable,

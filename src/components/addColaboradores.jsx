@@ -295,18 +295,7 @@ const Contenido = ({ mostrarMensaje }) => {
                     <figure className="colum__icon az"></figure>
                   </div>
                 </th>
-                <th className="colum">Telefono</th>
                 <th className="colum">EMail</th>
-                <th className="colum">
-                  <div className="colum__title">
-                    <p className="colum__name">Direccion</p>
-                    <figure className="colum__icon-cont">
-                      <img className="colum__icon" src={ordenar} />
-                      <div className="overlay"></div>
-                    </figure>
-                  </div>
-                </th>
-                <th className="colum">Ciudad</th>
                 <th className="colum">Rol</th>
                 <th className="colum">Empresa</th>
                 <th className="fijo"></th>
@@ -450,40 +439,6 @@ const Contenido = ({ mostrarMensaje }) => {
                 }
               />
               <label className="input-label label__form">Email</label>
-            </div>
-            <div className="input-container agg_colaborador">
-              <input
-                id="direccion"
-                name="direccion"
-                className="input-field"
-                placeholder=""
-                type="text"
-                value={editColaboradorData ? editColaboradorData.direccion : ""}
-                onChange={(e) =>
-                  setEditColaboradorData({
-                    ...editColaboradorData,
-                    direccion: e.target.value,
-                  })
-                }
-              />
-              <label className="input-label label__form">Direccion</label>
-            </div>
-            <div className="input-container agg_colaborador">
-              <input
-                id="ciudad"
-                className="input-field"
-                placeholder=""
-                type="text"
-                name="ciudad"
-                value={editColaboradorData ? editColaboradorData.ciudad : ""}
-                onChange={(e) =>
-                  setEditColaboradorData({
-                    ...editColaboradorData,
-                    ciudad: e.target.value,
-                  })
-                }
-              />
-              <label className="input-label label__form">Ciudad</label>
             </div>
             <div className="input-container agg_colaborador">
               <input

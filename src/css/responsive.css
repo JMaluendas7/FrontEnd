@@ -121,12 +121,13 @@
     /* Estilos responsive para Menu y adaptabilidad de los 3 componentes*/
     .menu-container {
         width: 30%;
+        height: auto;
         box-shadow: 3px 3px 3px 0px rgba(0,0,0,0.5);
         z-index: 2;
     }
 
     .banner {
-        width: 73%;
+        width: 69%;
     }
     /* .container { OJOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO */
     .container {
@@ -148,7 +149,7 @@
         width: 40%;
     }
     .banner {
-        width: 70%;
+        width: 59%;
     }
     .txt_noti {
         font-size: .8rem;
