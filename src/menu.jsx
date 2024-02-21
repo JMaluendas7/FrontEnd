@@ -66,6 +66,7 @@ const Menu = ({
   return (
     <section className={`menu-container ${containerClass}`} ref={menuRef}>
       <nav className="menu">
+        <span />
         {menuItems.map((item, index) => (
           <div key={index} className="menuItem">
             <nav
