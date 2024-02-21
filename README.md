@@ -21,8 +21,8 @@ El ambiente de desarrollo de 5Apps se debe guardar en una carpeta (`5Apps`).
 
 1. Desde la consola de Git Bash, accede a la carpeta `5Apps` identificate y clona el repositorio con las siguientes instrucciónes:
    ```bash
-   git config --global user.name "Nombre"
-   git config --global user.email "correo@dominio.com"
+   git config --global user.name "Name"
+   git config --global user.email "example@example.com"
    git clone https://github.com/JMaluendas7/FrontEnd.git
 3. Acceder a la carpeta FrontEnd en la cual queda alojado el proyecto clonado.
    ```bash
