@@ -19,10 +19,7 @@ El aplicativo tiene un diseño sencillo con comportamiento de dashboard, con enf
 
 El ambiente de desarrollo de 5Apps se debe guardar en una carpeta (`5Apps`).
 
-1. Desde la consola de Git Bash, acceder a la carpeta `5Apps` y clonar el repositorio con la siguiente instrucción:
-   ```bash
-   git clone https://github.com/JMaluendas7/FrontEnd.git
-1. Desde la consola de git bash acceder a la carpeta 5Apps y clonar el repositorio con la siguiente instruccion.
+1. Desde la consola de Git Bash, accede a la carpeta `5Apps` y clona el repositorio con la siguiente instrucción:
    ```bash
    git clone https://github.com/JMaluendas7/FrontEnd.git
 3. Acceder a la carpeta FrontEnd en la cual queda alojado el proyecto clonado.
@@ -37,12 +34,23 @@ El ambiente de desarrollo de 5Apps se debe guardar en una carpeta (`5Apps`).
 
 ## Uso
 
-Uso C y O
+5Apps actualmente cuenta con generacion de reportes para el area administrativa y operativa del grupo empresarial de Berlinas.
 
 ## Contribucion
 
-JMaluendas
+¡Para contribuir a mejorar 5Apps! Si tienes ideas para nuevas características, mejoras en el código o soluciones para problemas, Simplemente sigue estos pasos:
+
+Haz un fork del repositorio.
+1. Crea una nueva rama
+   ```bash
+   git checkout -b feature/mejora
+2. Realiza tus cambios y haz commit de ellos.
+   git commit -am 'Añade una mejora'
+3. Sube tus cambios a la rama.
+   ```bash
+   git push origin feature/mejora
+Abre un pull request.
 
 ## Licencia
 
-JMaluendas 2024
+© Transporte y Turismo Berlinas del Fonce - JMaluendas 2024. Todos los derechos reservados.
