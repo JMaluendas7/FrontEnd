@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import Banner from "./Banner";
-import Menu from "./Menu";
+import Banner from "./banner";
+import Menu from "./menu";
 import Container from "./Container";
 import LoginForm from "./Login";
 import Notificacion from "./Notificacion";
