@@ -1,7 +1,7 @@
 import Button from "./AdminButton";
 import React, { useState } from "react";
 import getDataFunc from "./AdminGetData";
-import DynamicTable from "./PruebaTabla2";
+import DynamicTable from "./AdminTable";
 import ContainerButtonsLeft from "./AdminButtonsLeft";
 
 const Fuec = ({ mostrarMensaje }) => {

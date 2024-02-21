@@ -238,23 +238,6 @@ const DynamicTable = ({
       <table className="filas__container">
         <thead>
           <tr className="title__campos">
-            {/* Columna de checkbox */}
-            {/* {columns.length > 0 && (
-              <th key={columns[0].key} className="colum">
-                <input
-                  type="checkbox"
-                  checked={selectedRows.length === currentItems.length}
-                  onChange={(e) =>
-                    setSelectedRows(
-                      e.target.checked
-                        ? currentItems.map((_, index) => index)
-                        : []
-                    )
-                  }
-                  className="campo__input"
-                />
-              </th>
-            )} */}
             {/* Cabecera de la tabla */}
             {columns.map((column) => (
               <th

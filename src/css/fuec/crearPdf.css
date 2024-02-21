@@ -45,14 +45,14 @@ li {
 }
 
 .num_viaje {
-    font-weight: bold;
+    /* font-weight: bold; */
     text-align: center;
     margin: 0;
 }
 
 .fecha {
     position: relative;
-    right: -14rem;
+    right: -13rem;
     font-size: .6rem;
     color: rgb(63, 61, 61);
 }
@@ -86,7 +86,7 @@ li {
 .item_name,
 .item_nit {
     display: flex;
-    width: 9rem;
+    width: 10rem;
     height: 1.2rem;
     line-height: .8rem;
     border: 1px solid black;
@@ -98,7 +98,7 @@ li {
     font-size: 15px;
 }
 .bold {
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .item_name2 {
@@ -125,11 +125,15 @@ li {
 
 .item_full {
     width: -webkit-fill-available;
+    width: 100%;
 }
 
 .item_desc {
-    margin-left: .5rem;
-    font-size: .8rem;
+    margin-left: 0.5rem;
+    font-size: .7rem;
+    /* font-weight: 400;
+    letter-spacing: -0.1px; */
+    text-align: left;
 }
 
 .center {
@@ -147,21 +151,20 @@ li {
 }
 
 .text_8 {
-    font-size: .8rem;
+    font-size: .7rem;
+}
+.text_7 {
+    font-size: .6rem;
 }
 .text_6 {
     font-size: .7rem;
 }
-
 .text_5 {
     font-size: .5rem;
 }
 
 .text_4 {
     font-size: 12px;
-}
-.text_11 {
-    font-size: 11px;
 }
 
 .item_55 {
@@ -252,17 +255,21 @@ li {
 .hr_logos {
     height: 4.5rem;
     margin: 0 .5rem;
+    border: 1px solid #000;
 }
 .hr_hor {
     width: 12rem;
     margin: 0;
+    overflow: auto;
+    border-color: #000;
+    height: 1px;
 }
 .martop_02 {
     margin-top: .2rem;
 }
 
 .botton_gp {
-    margin-top: 2rem;
+    margin: 2rem .3rem 0 !important;
 }
 
 .footer {

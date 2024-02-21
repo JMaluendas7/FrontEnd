@@ -1,9 +1,9 @@
 import axios from "axios";
+import Button from "./AdminButton";
+import DynamicTable from "./AdminTable";
 import React, { useState } from "react";
 import getDataFunc from "./AdminGetData";
-import DynamicTable from "./PruebaTabla2";
 import useDateRange from "./AdminDateRange";
-import ButtonGenerar from "./AdminButtonGenerar";
 import ContainerButtonsLeft from "./AdminButtonsLeft";
 
 const Inicio = ({ mostrarMensaje }) => {
@@ -28,36 +28,11 @@ const Inicio = ({ mostrarMensaje }) => {
         mostrarMensaje
       );
     } else {
-      setIsLoading(false);
       mostrarMensaje(
         "Debe seleccionar todos los campos",
         "warning_notification"
       );
     }
-  };
-
-  const generarExcel = async () => {
-    try {
-      const response = await axios.post(
-        "http://wsdx.berlinasdelfonce.com:9000/generarRptoComercial/",
-        {
-          results: results,
-          Opcion: 13,
-          Opcion2: 2,
-          SubOpcion: 0,
-          empresa: 277,
-          startDate: startDate,
-        },
-        {
-          responseType: "blob",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-    } catch {}
   };
 
   // Handle of table dynamic
@@ -94,7 +69,7 @@ const Inicio = ({ mostrarMensaje }) => {
         <section className="contabilidad_section">
           <div className="content__dateDH">{renderDatePicker()}</div>
         </section>
-        <ButtonGenerar isLoading={isLoading} getData={getData} />
+        {Button({ isLoading, getData })}
       </section>
       {showTable && (
         <div className="tablaFuecOD results__box">
@@ -108,7 +83,7 @@ const Inicio = ({ mostrarMensaje }) => {
           </div>
         </div>
       )}
-      {ContainerButtonsLeft({ isLoading, showTable, generarExcel })}
+      {ContainerButtonsLeft({ isLoading, showTable })}
     </div>
   );
 };

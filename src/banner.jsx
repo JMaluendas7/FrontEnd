@@ -2,13 +2,11 @@ import React from "react";
 import Cookies from "js-cookie";
 
 const Banner = ({
-  toggleMenu,
   setContainerComponent,
   username,
   nombre,
   apellido,
   isMenuOpen,
-  menuHRef,
   menuRef,
   setIsMenuOpen,
 }) => {

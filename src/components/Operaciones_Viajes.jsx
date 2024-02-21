@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import getDataFunc from "./AdminGetData";
-import DynamicTable from "./PruebaTabla2";
+import DynamicTable from "./AdminTable";
 import useDateRange from "./AdminDateRange";
-import ButtonGenerar from "./AdminButtonGenerar";
 import generarExcelFunc from "./AdminGenerarXlsx";
 import SelectEmpresa from "./AdminSelectedEmpresas";
 import ContainerButtonsLeft from "./AdminButtonsLeft";
+import Button from "./AdminButton";
 
 const Inicio = ({ mostrarMensaje }) => {
   const { formattedStartDate, formattedEndDate, renderDatePicker } =
@@ -87,7 +87,7 @@ const Inicio = ({ mostrarMensaje }) => {
             allowedCodes={[277, 278, 9001]}
           />
           {renderDatePicker()}
-          <ButtonGenerar isLoading={isLoading} getData={getData} />
+          {Button({ isLoading, getData })}
         </section>
       </section>
       {showTable && (

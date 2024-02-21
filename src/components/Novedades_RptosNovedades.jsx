@@ -2,7 +2,7 @@ import useDateMY from "./AdminMY";
 import Button from "./AdminButton";
 import React, { useState } from "react";
 import getDataFunc from "./AdminGetData";
-import DynamicTable from "./PruebaTabla2";
+import DynamicTable from "./AdminTable";
 import useDateRange from "./AdminDateRange";
 import generarExcelFunc from "./AdminGenerarXlsx";
 import SelectOptions from "./AdminSelectedOptions";

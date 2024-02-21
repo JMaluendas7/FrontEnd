@@ -1,6 +1,6 @@
 import React from "react";
 import html2pdf from "html2pdf.js";
-import "./crearPdf.css";
+import "../css/fuec/Rpto_fuec.css";
 
 // Import images
 import logoMint from "/src/img/rpt_pdf/logo_mint.png";
@@ -10,7 +10,6 @@ import logoTourline from "/src/img/rpt_pdf/logo-tourline.png";
 import logoCit from "/src/img/rpt_pdf/logo_cit.png";
 import logoSt from "/src/img/rpt_pdf/logo_st.png";
 import firmaPjc from "/src/img/rpt_pdf/FIRMA_PJC.jpg";
-import generarExcelFunc from "./AdminGenerarXlsx";
 import getDataFunc from "./AdminGetData";
 
 class HTMLtoPDF extends React.Component {

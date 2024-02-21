@@ -61,6 +61,7 @@
 }
 .desc__form {
     color: var(--color-text);
+    text-align: center;
 }
 
 .login {

@@ -1,12 +1,11 @@
 import useDate from "./AdminDate";
 import Button from "./AdminButton";
-import HTMLtoPDF from "./crearPdf";
 import InputBus from "./AdminInputBus";
-import volver from "/src/img/volver.png";
 import getDataFunc from "./AdminGetData";
 import DynamicTable from "./PruebaTabla";
 import React, { useState, useRef } from "react";
 import getDataJSONFunc from "./AdminGetDataJSON";
+import HTMLtoPDF from "./Reportes_RptoFuecCrearPdf";
 import ContainerButtonsLeft from "./AdminButtonsLeft";
 
 const Fuec = ({ mostrarMensaje, username }) => {
@@ -53,11 +52,6 @@ const Fuec = ({ mostrarMensaje, username }) => {
     setShowFormI(false);
   };
 
-  const volverAFormIni = () => {
-    setShowDataPdf(false);
-    setShowFormI(true);
-  };
-
   const [tableData, setTableData] = useState([]);
 
   const columns = [
@@ -86,18 +80,6 @@ const Fuec = ({ mostrarMensaje, username }) => {
 
   return (
     <div className="Efect">
-      {showPdf && (
-        <div className="buttons__VE">
-          <button
-            onClick={() => volverAFormIni()}
-            className="volver"
-            type="submit"
-          >
-            <img className="volver_img" src={volver}></img>
-            Volver
-          </button>
-        </div>
-      )}
       <h1 className="titulo_login title_fuec">Reporte FUEC</h1>
       <hr />
       {showFormI && (
@@ -132,12 +114,7 @@ const Fuec = ({ mostrarMensaje, username }) => {
           </section>
         </>
       )}
-      <ContainerButtonsLeft
-        isLoading={isLoading}
-        showPdf={showPdf}
-        DownloadPDF={DownloadPDF}
-        PrintPDF={PrintPDF}
-      />
+      {ContainerButtonsLeft({ isLoading, showPdf, DownloadPDF, PrintPDF })}
     </div>
   );
 };

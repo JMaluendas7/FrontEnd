@@ -10,29 +10,28 @@ import "../src/css/banner.css";
 import "../src/css/menu.css";
 import "../src/css/contenido.css";
 import "../src/css/Notificacion.css";
-import "../src/css/ContabilidadInicio.css";
-import "../src/css/administracion/AddColaboradores.css";
-import "./components/Contenido";
-import "./components/administracion/AddColaboradores";
+import "../src/css/AddColaboradores.css";
 import "/src/css/fuec/Rpto_fuec.css";
 import "../src/css/scroll.css";
 import "./App.css";
-import "../src/css/PruebaTabla2.css";
+import "../src/css/AdminTable.css";
 import "../src/css/responsive.css";
+// Mantener el orden en las importaciones del css para mantener la especificidad y evitar sobrepisar codigo
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado de autenticación
+  const [menuData, setMenuData] = useState([]);
   const [uidb64, setUidb64] = useState("");
   const [token, setToken] = useState("");
-  const [menuData, setMenuData] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado de autenticación
-  const menuRef = useRef(null);
   const menuHRef = useRef(null);
+  const menuRef = useRef(null);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const uidb64Param = searchParams.get("uidb64");
     const tokenParam = searchParams.get("token");
 
+    // Manejo de nueva contraseña
     if (uidb64Param && tokenParam) {
       setUidb64(uidb64Param);
       setToken(tokenParam);
@@ -54,66 +53,6 @@ function App() {
       getMenu();
     }
   }, [isAuthenticated, menuData.length]);
-
-  const handleLogout = () => {
-    Cookies.remove("authToken"); // Borra la cookie que contiene el token JWT
-    setContainerComponent(false); // Limpia las variables de estado de autenticación
-    window.location.reload(); // Recarga la pagina ya sin acceso
-    const username = "";
-    const nombre = "";
-    const apellido = "";
-    const rol_id = "";
-  };
-
-  // const [sessionTimeout, setSessionTimeout] = useState(null);
-
-  // const resetSessionTimeout = () => {
-  //   if (sessionTimeout) {
-  //     clearTimeout(sessionTimeout);
-  //   }
-
-  //   const timeout = setTimeout(() => {
-  //     if (isAuthenticated) {
-  //       handleLogout();
-  //       console.log('Sesión cerrada por inactividad');
-  //     }
-  //     console.log("listo");
-  //   }, 3000); // 5 minutos de inactividad (en milisegundos)
-
-  //   setSessionTimeout(timeout);
-  // };
-
-  // useEffect(() => {
-  //   const events = ['mousedown', 'keydown', 'touchstart']; // Eventos que indican actividad
-
-  //   const resetTimeout = () => {
-  //     resetSessionTimeout();
-  //   };
-
-  //   events.forEach((event) => {
-  //     window.addEventListener(event, resetTimeout);
-  //   });
-
-  //   resetSessionTimeout(); // Iniciar el temporizador al cargar el componente
-
-  //   return () => {
-  //     events.forEach((event) => {
-  //       window.removeEventListener(event, resetTimeout);
-  //     });
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   const handleUnload = (event) => {
-  //     handleLogout();
-  //     event.preventDefault();
-  //     return (event.returnValue = "¿Estás seguro de abandonar la página?");
-  //   };
-
-  //   window.addEventListener("beforeunload", handleUnload);
-
-  //   return () => window.removeEventListener("beforeunload", handleUnload);
-  // }, []);
 
   // Almacenamiento de Cookies en variables
   const username = localStorage.getItem("username");
@@ -144,9 +83,7 @@ function App() {
   const [containerComponent, setContainerComponent] = useState();
   useEffect(() => {
     if (rol_id == 3) {
-      setContainerComponent("Rpto_fuec");
-    } else if (rol_id == 2) {
-      setContainerComponent("Home");
+      setContainerComponent("Reportes_RptoFuec");
     } else {
       setContainerComponent("Home");
     }
@@ -235,14 +172,12 @@ function App() {
             username={username}
           />
           <Banner
-            toggleMenu={toggleMenu}
             isMenuOpen={isMenuOpen}
             setContainerComponent={setContainerComponent}
             setIsAuthenticated={setIsAuthenticated}
             username={username}
             nombre={nombre}
             apellido={apellido}
-            menuHRef={menuHRef}
             menuRef={menuRef}
             setIsMenuOpen={setIsMenuOpen}
           />

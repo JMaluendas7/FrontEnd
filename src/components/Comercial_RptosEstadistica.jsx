@@ -1,6 +1,6 @@
 import Button from "./AdminButton";
+import DynamicTable from "./AdminTable";
 import getDataFunc from "./AdminGetData";
-import DynamicTable from "./PruebaTabla2";
 import useDateRange from "./AdminDateRange";
 import generarExcelFunc from "./AdminGenerarXlsx";
 import SelectOptions from "./AdminSelectedOptions";

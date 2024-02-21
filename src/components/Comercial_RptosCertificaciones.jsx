@@ -1,8 +1,8 @@
 import Button from "./AdminButton";
 import InputDni from "./AdminInputDni";
+import DynamicTable from "./AdminTable";
 import React, { useState } from "react";
 import getDataFunc from "./AdminGetData";
-import DynamicTable from "./PruebaTabla2";
 import generarExcelFunc from "./AdminGenerarXlsx";
 import ContainerButtonsLeft from "./AdminButtonsLeft";
 

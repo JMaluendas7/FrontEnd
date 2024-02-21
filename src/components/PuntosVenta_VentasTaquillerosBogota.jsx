@@ -1,10 +1,10 @@
 import useDateMY from "./AdminMY";
+import Button from "./AdminButton";
 import es from "date-fns/locale/es";
 import InputDni from "./AdminInputDni";
+import DynamicTable from "./AdminTable";
 import getDataFunc from "./AdminGetData";
 import DatePicker from "react-datepicker";
-import DynamicTable from "./PruebaTabla2";
-import ButtonGenerar from "./AdminButtonGenerar";
 import generarExcelFunc from "./AdminGenerarXlsx";
 import SelectOptions from "./AdminSelectedOptions";
 import React, { useState, useEffect } from "react";
@@ -19,6 +19,7 @@ const Inicio = ({ mostrarMensaje }) => {
   const [results, setResults] = useState([]);
   const [DateF, setDateF] = useState("");
   const [dni, setdni] = useState("");
+  const [Opcion, setOpcion] = useState(0);
 
   const getData = async () => {
     const formData = new FormData();
@@ -28,13 +29,16 @@ const Inicio = ({ mostrarMensaje }) => {
       formData.append("Opcion", tipoInforme);
       if (dni) {
         formData.append("Documento", dni);
-      }
-      if (selectedDate) {
+        setOpcion(0);
+      } else if (selectedDate) {
+        setOpcion(1);
         const formattedDate =
           selectedDate.toISOString().split("T")[0] + "T00:00:00.00Z";
         try {
           formData.append("Fecha", formattedDate);
         } catch {}
+      } else {
+        setOpcion(0);
       }
       getDataFunc(
         "RPT_EstadisticaXTaquilla",
@@ -58,6 +62,7 @@ const Inicio = ({ mostrarMensaje }) => {
     data.append("Month", month);
     data.append("Year", year);
     data.append("empresa", 277);
+    data.append("Opcion", Opcion);
     generarExcelFunc(
       "XlsxRPT_EstadisticaXTaquilla",
       data,
@@ -68,21 +73,39 @@ const Inicio = ({ mostrarMensaje }) => {
   };
 
   // Handle of table dynamic
-  const columns = [
-    { key: "Nombres", label: "NOMBRE", type: "text" },
-    {
-      key: dni ? "Apellidos" : DateF ? "Apellidos" : "Apellido",
-      label: "APELLIDO",
-      type: "text",
-    },
-    { key: "Documento", label: "DOCUMENTO", type: "text" },
-    { key: "Empresa", label: "EMPRESA", type: "text" },
-    { key: "Año", label: "AÑO", type: "text" },
-    { key: "Mes", label: "MES", type: "text" },
-    { key: "Fecha Apertura", label: "FECHA APERTURA", type: "text" },
-    { key: "Fecha Cierre", label: "FECHA CIERRE", type: "text" },
-    { key: "Total_Ingresos", label: "INGRESOS", type: "text" },
-  ];
+  let columns;
+  if (Opcion == 0) {
+    columns = [
+      { key: "Nombres", label: "NOMBRE", type: "text" },
+      {
+        key: dni ? "Apellidos" : DateF ? "Apellidos" : "Apellido",
+        label: "APELLIDO",
+        type: "text",
+      },
+      { key: "Documento", label: "DOCUMENTO", type: "text" },
+      { key: "Empresa", label: "EMPRESA", type: "text" },
+      { key: "Año", label: "AÑO", type: "text" },
+      { key: "Mes", label: "MES", type: "text" },
+      { key: "Total_Ingresos", label: "INGRESOS", type: "number" },
+    ];
+  } else if (Opcion == 1) {
+    columns = [
+      { key: "Nombres", label: "NOMBRE", type: "text" },
+      {
+        key: dni ? "Apellidos" : DateF ? "Apellidos" : "Apellido",
+        label: "APELLIDO",
+        type: "text",
+      },
+      { key: "Documento", label: "DOCUMENTO", type: "text" },
+      { key: "Empresa", label: "EMPRESA", type: "text" },
+      { key: "Año", label: "AÑO", type: "text" },
+      { key: "Mes", label: "MES", type: "text" },
+      { key: "Fecha Apertura", label: "FECHA APERTURA", type: "text" },
+      { key: "Fecha Cierre", label: "FECHA CIERRE", type: "text" },
+      { key: "Total_Ingresos", label: "INGRESOS", type: "number" },
+    ];
+  }
+
   const updateTableData = (updatedData) => {
     setTableData(updatedData);
   };
@@ -165,7 +188,7 @@ const Inicio = ({ mostrarMensaje }) => {
             </div>
           </div>
         </section>
-        <ButtonGenerar isLoading={isLoading} getData={getData} />
+        <Button isLoading={isLoading} getData={getData} />
       </section>
       {showTable && (
         <div className="tablaFuecOD results__box">

@@ -1,12 +1,12 @@
 import useDate from "./AdminDate";
 import React, { useState } from "react";
 import getDataFunc from "./AdminGetData";
-import DynamicTable from "./PruebaTabla2";
-import ButtonGenerar from "./AdminButtonGenerar";
+import DynamicTable from "./AdminTable";
 import generarExcelFunc from "./AdminGenerarXlsx";
 import SelectOptions from "./AdminSelectedOptions";
 import SelectEmpresa from "./AdminSelectedEmpresas";
 import ContainerButtonsLeft from "./AdminButtonsLeft";
+import Button from "./AdminButton";
 
 const Inicio = ({ mostrarMensaje }) => {
   const { DateF, renderDatePicker1, selectedDate } = useDate();
@@ -150,7 +150,7 @@ const Inicio = ({ mostrarMensaje }) => {
             />
           )}
         </section>
-        <ButtonGenerar isLoading={isLoading} getData={getData} />
+        {Button({ isLoading, getData })}
       </section>
       {showTable && (
         <div className="tablaFuecOD results__box">

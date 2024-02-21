@@ -181,6 +181,7 @@ hr:before {
 .login_bottom {
   padding: 0 .2rem;
   display: flex;
+  flex-direction: row-reverse;
 }
 
 .submit-button:hover {

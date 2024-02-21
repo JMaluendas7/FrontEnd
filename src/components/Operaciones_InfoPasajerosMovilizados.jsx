@@ -1,12 +1,12 @@
 import getDataFunc from "./AdminGetData";
-import DynamicTable from "./PruebaTabla2";
-import ButtonGenerar from "./AdminButton";
+import DynamicTable from "./AdminTable";
 import useDateRange from "./AdminDateRange";
 import generarExcelFunc from "./AdminGenerarXlsx";
 import SelectOptions from "./AdminSelectedOptions";
 import React, { useState, useEffect } from "react";
 import SelectEmpresa from "./AdminSelectedEmpresas";
 import ContainerButtonsLeft from "./AdminButtonsLeft";
+import Button from "./AdminButton";
 
 const Inicio = ({ mostrarMensaje }) => {
   const { formattedStartDate, formattedEndDate, renderDatePicker } =
@@ -140,7 +140,7 @@ const Inicio = ({ mostrarMensaje }) => {
           />
         </section>
         <section className="contabilidad_section">{renderDatePicker()}</section>
-        <ButtonGenerar isLoading={isLoading} getData={getData} />
+        {Button({ isLoading, getData })}
       </section>
       {showTable && (
         <div className="tablaFuecOD results__box">

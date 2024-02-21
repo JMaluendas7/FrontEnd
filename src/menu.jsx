@@ -97,7 +97,6 @@ const Menu = ({
                     key={subIndex}
                     onClick={() => {
                       toggleSubMenu(index, subIndex, String(subItem.link));
-                      // toggleMenu();
                     }}
                   >
                     <div className={`menuItem__icon ${subItem.url_img}`} />

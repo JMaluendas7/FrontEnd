@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import DynamicTable from "./AdminTable";
 import getDataFunc from "./AdminGetData";
-import DynamicTable from "./PruebaTabla2";
 import useDateRange from "./AdminDateRange";
-import ButtonGenerar from "./AdminButtonGenerar";
 import generarExcelFunc from "./AdminGenerarXlsx";
 import ContainerButtonsLeft from "./AdminButtonsLeft";
+import Button from "./AdminButton";
 
 const Inicio = ({ mostrarMensaje }) => {
   const { formattedStartDate, formattedEndDate, renderDatePicker } =
@@ -77,7 +77,7 @@ const Inicio = ({ mostrarMensaje }) => {
       <hr />
       <section className="colum_table forms__box">
         <section className="contabilidad_section">{renderDatePicker()}</section>
-        <ButtonGenerar isLoading={isLoading} getData={getData} />
+        {Button({ isLoading, getData })}
       </section>
       {showTable && (
         <div className="tablaFuecOD results__box">

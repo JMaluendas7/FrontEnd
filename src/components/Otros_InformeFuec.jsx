@@ -1,8 +1,8 @@
+import Button from "./AdminButton";
+import DynamicTable from "./AdminTable";
 import React, { useState } from "react";
 import getDataFunc from "./AdminGetData";
-import DynamicTable from "./PruebaTabla2";
 import useDateRange from "./AdminDateRange";
-import ButtonGenerar from "./AdminButtonGenerar";
 import generarExcelFunc from "./AdminGenerarXlsx";
 import ContainerButtonsLeft from "./AdminButtonsLeft";
 
@@ -94,7 +94,7 @@ const Inicio = ({ mostrarMensaje }) => {
             <label className="input-label-options label">Empresa</label>
           </div>
           {renderDatePicker()}
-          <ButtonGenerar isLoading={isLoading} getData={getData} />
+          {Button({ isLoading, getData })}
         </section>
       </section>
       {showTable && (

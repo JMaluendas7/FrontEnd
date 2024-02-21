@@ -7,6 +7,7 @@ import "/src/css/administracion/Pruebas.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import useDateRange from "./AdminDateRange";
+import ContainerButtonsLeft from "./AdminButtonsLeft";
 
 const Pruebas = () => {
   const {
@@ -19,7 +20,7 @@ const Pruebas = () => {
   const [colaboradores, setColaboradores] = useState([]);
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/users/")
+      .get("http://wsdx.berlinasdelfonce.com:9000/api/users/")
       .then((response) => {
         setColaboradores(response.data);
       })
@@ -33,7 +34,7 @@ const Pruebas = () => {
 
   const getUsers = () => {
     axios
-      .get("http://127.0.0.1:8000/api/login/")
+      .get("http://wsdx.berlinasdelfonce.com:9000/api/login/")
       .then((response) => {
         setUsers(response.data);
       })
@@ -82,7 +83,7 @@ const Pruebas = () => {
     const formData = new FormData(event.target);
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/addUsers/",
+        "http://wsdx.berlinasdelfonce.com:9000/addUsers/",
         formData
       );
 
@@ -127,7 +128,6 @@ const Pruebas = () => {
   return (
     <div className="Efect">
       <h1 className="titulo_login">Pruebas</h1>
-      <div className="loader"></div>
       <h3 className="subtitulo_logi">Campo Search con dropdown list</h3>
       <form method="post" onSubmit={enviarSubmit}>
         <div className="form-regUsers">
@@ -327,6 +327,13 @@ const Pruebas = () => {
             </div>
           </div>
         )}
+        <ContainerButtonsLeft
+          isLoading={true}
+          generarExcel={true}
+          showPdf={true}
+          DownloadPDF={true}
+          PrintPDF={true}
+        />
       </div>
     </div>
   );
