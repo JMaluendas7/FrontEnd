@@ -45,8 +45,9 @@ Haz un fork del repositorio.
    ```bash
    git checkout -b feature/mejora
 2. Realiza tus cambios y haz commit de ellos.
+   ```bash
    git commit -am 'Añade una mejora'
-3. Sube tus cambios a la rama.
+4. Sube tus cambios a la rama.
    ```bash
    git push origin feature/mejora
 Abre un pull request.
